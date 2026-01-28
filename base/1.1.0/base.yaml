@@ -165,7 +165,7 @@ columns:
             - v2.0.0-dev
 
   - name: comment[sdrf template]
-    description: Template name and version used for annotation (format template_name,version=vX.Y.Z). Multiple templates can be specified using multiple columns.
+    description: Template name and version used for annotation. Format follows key=value pattern (NT=template_name;version=vX.Y.Z). Multiple templates can be specified using multiple columns.
     requirement: optional
     cardinality: multiple
     allow_not_applicable: false
@@ -173,26 +173,26 @@ columns:
     validators:
       - validator_name: pattern
         params:
-          pattern: ^[\w-]+,version=v\d+\.\d+\.\d+(-[\w.]+)?$
-          description: Template should be specified as 'template_name,version=vX.Y.Z'
+          pattern: ^NT=[\w-]+;version=v\d+\.\d+\.\d+(-[\w.]+)?$
+          description: Template should be specified as 'NT=template_name;version=vX.Y.Z'
           examples:
-            - human,version=v1.1.0
-            - ms-proteomics,version=v1.1.0
-            - single-cell,version=v1.0.0
+            - NT=human;version=v1.1.0
+            - NT=ms-proteomics;version=v1.1.0
+            - NT=single-cell;version=v1.0.0
 
   - name: comment[sdrf annotation tool]
-    description: Software tool or method used to generate or annotate the SDRF file
+    description: Software tool or method used to generate or annotate the SDRF file. Format follows key=value pattern (NT=tool_name;version=vX.Y.Z).
     requirement: optional
     allow_not_applicable: false
     allow_not_available: false
     validators:
       - validator_name: pattern
         params:
-          pattern: ^.+$
-          description: Annotation tool identifier (e.g., 'lesSDRF v0.1.0', 'manual curation')
+          pattern: ^NT=[\w-]+;version=v[\d.]+[\w.-]*$|^manual curation$
+          description: Annotation tool should be specified as 'NT=tool_name;version=vX.Y.Z' or 'manual curation'
           examples:
-            - lesSDRF v0.1.0
-            - sdrf-pipelines v1.0.0
+            - NT=lesSDRF;version=v0.1.0
+            - NT=sdrf-pipelines;version=v1.0.0
             - manual curation
 
   - name: comment[modification parameters]
