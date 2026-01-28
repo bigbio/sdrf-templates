@@ -123,11 +123,10 @@ columns:
   - name: comment[instrument]
     description: Instrument used for data acquisition (MS instrument or affinity platform)
     requirement: required
+    cardinality: multiple
     allow_not_applicable: false
     allow_not_available: false
     validators:
-      - validator_name: single_cardinality_validator
-        params: {}
       - validator_name: ontology
         params:
           ontologies:
