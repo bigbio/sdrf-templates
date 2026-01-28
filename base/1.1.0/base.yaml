@@ -149,6 +149,52 @@ columns:
     allow_not_applicable: false
     allow_not_available: false
 
+  - name: comment[sdrf version]
+    description: Version of the SDRF-Proteomics specification used to annotate this file
+    requirement: recommended
+    allow_not_applicable: false
+    allow_not_available: false
+    validators:
+      - validator_name: pattern
+        params:
+          pattern: ^v\d+\.\d+\.\d+(-[\w.]+)?$
+          description: SDRF version should follow semantic versioning format (e.g., v1.1.0)
+          examples:
+            - v1.1.0
+            - v1.0.0
+            - v2.0.0-dev
+
+  - name: comment[sdrf template]
+    description: Template name and version used for annotation (format template_name,version=vX.Y.Z). Multiple templates can be specified using multiple columns.
+    requirement: optional
+    cardinality: multiple
+    allow_not_applicable: false
+    allow_not_available: false
+    validators:
+      - validator_name: pattern
+        params:
+          pattern: ^[\w-]+,version=v\d+\.\d+\.\d+(-[\w.]+)?$
+          description: Template should be specified as 'template_name,version=vX.Y.Z'
+          examples:
+            - human,version=v1.1.0
+            - ms-proteomics,version=v1.1.0
+            - single-cell,version=v1.0.0
+
+  - name: comment[sdrf annotation tool]
+    description: Software tool or method used to generate or annotate the SDRF file
+    requirement: optional
+    allow_not_applicable: false
+    allow_not_available: false
+    validators:
+      - validator_name: pattern
+        params:
+          pattern: ^.+$
+          description: Annotation tool identifier (e.g., 'lesSDRF v0.1.0', 'manual curation')
+          examples:
+            - lesSDRF v0.1.0
+            - sdrf-pipelines v1.0.0
+            - manual curation
+
   - name: comment[modification parameters]
     description: Post-translational modifications searched
     requirement: recommended

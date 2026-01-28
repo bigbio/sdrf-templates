@@ -1,3 +1,1 @@
-#file_format=SDRF
-#version=v1.1.0
-source name	characteristics[organism]	characteristics[organism part]	characteristics[cell type]	characteristics[biological replicate]	assay name	technology type	comment[instrument]	comment[technical replicate]	comment[data file]
+source name	characteristics[organism]	characteristics[organism part]	characteristics[cell type]	characteristics[biological replicate]	assay name	technology type	comment[instrument]	comment[technical replicate]	comment[data file]	comment[sdrf version]	comment[sdrf template]	comment[sdrf annotation tool]
