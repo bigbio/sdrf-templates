@@ -1,0 +1,51 @@
+name: Generate Manifest
+
+on:
+  push:
+    branches: [master, main]
+    paths:
+      - '*/*/**.yaml'
+      - '*/*/**.tsv'
+      - 'scripts/generate_manifest.py'
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          pip install pyyaml packaging
+
+      - name: Generate manifest
+        run: python scripts/generate_manifest.py
+
+      - name: Check for changes
+        id: changes
+        run: |
+          if git diff --quiet templates.yaml; then
+            echo "changed=false" >> $GITHUB_OUTPUT
+          else
+            echo "changed=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Commit and push manifest
+        if: steps.changes.outputs.changed == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add templates.yaml
+          git commit -m "chore: update templates.yaml manifest [skip ci]"
+          git push

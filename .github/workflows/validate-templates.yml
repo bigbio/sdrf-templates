@@ -1,0 +1,81 @@
+name: Validate Templates
+
+on:
+  pull_request:
+    branches: [master, main]
+  push:
+    branches: [master, main]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          pip install pyyaml packaging
+
+      - name: Validate template structure
+        run: |
+          python -c "
+          import sys
+          from pathlib import Path
+          import yaml
+
+          errors = []
+          repo_root = Path('.')
+          skip_dirs = {'scripts', '.git', '.github', '__pycache__'}
+
+          for template_dir in repo_root.iterdir():
+              if not template_dir.is_dir() or template_dir.name in skip_dirs or template_dir.name.startswith('.'):
+                  continue
+
+              # Check each version directory
+              for version_dir in template_dir.iterdir():
+                  if not version_dir.is_dir():
+                      continue
+
+                  yaml_file = version_dir / f'{template_dir.name}.yaml'
+                  if not yaml_file.exists():
+                      errors.append(f'Missing YAML: {yaml_file}')
+                      continue
+
+                  # Validate YAML is parseable
+                  try:
+                      with open(yaml_file) as f:
+                          data = yaml.safe_load(f)
+                  except yaml.YAMLError as e:
+                      errors.append(f'Invalid YAML {yaml_file}: {e}')
+                      continue
+
+                  # Check required fields
+                  required = ['name', 'description', 'version', 'columns']
+                  for field in required:
+                      if field not in data:
+                          errors.append(f'{yaml_file}: missing required field \"{field}\"')
+
+                  # Validate version in YAML matches directory
+                  if data.get('version') != version_dir.name:
+                      errors.append(f'{yaml_file}: version \"{data.get(\"version\")}\" does not match directory \"{version_dir.name}\"')
+
+          if errors:
+              print('Validation errors:')
+              for e in errors:
+                  print(f'  - {e}')
+              sys.exit(1)
+          else:
+              print('All templates valid!')
+          "
+
+      - name: Test manifest generation
+        run: |
+          python scripts/generate_manifest.py
+          echo "Manifest generated successfully"
