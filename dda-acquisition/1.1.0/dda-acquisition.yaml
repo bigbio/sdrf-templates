@@ -36,12 +36,15 @@ columns:
     validators:
       - validator_name: pattern
         params:
-          pattern: ^\d+(\.\d+)?(%|eV)?$|^normalized\s+\d+(\.\d+)?%?$
-          description: Energy value with optional unit
+          pattern: ^\d+(\.\d+)?%? (NCE|eV)(;\d+(\.\d+)?%? (NCE|eV))*$|^not available$
+          description: "Collision energy format: {value} {unit} where value is a number optionally followed by %, and unit is NCE or eV. For stepped collision energies, use semicolon-separated values each with their own unit."
           examples:
-            - 27
-            - 30%
-            - normalized 27%
+            - 30 NCE
+            - 30% NCE
+            - 27 eV
+            - 25 NCE;27 NCE;30 NCE
+            - 25% NCE;27% NCE;30% NCE
+            - not available
 
   - name: comment[fractionation method]
     description: Peptide fractionation method used before MS analysis
