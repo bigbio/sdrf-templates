@@ -41,11 +41,10 @@ columns:
   - name: comment[instrument]
     description: Mass spectrometer instrument used
     requirement: required
+    cardinality: multiple
     allow_not_applicable: false
     allow_not_available: false
     validators:
-      - validator_name: single_cardinality_validator
-        params: {}
       - validator_name: ontology
         params:
           ontologies:

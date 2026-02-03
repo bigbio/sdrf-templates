@@ -58,12 +58,15 @@ columns:
     validators:
       - validator_name: pattern
         params:
-          pattern: ^\d+(\.\d+)?(%|eV)?$|^\d+(\.\d+)?[,;]\d+(\.\d+)?[,;]\d+(\.\d+)?(%|eV)?$
-          description: Single value or stepped energies
+          pattern: ^\d+(\.\d+)?%? (NCE|eV)(;\d+(\.\d+)?%? (NCE|eV))*$|^not available$
+          description: "Collision energy format: {value} {unit} where value is a number optionally followed by %, and unit is NCE or eV. For stepped collision energies, use semicolon-separated values each with their own unit."
           examples:
-            - 27
-            - 25;27;30
-            - 30%
+            - 30 NCE
+            - 30% NCE
+            - 27 eV
+            - 25 NCE;27 NCE;30 NCE
+            - 25% NCE;27% NCE;30% NCE
+            - not available
 
   - name: comment[modification parameters]
     description: Post-translational modifications searched
