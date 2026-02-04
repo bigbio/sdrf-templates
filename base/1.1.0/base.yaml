@@ -164,7 +164,7 @@ columns:
             - v2.0.0-dev
 
   - name: comment[sdrf template]
-    description: Template name and version used for annotation. Two formats are supported - key=value format (NT=template_name;version=vX.Y.Z) or simple format (template_name vX.Y.Z). Multiple templates can be specified using multiple columns.
+    description: Template name and version used for annotation. Two formats are supported - key=value format (NT=template_name;VV=vX.Y.Z) or simple format (template_name vX.Y.Z). Multiple templates can be specified using multiple columns.
     requirement: optional
     cardinality: multiple
     allow_not_applicable: false
@@ -172,28 +172,28 @@ columns:
     validators:
       - validator_name: pattern
         params:
-          pattern: ^(NT=[\w-]+;version=v\d+\.\d+\.\d+(-[\w.]+)?|[\w-]+ v\d+\.\d+\.\d+(-[\w.]+)?)$
-          description: Template can be specified as 'NT=name;version=vX.Y.Z' or 'name vX.Y.Z'
+          pattern: ^(NT=[\w-]+;VV=v\d+\.\d+\.\d+(-[\w.]+)?|[\w-]+ v\d+\.\d+\.\d+(-[\w.]+)?)$
+          description: Template can be specified as 'NT=name;VV=vX.Y.Z' or 'name vX.Y.Z'
           examples:
-            - NT=human;version=v1.1.0
+            - NT=human;VV=v1.1.0
             - human v1.1.0
-            - NT=ms-proteomics;version=v1.1.0
+            - NT=ms-proteomics;VV=v1.1.0
             - ms-proteomics v1.1.0
 
   - name: comment[sdrf annotation tool]
-    description: Software tool or method used to generate or annotate the SDRF file. Two formats are supported - key=value format (NT=tool_name;version=vX.Y.Z) or simple format (tool_name vX.Y.Z).
+    description: Software tool or method used to generate or annotate the SDRF file. Two formats are supported - key=value format (NT=tool_name;VV=vX.Y.Z) or simple format (tool_name vX.Y.Z).
     requirement: optional
     allow_not_applicable: false
     allow_not_available: false
     validators:
       - validator_name: pattern
         params:
-          pattern: ^(NT=[\w-]+;version=v[\d.]+[\w.-]*|[\w-]+ v[\d.]+[\w.-]*|manual curation)$
-          description: Annotation tool can be specified as 'NT=name;version=vX.Y.Z' or 'name vX.Y.Z' or 'manual curation'
+          pattern: ^(NT=[\w-]+;VV=v[\d.]+[\w.-]*|[\w-]+ v[\d.]+[\w.-]*|manual curation)$
+          description: Annotation tool can be specified as 'NT=name;VV=vX.Y.Z' or 'name vX.Y.Z' or 'manual curation'
           examples:
-            - NT=lesSDRF;version=v0.1.0
+            - NT=lesSDRF;VV=v0.1.0
             - lesSDRF v0.1.0
-            - NT=sdrf-pipelines;version=v1.0.0
+            - NT=sdrf-pipelines;VV=v1.0.0
             - sdrf-pipelines v1.0.0
             - manual curation
 
