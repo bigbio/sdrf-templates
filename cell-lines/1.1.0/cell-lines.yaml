@@ -28,6 +28,25 @@ columns:
             - MCF7
             - A549
 
+  - name: characteristics[disease]
+    description: Disease state of the original tissue from which the cell line was established
+    requirement: required
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: ontology
+        params:
+          ontologies:
+            - mondo
+            - efo
+            - doid
+          error_level: warning
+          description: The disease should be a valid MONDO, EFO, or DOID ontology term. Use 'normal' if applicable.
+          examples:
+            - cervical adenocarcinoma
+            - chronic myelogenous leukemia
+            - normal
+
   - name: characteristics[cellosaurus accession]
     description: Cellosaurus accession number for the cell line
     requirement: required
