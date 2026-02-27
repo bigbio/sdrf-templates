@@ -13,7 +13,7 @@ validators:
 columns:
   - name: characteristics[individual]
     description: Unique identifier for the donor individual
-    requirement: required
+    requirement: recommended
     allow_not_applicable: true
     allow_not_available: true
     allow_anonymized: true
@@ -29,8 +29,8 @@ columns:
             - subject_12
             - anonymized
 
-  - name: comment[instrument]
-    description: Affinity proteomics platform/instrument used for data acquisition
+  - name: comment[platform]
+    description: Affinity proteomics platform used (e.g. Olink Explore HT, SomaScan Assay 7K)
     requirement: required
     allow_not_applicable: false
     allow_not_available: false
@@ -42,12 +42,29 @@ columns:
           ontologies:
             - pride
           error_level: error
-          description: The instrument should be a valid PRIDE ontology term for affinity platforms
+          description: The platform should be a valid PRIDE ontology term for affinity platforms
           examples:
             - Olink Explore HT
             - Olink Target 96
             - SomaScan Assay 7K
             - SomaScan Assay 11K
+
+  - name: comment[instrument]
+    description: Instrument used for data acquisition (e.g. sequencer, qPCR machine, microarray reader)
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: ontology
+        params:
+          ontologies:
+            - ms
+          error_level: warning
+          description: The instrument should be a valid PSI-MS ontology term
+          examples:
+            - Illumina NovaSeq X
+            - Illumina NextSeq 2000
+            - Agilent SureScan Microarray Scanner
 
   - name: comment[panel name]
     description: Name of the commercial panel used
@@ -130,3 +147,19 @@ columns:
             - 2
             - plate_A
             - Plate_001
+
+  - name: comment[fraction identifier]
+    description: Fraction or dilution series identifier. While fractionation is rare in affinity proteomics, dilution series are used in some protocols (e.g. SomaScan alternative matrix validation).
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: pattern
+        params:
+          pattern: ^.+$
+          description: Fraction or dilution identifier
+          examples:
+            - 1
+            - 2
+            - dilution_1x
+            - dilution_10x
