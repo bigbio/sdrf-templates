@@ -92,7 +92,7 @@ columns:
     validators:
       - validator_name: pattern
         params:
-          pattern: ^SAM[NED]A?\d+$|^not available$|^not applicable$
+          pattern: ^SAM(N|EA|D)\d+$|^not available$|^not applicable$
           description: BioSample accession number
           examples:
             - SAMN12345678

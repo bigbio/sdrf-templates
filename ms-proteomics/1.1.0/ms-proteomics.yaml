@@ -164,7 +164,7 @@ columns:
     validators:
       - validator_name: pattern
         params:
-          pattern: ^\d+(\.\d+)?\s*(ppm|Da)$
+          pattern: ^\d+(\.\d+)?\s*(ppm|Da)$|^not available$|^not applicable$
           description: Mass tolerance with unit (ppm or Da)
           examples:
             - 10 ppm
@@ -179,7 +179,7 @@ columns:
     validators:
       - validator_name: pattern
         params:
-          pattern: ^\d+(\.\d+)?\s*(ppm|Da)$
+          pattern: ^\d+(\.\d+)?\s*(ppm|Da)$|^not available$|^not applicable$
           description: Mass tolerance with unit (ppm or Da)
           examples:
             - 0.02 Da

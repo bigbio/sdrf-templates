@@ -86,13 +86,13 @@ columns:
 
   - name: comment[precursor mass tolerance]
     description: Precursor mass tolerance for database search
-    requirement: required
-    allow_not_applicable: false
+    requirement: recommended
+    allow_not_applicable: true
     allow_not_available: true
     validators:
       - validator_name: pattern
         params:
-          pattern: ^\d+(\.\d+)?\s*(ppm|Da)$
+          pattern: ^\d+(\.\d+)?\s*(ppm|Da)$|^not available$|^not applicable$
           description: Mass tolerance with unit
           examples:
             - 10 ppm
@@ -100,13 +100,13 @@ columns:
 
   - name: comment[fragment mass tolerance]
     description: Fragment mass tolerance for database search
-    requirement: required
-    allow_not_applicable: false
+    requirement: recommended
+    allow_not_applicable: true
     allow_not_available: true
     validators:
       - validator_name: pattern
         params:
-          pattern: ^\d+(\.\d+)?\s*(ppm|Da)$
+          pattern: ^\d+(\.\d+)?\s*(ppm|Da)$|^not available$|^not applicable$
           description: Mass tolerance with unit
           examples:
             - 0.02 Da

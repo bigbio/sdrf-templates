@@ -124,10 +124,10 @@ columns:
           values:
             - sample
             - quality control sample
-            - sample_control
-            - negative_control
-            - plate_control
-            - buffer_control
+            - sample control
+            - negative control
+            - plate control
+            - buffer control
             - not applicable
           error_level: warning
           description: Sample type classification
