@@ -116,7 +116,7 @@ columns:
 
   - name: comment[dissociation method]
     description: Fragmentation method used in MS/MS
-    requirement: optional
+    requirement: recommended
     allow_not_applicable: true
     allow_not_available: true
     validators:

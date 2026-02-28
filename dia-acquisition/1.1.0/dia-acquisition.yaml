@@ -4,9 +4,22 @@ version: 1.1.0
 extends: ms-proteomics
 usable_alone: false
 layer: experiment
-mutually_exclusive_with:
-  - dda-acquisition
 columns:
+  - name: comment[proteomics data acquisition method]
+    description: Mass spectrometry acquisition method (restricted to DIA for this template)
+    requirement: required
+    allow_not_applicable: false
+    allow_not_available: false
+    validators:
+      - validator_name: single_cardinality_validator
+        params: {}
+      - validator_name: values
+        params:
+          values:
+            - Data-independent acquisition
+          error_level: error
+          description: This template requires Data-independent acquisition
+
   - name: comment[scan window lower limit]
     description: Lower m/z limit of the DIA scan window
     requirement: recommended
@@ -33,7 +46,7 @@ columns:
           description: m/z value as a number
           examples:
             - 1200
-            - 1000.5
+            - 1000
 
   - name: comment[isolation window width]
     description: Width of the isolation window in m/z units

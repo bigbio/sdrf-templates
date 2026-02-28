@@ -58,7 +58,7 @@ Templates use an `extends` field to inherit columns from parent templates:
 - `ms-proteomics` extends `base` - Mass spectrometry columns
 - `affinity-proteomics` extends `base` - Affinity assay columns
 - `human` extends `base` - Human sample columns
-- `dda-acquisition` extends `ms-proteomics` - DDA-specific columns
+- `dia-acquisition` extends `ms-proteomics` - DIA-specific columns
 
 ## Adding a New Version
 

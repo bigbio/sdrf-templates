@@ -43,15 +43,6 @@ templates:
     layer: experiment
     description: SDRF template for crosslinking mass spectrometry (XL-MS) experiments.
       Extends ms-proteomics with crosslinking-specific columns for data analysis.
-  dda-acquisition:
-    latest: 1.1.0
-    versions:
-    - 1.1.0
-    extends: ms-proteomics
-    usable_alone: false
-    layer: experiment
-    description: SDRF template for Data-dependent acquisition (DDA) experiments. Extends
-      ms-proteomics with DDA-specific columns.
   dia-acquisition:
     latest: 1.1.0
     versions:
