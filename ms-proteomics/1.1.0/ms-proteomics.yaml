@@ -161,7 +161,7 @@ columns:
     validators:
       - validator_name: pattern
         params:
-          pattern: ^\d+(\.\d+)?%?\s*(NCE|eV)(;\d+(\.\d+)?%?\s*(NCE|eV))*$|^stepped\s+.+$|^not available$
+          pattern: ^\d+(\.\d+)?%?\s*(NCE|eV)(;\d+(\.\d+)?%?\s*(NCE|eV))*$|^stepped\s+.+$
           description: "Collision energy format: {value} {unit} where unit is NCE or eV. For stepped collision energies, use semicolon-separated values or 'stepped' prefix."
           examples:
             - 30 NCE
@@ -169,7 +169,6 @@ columns:
             - 27 eV
             - 25 NCE;27 NCE;30 NCE
             - stepped 27+-6%
-            - not available
 
   - name: comment[precursor mass tolerance]
     description: Precursor mass tolerance for database search

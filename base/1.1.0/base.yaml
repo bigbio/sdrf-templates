@@ -167,7 +167,7 @@ columns:
     requirement: optional
     cardinality: multiple
     allow_not_applicable: false
-    allow_not_available: false
+    allow_not_available: true
     validators:
       - validator_name: pattern
         params:
@@ -183,7 +183,7 @@ columns:
     description: Software tool or method used to generate or annotate the SDRF file. Two formats are supported - key=value format (NT=tool_name;VV=vX.Y.Z) or simple format (tool_name vX.Y.Z).
     requirement: optional
     allow_not_applicable: false
-    allow_not_available: false
+    allow_not_available: true
     validators:
       - validator_name: pattern
         params:

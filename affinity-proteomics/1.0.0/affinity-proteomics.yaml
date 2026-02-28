@@ -123,7 +123,6 @@ columns:
             - negative control
             - plate control
             - buffer control
-            - not applicable
           error_level: warning
           description: Sample type classification
 

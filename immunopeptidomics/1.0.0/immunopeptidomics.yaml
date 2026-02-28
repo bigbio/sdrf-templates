@@ -75,8 +75,6 @@ columns:
             - predicted from RNA-seq
             - inferred from mass spectrometry
             - inbred strain (known genotype)
-            - not available
-            - not applicable
           error_level: warning
           description: "MHC typing method used (PRIDE:0000894). Values mapped to NCIT where available: NGS-based typing (NCIT:C101293), sequence-based typing (NCIT:C130180), PCR-SSO (NCIT:C130181), PCR-SSP (NCIT:C130179), PCR-based genotyping (NCIT:C17003)"
 

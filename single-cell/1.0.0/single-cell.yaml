@@ -27,7 +27,6 @@ columns:
             - empty
             - negative control
             - bulk control
-            - not applicable
           error_level: error
           description: Sample type classification per SCP guidelines
 
@@ -50,7 +49,6 @@ columns:
             - nanoPOTS
             - droplet microfluidics
             - acoustic droplet ejection
-            - not applicable
           error_level: warning
           description: Single cell isolation method
 
@@ -102,7 +100,7 @@ columns:
     validators:
       - validator_name: pattern
         params:
-          pattern: ^\d+$|^not applicable$|^not available$
+          pattern: ^\d+$
           description: Number of cells
           examples:
             - 1
@@ -122,12 +120,11 @@ columns:
     validators:
       - validator_name: pattern
         params:
-          pattern: ^[\d.]+$|^not available$|^not applicable$
+          pattern: ^[\d.]+$
           description: FSC value (numeric)
           examples:
             - 316.0
             - 250
-            - not applicable
 
   - name: characteristics[side scatter]
     description: Side scatter (SSC) value from flow cytometry - proxy for cell granularity/complexity
@@ -137,12 +134,11 @@ columns:
     validators:
       - validator_name: pattern
         params:
-          pattern: ^[\d.]+$|^not available$|^not applicable$
+          pattern: ^[\d.]+$
           description: SSC value (numeric)
           examples:
             - 301.0
             - 184
-            - not applicable
 
   - name: characteristics[sorting marker]
     description: Markers used for cell sorting/selection with optional intensity values
@@ -178,8 +174,6 @@ columns:
             - viable
             - dead
             - unknown
-            - not available
-            - not applicable
           error_level: warning
           description: Cell viability status
 
@@ -199,8 +193,6 @@ columns:
             - M
             - G0
             - not determined
-            - not available
-            - not applicable
           error_level: warning
           description: Cell cycle phase
 
@@ -233,8 +225,6 @@ columns:
             - fail
             - OK
             - not OK
-            - not available
-            - not applicable
           error_level: warning
           description: Single cell quality assessment
 
@@ -302,12 +292,11 @@ columns:
     validators:
       - validator_name: pattern
         params:
-          pattern: ^TMT\d+[NC]?$|^iTRAQ\d+$|^not applicable$|^-$
+          pattern: ^TMT\d+[NC]?$|^iTRAQ\d+$|^-$
           description: TMT/iTRAQ channel for carrier
           examples:
             - TMT131C
             - TMT126
-            - not applicable
 
   - name: comment[reference channel]
     description: TMT/iTRAQ channel used for reference/booster sample
@@ -317,12 +306,11 @@ columns:
     validators:
       - validator_name: pattern
         params:
-          pattern: ^TMT\d+[NC]?$|^iTRAQ\d+$|^not applicable$|^-$
+          pattern: ^TMT\d+[NC]?$|^iTRAQ\d+$|^-$
           description: TMT/iTRAQ channel for reference
           examples:
             - TMT127N
             - TMT134N
-            - not applicable
 
   # ==========================================================================
   # OPTIONAL COLUMNS - Batch and Technical Tracking
@@ -370,12 +358,11 @@ columns:
     validators:
       - validator_name: pattern
         params:
-          pattern: ^X=[\d.]+;Y=[\d.]+$|^not applicable$|^not available$
+          pattern: ^X=[\d.]+;Y=[\d.]+$
           description: Spatial coordinates
           examples:
             - X=100;Y=250
             - X=50.5;Y=120.3
-            - not applicable
 
   - name: comment[tissue section]
     description: Tissue section identifier for spatially resolved single-cell proteomics

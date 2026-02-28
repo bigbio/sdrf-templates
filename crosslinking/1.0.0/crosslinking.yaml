@@ -91,7 +91,7 @@ columns:
     validators:
       - validator_name: pattern
         params:
-          pattern: ^\d+(\.\d+)?%?\s*(NCE|eV)(;\d+(\.\d+)?%?\s*(NCE|eV))*$|^stepped\s+.+$|^not available$
+          pattern: ^\d+(\.\d+)?%?\s*(NCE|eV)(;\d+(\.\d+)?%?\s*(NCE|eV))*$|^stepped\s+.+$
           description: "Collision energy format: {value} {unit} where unit is NCE or eV. For stepped collision energies, use semicolon-separated values or 'stepped' prefix."
           examples:
             - 30 NCE
@@ -100,7 +100,6 @@ columns:
             - 25 NCE;27 NCE;30 NCE
             - 25% NCE;27% NCE;30% NCE
             - stepped 27+-6%
-            - not available
 
   - name: comment[crosslink enrichment method]
     description: Method used to enrich crosslinked peptides before MS analysis
@@ -208,7 +207,6 @@ columns:
             - 4°C
             - 37°C
             - room temperature
-            - not available
 
   - name: comment[crosslinker to protein ratio]
     description: Molar ratio of crosslinker to protein
@@ -218,13 +216,12 @@ columns:
     validators:
       - validator_name: pattern
         params:
-          pattern: ^\d+:\d+(\s+\w+/\w+)?$|^not available$
+          pattern: ^\d+:\d+(\s+\w+/\w+)?$
           description: Ratio format (e.g., 50:1 or 1:1 w/w)
           examples:
             - 50:1
             - 100:1
             - 1:1 w/w
-            - not available
 
   - name: comment[quenching reagent]
     description: Reagent used to quench the crosslinking reaction

@@ -57,7 +57,6 @@ columns:
             - urine
             - cell lysate
             - tissue lysate
-            - not available
           error_level: warning
           description: Sample matrix for SomaScan
 
@@ -69,7 +68,7 @@ columns:
     validators:
       - validator_name: pattern
         params:
-          pattern: ^(0.005%|0.5%|20%|40%|not available|not applicable)$
+          pattern: ^(0.005%|0.5%|20%|40%)$
           description: Standard SomaScan dilution factors
           examples:
             - 0.005%
@@ -92,7 +91,6 @@ columns:
             - calibrated
             - adaptive normalization by maximum likelihood (ANML)
             - not normalized
-            - not available
           error_level: warning
           description: SomaScan normalization method
 
@@ -108,7 +106,6 @@ columns:
             - PASS
             - FLAG
             - FAIL
-            - not available
           error_level: warning
           description: SomaScan QC flag
 

@@ -53,7 +53,6 @@ columns:
             - intensity normalized
             - bridge normalized
             - not normalized
-            - not available
           error_level: warning
           description: NPX normalization method
 
