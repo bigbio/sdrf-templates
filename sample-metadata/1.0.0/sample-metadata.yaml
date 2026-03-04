@@ -114,7 +114,7 @@ columns:
 
   - name: characteristics[pooled sample]
     ontology_accession: NCIT:C165587
-    description: Whether the sample is a pooled sample combining material from multiple biological sources
+    description: Whether the sample is a pooled sample combining material from multiple biological sources. Use 'not pooled' for individual samples, 'pooled' when sources are unknown, or 'SN=sample1;SN=sample2' to list source names.
     requirement: optional
     allow_not_applicable: true
     allow_not_available: true
@@ -122,8 +122,12 @@ columns:
       - validator_name: values
         params:
           values:
-            - yes
-            - no
+            - not pooled
+            - pooled
+          error_level: warning
+      - validator_name: pattern
+        params:
+          pattern: "^SN=.+(;SN=.+)*$"
           error_level: warning
 
   - name: comment[sample type]
@@ -157,7 +161,7 @@ columns:
             - buffer control
 
   - name: characteristics[disease]
-    ontology_accession: OGMS:0000031
+    ontology_accession: EFO:0000408
     description: Disease state of the sample
     requirement: recommended
     allow_not_applicable: true

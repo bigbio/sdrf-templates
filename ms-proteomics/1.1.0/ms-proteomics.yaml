@@ -81,10 +81,10 @@ columns:
           error_level: error
           description: The proteomics data acquisition method should be a valid PRIDE ontology term
           examples:
-            - Data-dependent acquisition
-            - Data-independent acquisition
-            - Parallel reaction monitoring
-            - Selected reaction monitoring
+            - data-dependent acquisition
+            - data-independent acquisition
+            - parallel reaction monitoring
+            - selected reaction monitoring
 
   - name: comment[instrument]
     ontology_accession: MS:1000031

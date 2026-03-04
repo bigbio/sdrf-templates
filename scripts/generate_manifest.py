@@ -54,13 +54,18 @@ def find_template_versions(template_dir: Path) -> list[dict]:
             except yaml.YAMLError:
                 continue
 
-        versions.append({
+        entry = {
             "version": version_dir.name,
             "extends": data.get("extends"),
             "usable_alone": data.get("usable_alone", True),
             "layer": data.get("layer"),
             "description": data.get("description", ""),
-        })
+        }
+        if "exclusive_with" in data:
+            entry["exclusive_with"] = data["exclusive_with"]
+        if "requires" in data:
+            entry["requires"] = data["requires"]
+        versions.append(entry)
 
     return versions
 
@@ -102,14 +107,19 @@ def generate_manifest() -> dict:
         # Get metadata from latest version
         latest_data = next((v for v in versions_data if v["version"] == latest), versions_data[0])
 
-        templates[template_dir.name] = {
+        entry = {
             "latest": latest,
             "versions": sort_versions(version_strings),
             "extends": latest_data["extends"],
             "usable_alone": latest_data["usable_alone"],
             "layer": latest_data["layer"],
-            "description": latest_data["description"],
         }
+        if "exclusive_with" in latest_data:
+            entry["exclusive_with"] = latest_data["exclusive_with"]
+        if "requires" in latest_data:
+            entry["requires"] = latest_data["requires"]
+        entry["description"] = latest_data["description"]
+        templates[template_dir.name] = entry
 
     # Sort templates alphabetically
     templates = dict(sorted(templates.items()))

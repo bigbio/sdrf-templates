@@ -13,7 +13,7 @@ documentation: |
     (pre-treatment, on treatment, post-treatment, treatment naive).
   - `characteristics[treatment response]`: Clinical response assessment (complete response,
     partial response, progressive disease, stable disease).
-  - `characteristics[sampling time point]`: Time of collection with unit (0 hour, 24 hour,
+  - `characteristics[sampling time]`: Time of collection with unit (0 hour, 24 hour,
     7 day). Critical for time-course and pharmacokinetic studies.
   - `characteristics[sampling site]`: Anatomical context (tumor, normal tissue adjacent to
     tumor). Important for matched tissue designs.
@@ -33,7 +33,6 @@ usable_alone: false
 layer: sample
 columns:
   - name: characteristics[disease]
-    ontology_accession: EFO:0000408
     requirement: required
 
   - name: characteristics[compound]

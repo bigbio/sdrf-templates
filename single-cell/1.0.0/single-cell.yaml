@@ -22,6 +22,9 @@ documentation: |
     for cell size and identity documentation.
   - `comment[spatial coordinates]` / `comment[tissue section]`: For spatially resolved SCP
     (e.g., LCM-based isolation from tissue sections).
+  - Isolation method-specific parameters (all optional): `comment[facs nozzle size]`,
+    `comment[facs sorting mode]`, `comment[microfluidics chip type]`,
+    `comment[lcm microscope model]`, `comment[nanopots chip version]`.
 contributors:
   - Yasset Perez-Riverol (yperez@ebi.ac.uk) - EMBL-EBI
   - Deepti Jaiswal Kundu (jaiswal@ebi.ac.uk) - EMBL-EBI
@@ -58,7 +61,6 @@ columns:
           values:
             - FACS
             - cellenONE
-            - CellenONE
             - microfluidics
             - laser capture microdissection
             - LCM
@@ -290,5 +292,91 @@ columns:
           examples:
             - section_001
             - slide_A_section_3
+
+  # ==========================================================================
+  # OPTIONAL COLUMNS - Isolation Method-Specific Parameters
+  # ==========================================================================
+
+  - name: comment[facs nozzle size]
+    ontology_accession: PRIDE:0000961
+    description: Nozzle diameter used for FACS-based single cell isolation (in micrometers)
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: number_with_unit
+        params:
+          units: [um, μm]
+          error_level: warning
+          description: Nozzle size with unit
+          examples:
+            - 70 um
+            - 100 um
+            - 130 μm
+
+  - name: comment[facs sorting mode]
+    ontology_accession: PRIDE:0000962
+    description: Sorting mode used during FACS isolation
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: values
+        params:
+          values:
+            - single cell
+            - purity
+            - yield
+            - 4-way purity
+          error_level: warning
+          description: FACS sorting mode
+
+  - name: comment[microfluidics chip type]
+    ontology_accession: PRIDE:0000963
+    description: Type and manufacturer of the microfluidics chip used for single cell isolation
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: pattern
+        params:
+          pattern: ^.+$
+          description: Chip type/manufacturer identifier
+          examples:
+            - Fluidigm C1
+            - Cellenion cellenCHIP
+            - nanowell chip
+
+  - name: comment[lcm microscope model]
+    ontology_accession: PRIDE:0000964
+    description: Model of the laser capture microdissection microscope used for cell isolation
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: pattern
+        params:
+          pattern: ^.+$
+          description: LCM microscope model name
+          examples:
+            - Leica LMD7
+            - Zeiss PALM MicroBeam
+            - Thermo LCM
+
+  - name: comment[nanopots chip version]
+    ontology_accession: PRIDE:0000965
+    description: Version of the nanoPOTS chip used for single cell sample preparation
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: pattern
+        params:
+          pattern: ^.+$
+          description: nanoPOTS chip version identifier
+          examples:
+            - nanoPOTS v1
+            - nanoPOTS v2
+            - 9-well chip
 
 

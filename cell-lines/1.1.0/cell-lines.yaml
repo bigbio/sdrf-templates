@@ -56,7 +56,7 @@ columns:
             - A549
 
   - name: characteristics[disease]
-    ontology_accession: OGMS:0000031
+    ontology_accession: EFO:0000408
     description: Disease state of the donor tissue from which the cell line was established
     requirement: required
 

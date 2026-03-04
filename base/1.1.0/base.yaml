@@ -89,6 +89,7 @@ columns:
     allow_not_available: false
 
   - name: comment[sdrf version]
+    ontology_accession: PRIDE:0000839
     description: Version of the SDRF-Proteomics specification used to annotate this file
     requirement: recommended
     allow_not_applicable: false
@@ -105,6 +106,7 @@ columns:
             - v2.0.0-dev
 
   - name: comment[sdrf template]
+    ontology_accession: PRIDE:0000832
     description: Template name and version used for annotation. Two formats are supported - key=value format (NT=template_name;VV=vX.Y.Z) or simple format (template_name vX.Y.Z). Multiple templates can be specified using multiple columns.
     requirement: optional
     cardinality: multiple
@@ -122,6 +124,7 @@ columns:
             - ms-proteomics v1.1.0
 
   - name: comment[sdrf annotation tool]
+    ontology_accession: PRIDE:0000840
     description: Software tool or method used to generate or annotate the SDRF file. Two formats are supported - key=value format (NT=tool_name;VV=vX.Y.Z) or simple format (tool_name vX.Y.Z).
     requirement: optional
     allow_not_applicable: false

@@ -42,7 +42,9 @@ templates:
     extends: sample-metadata
     usable_alone: false
     layer: experiment
-    requires: [ms-proteomics, affinity-proteomics]
+    requires:
+    - layer: technology
+    - layer: sample
     description: SDRF template for cell line samples with Cellosaurus-based annotation.
       Cell lines can originate from any organism - combine with appropriate organism
       template (human for HeLa, vertebrates for NIH 3T3, invertebrates for Sf9).
@@ -72,7 +74,8 @@ templates:
     usable_alone: false
     layer: sample
     exclusive_with: [vertebrates, invertebrates, plants]
-    requires: [ms-proteomics, affinity-proteomics]
+    requires:
+    - layer: technology
     description: Human SDRF template with human-specific sample metadata fields. Must
       be combined with a technology template (ms-proteomics or affinity-proteomics).
   immunopeptidomics:
@@ -93,7 +96,8 @@ templates:
     usable_alone: false
     layer: sample
     exclusive_with: [human, vertebrates, plants]
-    requires: [ms-proteomics, affinity-proteomics]
+    requires:
+    - layer: technology
     description: SDRF template for invertebrate samples (Drosophila, C. elegans, insects,
       etc.). Must be combined with a technology template (ms-proteomics or affinity-proteomics).
   metaproteomics:
@@ -143,7 +147,8 @@ templates:
     usable_alone: false
     layer: sample
     exclusive_with: [human, vertebrates, invertebrates]
-    requires: [ms-proteomics, affinity-proteomics]
+    requires:
+    - layer: technology
     description: SDRF template for plant samples (Arabidopsis, crops, etc.). Must
       be combined with a technology template (ms-proteomics or affinity-proteomics).
   sample-metadata:
@@ -185,7 +190,8 @@ templates:
     usable_alone: false
     layer: sample
     exclusive_with: [human, invertebrates, plants]
-    requires: [ms-proteomics, affinity-proteomics]
+    requires:
+    - layer: technology
     description: SDRF template for non-human vertebrate samples (mammals, birds, fish,
       reptiles, amphibians). Must be combined with a technology template (ms-proteomics
       or affinity-proteomics).

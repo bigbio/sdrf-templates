@@ -32,7 +32,7 @@ mutually_exclusive_with:
   - plants
 columns:
   - name: characteristics[disease]
-    ontology_accession: OGMS:0000031
+    ontology_accession: EFO:0000408
     requirement: required
 
   - name: characteristics[developmental stage]

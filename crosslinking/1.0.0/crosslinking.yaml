@@ -2,20 +2,20 @@ name: crosslinking
 description: SDRF template for crosslinking mass spectrometry (XL-MS) experiments. Extends ms-proteomics with crosslinking-specific columns for data analysis.
 documentation: |
   The crosslinking template adds XL-MS-specific columns for structural proteomics studies.
-  Cross-linker identity and enrichment are required for proper data interpretation.
+  Cross-linker identity is required and enrichment is recommended for proper data interpretation.
 
   Key guidance:
   - `comment[cross-linker]`: Required. Use structured format with ontology accession:
     `NT=DSS;AC=XLMOD:02001` for simple notation, or extended format with cleavability,
     target residues, and mass: `NT=DSSO;AC=XLMOD:02010;CL=yes;TA=K,S,T,Y,nterm;MH=54.01;ML=85.98`.
-  - `characteristics[enrichment process]`: Required. Must be `enrichment of cross-linked peptides`.
+  - `characteristics[enrichment process]`: Recommended. Should be `enrichment of cross-linked peptides`.
   - `comment[dissociation method]`: Required (overridden from ms-proteomics recommended).
     Dissociation method critically affects cleavable linker stub ion generation.
     Common: HCD, CID, ETD, EThcD, stepped HCD.
   - `comment[collision energy]`: Recommended. Stepped collision energies are common for
     cleavable linkers (e.g., `25 NCE;27 NCE;30 NCE`).
   - `characteristics[crosslink distance]`: Maximum Calpha-Calpha distance constraint in
-    Angstroms (30 A for DSS/BS3, 26.4 A for DSSO, 11.4 A for EDC zero-length).
+    Angstroms (30 Å for DSS/BS3, 26.4 Å for DSSO, 11.4 Å for EDC zero-length).
   - `comment[crosslinker to protein ratio]`: Molar ratio (50:1, 100:1).
 
   Common cross-linkers: DSS (XLMOD:02001), BS3 (XLMOD:02000), DSSO (XLMOD:02010, cleavable),
@@ -162,13 +162,13 @@ columns:
     validators:
       - validator_name: number_with_unit
         params:
-          units: [A, Å]
+          units: [Å]
           error_level: error
-          description: Distance should be a number followed by unit (A or Å)
+          description: Distance should be a number followed by Å (Angstrom)
           examples:
-            - 30 A
-            - 26.4 A
-            - 11.4 A
+            - 30 Å
+            - 26.4 Å
+            - 11.4 Å
 
   - name: comment[crosslinker concentration]
     ontology_accession: PRIDE:0000951
