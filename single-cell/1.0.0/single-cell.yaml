@@ -10,9 +10,8 @@ documentation: |
   - `characteristics[cell identifier]`: Required. Unique per-cell label within the experiment.
     Use special values `carrier`, `reference`, or `empty` for non-single-cell wells in
     multiplexed designs (e.g., SCoPE-MS, plexDIA).
-  - `comment[cells per well]`: Recommended. Use `1` for true single cells. Higher numbers
-    (5, 10, 100) for small cell pools. This is distinct from the general
-    `comment[cell per well]` in sample-metadata.
+  - `characteristics[cells per well]`: Recommended. Use `1` for true single cells. Higher numbers
+    (5, 10, 100) for small cell pools.
   - `comment[carrier channel]` / `comment[reference channel]`: Recommended for TMT-based SCP.
     Specify the TMT channel used for carrier proteome and reference normalization.
   - `comment[sample preparation batch]`: Critical for batch effect correction in SCP.
@@ -43,6 +42,7 @@ columns:
 
   # Override sample type to recommended for single-cell (carrier, reference, empty wells)
   - name: comment[sample type]
+    ontology_accession: PRIDE:0000895
     requirement: recommended
 
   # ==========================================================================
@@ -63,7 +63,6 @@ columns:
             - cellenONE
             - microfluidics
             - laser capture microdissection
-            - LCM
             - manual picking
             - nanoPOTS
             - droplet microfluidics
@@ -100,7 +99,7 @@ columns:
     description: Batch identifier for sample preparation (plate, chip, processing batch). Critical for batch effect correction.
     requirement: recommended
 
-  - name: comment[cells per well]
+  - name: characteristics[cells per well]
     ontology_accession: UO:0000317
     description: Number of cells per well/reaction. Use 1 for true single cells, higher numbers for small pools.
     requirement: recommended

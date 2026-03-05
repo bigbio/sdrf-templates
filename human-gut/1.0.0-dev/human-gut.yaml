@@ -1,0 +1,393 @@
+name: human-gut
+description: >
+  SDRF template for human gut metaproteomics. Extends metaproteomics with
+  host-associated columns aligned with the GSC MIxS human-gut extension (0016004).
+  Combine with ms-proteomics for MS acquisition columns.
+documentation: |
+  The human-gut template adds host-associated metadata fields from the MIxS
+  human-gut extension. These columns describe the host organism, its health
+  status, diet, and other clinical context relevant to gut microbiome studies.
+
+  PRIDE ontology terms (PRIDE:0000674 children) include MIxS cross-references.
+
+  Usage: human-gut + ms-proteomics
+contributors:
+  - Yasset Perez-Riverol (yperez@ebi.ac.uk) - EMBL-EBI
+  - Deepti Jaiswal Kundu (jaiswal@ebi.ac.uk) - EMBL-EBI
+  - Nithu Sara John (nithu@ebi.ac.uk) - EMBL-EBI
+  - Nandana Madhusoodanan (nandana@ebi.ac.uk) - EMBL-EBI
+  - Asier Larrea (alarre@ebi.ac.uk) - EMBL-EBI
+  - Toan Phung (TPhung001@dundee.ac.uk) - University of Dundee
+  - Timo Sachsenberg (timo.sachsenberg@uni-tuebingen.de) - University of Tübingen
+version: 1.0.0-dev
+extends: metaproteomics
+usable_alone: false
+layer: sample
+mutually_exclusive_with:
+  - soil
+  - water
+columns:
+  # ==========================================================================
+  # REQUIRED COLUMNS - Host Identity
+  # ==========================================================================
+
+  - name: characteristics[host organism]
+    ontology_accession: PRIDE:0000998
+    description: Host organism for host-associated microbiome samples
+    requirement: required
+    allow_not_applicable: true
+    allow_not_available: false
+    validators:
+      - validator_name: ontology
+        params:
+          ontologies:
+            - ncbitaxon
+          error_level: warning
+          description: Should be a valid NCBI Taxonomy term
+          examples:
+            - Homo sapiens
+
+  # ==========================================================================
+  # RECOMMENDED COLUMNS - Host Clinical Context
+  # ==========================================================================
+
+  - name: characteristics[host subject id]
+    ontology_accession: PRIDE:0000680
+    description: De-identified unique identifier for the host subject. Corresponds to MIxS host_subject_id (MIXS:0000861).
+    requirement: recommended
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: identifier
+        params:
+          charset: "[A-Za-z0-9_.-]"
+          special_values: [anonymized]
+          error_level: error
+          description: Host subject identifier
+          examples:
+            - subject_001
+            - patient_A
+            - anonymized
+
+  - name: characteristics[host disease status]
+    ontology_accession: PRIDE:0000682
+    description: Host disease diagnoses. Corresponds to MIxS host_disease_stat (MIXS:0000031).
+    requirement: recommended
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: ontology
+        params:
+          ontologies:
+            - mondo
+            - doid
+          error_level: warning
+          description: Should be a valid disease ontology term
+          examples:
+            - inflammatory bowel disease
+            - colorectal cancer
+            - healthy
+
+  - name: characteristics[host body site]
+    ontology_accession: PRIDE:0000685
+    description: Body site where sample was obtained. Corresponds to MIxS host_body_site (MIXS:0000867).
+    requirement: recommended
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: ontology
+        params:
+          ontologies:
+            - uberon
+            - bto
+          error_level: warning
+          description: Body site should be a valid UBERON or BTO term
+          examples:
+            - stool
+            - oral cavity
+            - colon
+
+  # ==========================================================================
+  # OPTIONAL COLUMNS - Host Demographics
+  # ==========================================================================
+
+  - name: characteristics[host age]
+    ontology_accession: PRIDE:0000681
+    description: Age of host at the time of sampling. Corresponds to MIxS host_age (MIXS:0000255).
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: pattern
+        params:
+          pattern: ^\d+[YMWDH]$
+          description: Age in standard format (Y=year, M=month, W=week, D=day, H=hour)
+          examples:
+            - 45Y
+            - 8W
+            - 3M
+
+  - name: characteristics[host sex]
+    ontology_accession: PRIDE:0000999
+    description: Sex of the host organism. Corresponds to MIxS host_sex (MIXS:0000811).
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: values
+        params:
+          values:
+            - male
+            - female
+            - intersex
+          error_level: warning
+          description: Host sex
+
+  - name: characteristics[host body-mass index]
+    ontology_accession: PRIDE:0000695
+    description: Body mass index (weight/height^2). Corresponds to MIxS host_body_mass_index (MIXS:0000317).
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: pattern
+        params:
+          pattern: ^[\d.]+$
+          description: BMI numeric value
+          examples:
+            - "22.5"
+            - "30.1"
+            - "18.5"
+
+  - name: characteristics[host height]
+    ontology_accession: PRIDE:0000688
+    description: Height of the host. Corresponds to MIxS host_height (MIXS:0000264).
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: number_with_unit
+        params:
+          units: [cm, m]
+          error_level: warning
+          description: Host height with unit
+          examples:
+            - 175 cm
+            - 1.75 m
+
+  - name: characteristics[host total mass]
+    ontology_accession: PRIDE:0000687
+    description: Total mass of the host. Corresponds to MIxS host_tot_mass (MIXS:0000263).
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: number_with_unit
+        params:
+          units: [kg, g]
+          error_level: warning
+          description: Host mass with unit
+          examples:
+            - 70 kg
+            - 85 kg
+
+  - name: characteristics[ethnicity]
+    ontology_accession: PRIDE:0000696
+    description: Ethnicity of the host. Corresponds to MIxS ethnicity (MIXS:0000895).
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: pattern
+        params:
+          pattern: ^.+$
+          description: Ethnicity description
+          examples:
+            - European
+            - East Asian
+            - African
+
+  # ==========================================================================
+  # OPTIONAL COLUMNS - Host Diet and Lifestyle
+  # ==========================================================================
+
+  - name: characteristics[host diet]
+    ontology_accession: PRIDE:0000689
+    description: Diet type of the host. Corresponds to MIxS host_diet (MIXS:0000869).
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: pattern
+        params:
+          pattern: ^.+$
+          description: Diet description
+          examples:
+            - omnivore
+            - vegan
+            - western diet
+            - high-fiber
+
+  - name: characteristics[special diet]
+    ontology_accession: PRIDE:0000679
+    description: Special dietary restrictions. Corresponds to MIxS special_diet (MIXS:0000905).
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: pattern
+        params:
+          pattern: ^.+$
+          description: Special diet description
+          examples:
+            - gluten-free
+            - low FODMAP
+            - ketogenic
+
+  - name: characteristics[host last meal]
+    ontology_accession: PRIDE:0000690
+    description: Content of last meal and time since feeding. Corresponds to MIxS host_last_meal (MIXS:0000870).
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: pattern
+        params:
+          pattern: ^.+$
+          description: Last meal description
+          examples:
+            - breakfast 4 hours prior
+            - fasting 12 hours
+
+  # ==========================================================================
+  # OPTIONAL COLUMNS - Host Clinical
+  # ==========================================================================
+
+  - name: characteristics[gastrointestinal tract disorder]
+    ontology_accession: PRIDE:0000677
+    description: History of GI tract disorders. Corresponds to MIxS gastroint_disord (MIXS:0000280).
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: pattern
+        params:
+          pattern: ^.+$
+          description: GI disorder description
+          examples:
+            - Crohn's disease
+            - ulcerative colitis
+            - irritable bowel syndrome
+            - none
+
+  - name: characteristics[liver disorder]
+    ontology_accession: PRIDE:0000678
+    description: History of liver disorders. Corresponds to MIxS liver_disord (MIXS:0000282).
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: pattern
+        params:
+          pattern: ^.+$
+          description: Liver disorder description
+          examples:
+            - none
+            - fatty liver disease
+            - hepatitis
+
+  - name: characteristics[antibiotic treatment]
+    ontology_accession: PRIDE:0001000
+    description: Recent antibiotic exposure of the host
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: pattern
+        params:
+          pattern: ^.+$
+          description: Antibiotic treatment description
+          examples:
+            - none
+            - amoxicillin 7 days prior
+            - broad-spectrum
+
+  - name: characteristics[IHMC medication code]
+    ontology_accession: PRIDE:0000683
+    description: Medication codes (IHMC). Corresponds to MIxS ihmc_medication_code (MIXS:0000884).
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: pattern
+        params:
+          pattern: ^.+$
+          description: Medication code(s)
+          examples:
+            - none
+            - A02BC01
+            - N02BE01
+
+  - name: characteristics[host body product]
+    ontology_accession: PRIDE:0000686
+    description: Substance produced by the body where sample was obtained. Corresponds to MIxS host_body_product (MIXS:0000888).
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: pattern
+        params:
+          pattern: ^.+$
+          description: Body product description
+          examples:
+            - stool
+            - mucus
+            - saliva
+
+  - name: characteristics[host body temperature]
+    ontology_accession: PRIDE:0000694
+    description: Core body temperature at sample collection. Corresponds to MIxS host_body_temp (MIXS:0000874).
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: number_with_unit
+        params:
+          units: ["°C"]
+          error_level: warning
+          description: Body temperature in Celsius
+          examples:
+            - 36.6 °C
+            - 37.2 °C
+
+  - name: characteristics[perturbation]
+    ontology_accession: PRIDE:0000700
+    description: Type of perturbation applied. Corresponds to MIxS perturbation (MIXS:0000754).
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: pattern
+        params:
+          pattern: ^.+$
+          description: Perturbation description
+          examples:
+            - antibiotic administration
+            - dietary intervention
+            - none
+
+  - name: characteristics[chemical administration]
+    ontology_accession: PRIDE:0000684
+    description: Chemical compounds administered to the host. Corresponds to MIxS chem_administration (MIXS:0000751).
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: pattern
+        params:
+          pattern: ^.+$
+          description: Chemical administration description
+          examples:
+            - metformin 500mg daily
+            - probiotics
+            - none

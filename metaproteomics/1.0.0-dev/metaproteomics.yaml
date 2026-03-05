@@ -1,31 +1,34 @@
 name: metaproteomics
-description: SDRF template for metaproteomics experiments (microbial community proteomics). Extends ms-proteomics with metaproteomics-specific columns.
+description: >
+  Base SDRF template for metaproteomics experiments (microbial community proteomics).
+  Extends base directly and defines MIxS-aligned sample metadata. When combined with
+  ms-proteomics, sample-metadata columns (organism, disease, cell type) are excluded.
+  Use a child template (human-gut, soil, water) for environment-specific fields.
 documentation: |
-  The metaproteomics template captures environmental and microbial community context for
-  metaproteomics studies. Columns are organized by sample type:
+  The metaproteomics template is aligned with the Genomics Standards Consortium (GSC)
+  MIxS standard for environmental and host-associated sample metadata.
 
-  Environmental samples:
-  - `characteristics[environmental sample type]`: Required. ENVO/EFO term (soil, seawater,
-    gut microbiome, wastewater, biofilm).
-  - `characteristics[geographic location]`: Recommended. GAZ terms or coordinates.
-  - Physical/chemical parameters: temperature, pH, depth, salinity, dissolved oxygen.
-  - Aquatic-specific: water body type, chlorophyll, sampling depth zone.
-  - Soil-specific: soil type, soil horizon, land use, vegetation.
+  Template hierarchy:
+    metaproteomics (this template) - shared environmental context
+      human-gut  - human gut microbiome (MIxS human-gut extension)
+      soil       - soil metaproteomics (MIxS soil extension)
+      water      - aquatic metaproteomics (MIxS water extension)
 
-  Host-associated microbiome samples:
-  - `characteristics[host organism]`: NCBI Taxonomy host species.
-  - `characteristics[body site]`: UBERON/BTO site (stool, oral cavity, skin).
-  - `characteristics[host diet]`: Diet information (omnivore, vegan, western diet).
-  - `characteristics[antibiotic treatment]`: Recent antibiotic exposure.
-  - `characteristics[microbiome source]`: Source microbiome type (gut, rhizosphere, oral).
+  Usage: combine a child template with ms-proteomics, e.g.:
+    human-gut + ms-proteomics
+    soil + ms-proteomics
 
-  Mock communities and QC:
-  - `characteristics[mock community]`: Standard used (ZymoBIOMICS, ATCC MSA-1000).
-  - `comment[host contamination]`: Host protein contamination level (low <5%, moderate, high).
-  - `comment[contaminant database]`: Database for contamination filtering (cRAP, MaxQuant).
+  Key columns:
+  - `characteristics[environmental sample type]`: Required. ENVO/EFO term describing
+    the environmental material (soil, seawater, gut microbiome, biofilm).
+  - `characteristics[geographic location]`: Recommended. GAZ term or coordinates.
+  - `characteristics[collection date]`: ISO 8601 date of sample collection.
+  - `characteristics[environmental medium]`: ENVO term for the environmental material.
   - `comment[metagenome accession]`: Link to matched metagenome dataset.
 
-  Combine with human template for human gut/oral microbiome studies.
+  PRIDE ontology terms include MIxS cross-references in their definitions
+  (e.g., MIXS:0001107). Column names use spaces (SDRF convention) rather than
+  underscores (MIxS convention).
 contributors:
   - Yasset Perez-Riverol (yperez@ebi.ac.uk) - EMBL-EBI
   - Deepti Jaiswal Kundu (jaiswal@ebi.ac.uk) - EMBL-EBI
@@ -35,13 +38,27 @@ contributors:
   - Toan Phung (TPhung001@dundee.ac.uk) - University of Dundee
   - Timo Sachsenberg (timo.sachsenberg@uni-tuebingen.de) - University of Tübingen
 version: 1.0.0-dev
-extends: ms-proteomics
+extends: base
 usable_alone: false
-layer: experiment
+layer: sample
+mutually_exclusive_with:
+  - human
+  - vertebrates
+  - invertebrates
+  - plants
+requires:
+  - layer: technology
+excludes:
+  templates:
+    - sample-metadata
 columns:
+  # ==========================================================================
+  # REQUIRED COLUMNS
+  # ==========================================================================
+
   - name: characteristics[environmental sample type]
-    ontology_accession: ENVO:00010483
-    description: Type of environmental sample analyzed
+    ontology_accession: PRIDE:0000993
+    description: Type of environmental sample analyzed (ENVO or EFO term). Corresponds to MIxS env_medium (MIXS:0000014).
     requirement: required
     allow_not_applicable: false
     allow_not_available: false
@@ -60,26 +77,13 @@ columns:
             - wastewater
             - biofilm
 
-  - name: characteristics[sample collection method]
-    ontology_accession: OBI:0000659
-    description: Method used to collect the environmental sample
-    requirement: optional
-    allow_not_applicable: true
-    allow_not_available: true
-    validators:
-      - validator_name: pattern
-        params:
-          pattern: ^.+$
-          description: Collection method description
-          examples:
-            - grab sample
-            - core sample
-            - swab
-            - filtration
+  # ==========================================================================
+  # RECOMMENDED COLUMNS
+  # ==========================================================================
 
   - name: characteristics[geographic location]
-    ontology_accession: GAZ:00000448
-    description: Geographic location where sample was collected
+    ontology_accession: PRIDE:0000995
+    description: Geographic location where sample was collected (GAZ term or coordinates). Corresponds to MIxS geo_loc_name (MIXS:0000010).
     requirement: recommended
     allow_not_applicable: true
     allow_not_available: true
@@ -93,11 +97,35 @@ columns:
           examples:
             - Pacific Ocean
             - Amazon rainforest
-            - 47.6062° N, 122.3321° W
+            - 47.6062 N, 122.3321 W
+
+  - name: characteristics[environmental medium]
+    ontology_accession: PRIDE:0000994
+    description: Environmental material from which the sample was obtained (ENVO term). Corresponds to MIxS env_medium (MIXS:0000014).
+    requirement: recommended
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: ontology
+        params:
+          ontologies:
+            - envo
+          error_level: warning
+          description: Should be a valid ENVO environmental material term
+          examples:
+            - soil
+            - seawater
+            - freshwater
+            - feces
+            - biofilm
+
+  # ==========================================================================
+  # OPTIONAL COLUMNS - Environmental Context
+  # ==========================================================================
 
   - name: characteristics[collection date]
-    ontology_accession: NCIT:C81286
-    description: Date when sample was collected
+    ontology_accession: PRIDE:0000996
+    description: Date when sample was collected (ISO 8601)
     requirement: optional
     allow_not_applicable: true
     allow_not_available: true
@@ -113,9 +141,26 @@ columns:
             - "2024-01"
             - "2024-01-15"
 
+  - name: characteristics[sample collection method]
+    ontology_accession: PRIDE:0000997
+    description: Method used to collect the environmental sample
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: pattern
+        params:
+          pattern: ^.+$
+          description: Collection method description
+          examples:
+            - grab sample
+            - core sample
+            - swab
+            - filtration
+
   - name: characteristics[depth]
-    ontology_accession: PATO:0001595
-    description: Depth at which sample was collected
+    ontology_accession: PRIDE:0000711
+    description: Depth at which sample was collected. Corresponds to MIxS depth (MIXS:0000018).
     requirement: optional
     allow_not_applicable: true
     allow_not_available: true
@@ -130,9 +175,26 @@ columns:
             - 50 cm
             - 100 m
 
+  - name: characteristics[altitude]
+    ontology_accession: PRIDE:0000712
+    description: Altitude or elevation of sampling site. Corresponds to MIxS elevation (MIXS:0000093).
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: number_with_unit
+        params:
+          units: [m]
+          error_level: warning
+          description: Altitude with unit
+          examples:
+            - 500 m
+            - 1200 m
+            - 0 m
+
   - name: characteristics[temperature]
-    ontology_accession: PATO:0000146
-    description: Temperature at sampling location
+    ontology_accession: PRIDE:0000703
+    description: Temperature at sampling location. Corresponds to MIxS temperature (MIXS:0000113).
     requirement: optional
     allow_not_applicable: true
     allow_not_available: true
@@ -149,7 +211,7 @@ columns:
             - -20 °C
 
   - name: characteristics[ph]
-    ontology_accession: PATO:0001842
+    ontology_accession: PRIDE:0000746
     description: pH at sampling location
     requirement: optional
     allow_not_applicable: true
@@ -160,45 +222,29 @@ columns:
           pattern: ^\d+(\.\d+)?$
           description: pH value
           examples:
-            - 7.0
-            - 5.5
-            - 8.2
+            - "7.0"
+            - "5.5"
+            - "8.2"
 
-  - name: characteristics[host organism]
-    ontology_accession: APOLLO_SV:00000238
-    description: Host organism for host-associated microbiome samples
+  # ==========================================================================
+  # OPTIONAL COLUMNS - Sample Storage and Processing
+  # ==========================================================================
+
+  - name: comment[sample storage]
+    ontology_accession: PRIDE:0000730
+    description: Storage conditions for the sample before analysis
     requirement: optional
     allow_not_applicable: true
     allow_not_available: true
     validators:
-      - validator_name: ontology
+      - validator_name: pattern
         params:
-          ontologies:
-            - ncbitaxon
-          error_level: warning
-          description: Should be a valid NCBI Taxonomy term
+          pattern: ^.+$
+          description: Storage conditions
           examples:
-            - Homo sapiens
-            - Mus musculus
-
-  - name: characteristics[host disease]
-    ontology_accession: PRIDE:0000682
-    description: Disease state of the host organism
-    requirement: optional
-    allow_not_applicable: true
-    allow_not_available: true
-    validators:
-      - validator_name: ontology
-        params:
-          ontologies:
-            - mondo
-            - doid
-          error_level: warning
-          description: Should be a valid disease ontology term
-          examples:
-            - inflammatory bowel disease
-            - colorectal cancer
-            - healthy
+            - -80C
+            - liquid nitrogen
+            - 4C
 
   - name: comment[metagenome accession]
     ontology_accession: PRIDE:0000956
@@ -217,284 +263,12 @@ columns:
             - MGYA00001234
             - SRP123456
 
-  - name: comment[sample storage]
-    ontology_accession: PRIDE:0000730
-    description: Storage conditions for the sample before analysis
-    requirement: optional
-    allow_not_applicable: true
-    allow_not_available: true
-    validators:
-      - validator_name: pattern
-        params:
-          pattern: ^.+$
-          description: Storage conditions
-          examples:
-            - -80C
-            - liquid nitrogen
-            - 4C
-
   # ==========================================================================
-  # ENVIRONMENTAL CONTEXT - Aquatic Samples
+  # OPTIONAL COLUMNS - Microbial Community Context
   # ==========================================================================
-
-  - name: characteristics[altitude]
-    ontology_accession: PATO:0000118
-    description: Altitude or elevation of terrestrial sampling site
-    requirement: optional
-    allow_not_applicable: true
-    allow_not_available: true
-    validators:
-      - validator_name: number_with_unit
-        params:
-          units: [m]
-          error_level: warning
-          description: Altitude with unit
-          examples:
-            - 500 m
-            - 1200 m
-            - 0 m
-
-  - name: characteristics[water body type]
-    ontology_accession: ENVO:00000063
-    description: Type of water body from which sample was collected
-    requirement: optional
-    allow_not_applicable: true
-    allow_not_available: true
-    validators:
-      - validator_name: ontology
-        params:
-          ontologies:
-            - envo
-          error_level: warning
-          description: Should be a valid ENVO term for water body type
-          examples:
-            - ocean
-            - lake
-            - river
-            - estuary
-            - pond
-
-  - name: characteristics[salinity]
-    ontology_accession: PATO:0000014
-    description: Salinity measurement of the water sample
-    requirement: optional
-    allow_not_applicable: true
-    allow_not_available: true
-    validators:
-      - validator_name: pattern
-        params:
-          pattern: ^[\d.]+\s*(PSU|ppt|g/L)$|^(freshwater|brackish|marine)$
-          description: Salinity value with unit or descriptive term
-          examples:
-            - 35 PSU
-            - freshwater
-            - brackish
-
-  - name: characteristics[dissolved oxygen]
-    ontology_accession: ENVO:09200021
-    description: Dissolved oxygen concentration in water sample
-    requirement: optional
-    allow_not_applicable: true
-    allow_not_available: true
-    validators:
-      - validator_name: pattern
-        params:
-          pattern: ^[\d.]+\s*mg/L$|^(hypoxic|anoxic|oxic)$
-          description: Dissolved oxygen with unit or descriptive term
-          examples:
-            - 8.5 mg/L
-            - hypoxic
-            - anoxic
-
-  - name: characteristics[chlorophyll]
-    ontology_accession: CHEBI:28966
-    description: Chlorophyll concentration if measured
-    requirement: optional
-    allow_not_applicable: true
-    allow_not_available: true
-    validators:
-      - validator_name: number_with_unit
-        params:
-          units: [ug/L, mg/L]
-          error_level: warning
-          description: Chlorophyll concentration with unit
-          examples:
-            - 2.5 ug/L
-            - 0.1 mg/L
-
-  - name: characteristics[sampling depth zone]
-    ontology_accession: ENVO:00000015
-    description: Ecological depth zone of the sampling site
-    requirement: optional
-    allow_not_applicable: true
-    allow_not_available: true
-    validators:
-      - validator_name: values
-        params:
-          values:
-            - epipelagic
-            - mesopelagic
-            - bathypelagic
-            - abyssopelagic
-            - hadopelagic
-            - benthic
-            - surface
-          error_level: warning
-          description: Ocean depth zone
-
-  # ==========================================================================
-  # ENVIRONMENTAL CONTEXT - Soil Samples
-  # ==========================================================================
-
-  - name: characteristics[soil type]
-    ontology_accession: ENVO:00001998
-    description: Soil classification type
-    requirement: optional
-    allow_not_applicable: true
-    allow_not_available: true
-    validators:
-      - validator_name: ontology
-        params:
-          ontologies:
-            - envo
-          error_level: warning
-          description: Should be a valid ENVO soil type term
-          examples:
-            - sandy loam
-            - clay
-            - peat
-            - silt
-
-  - name: characteristics[soil horizon]
-    ontology_accession: ENVO:00005802
-    description: Soil horizon from which sample was collected
-    requirement: optional
-    allow_not_applicable: true
-    allow_not_available: true
-    validators:
-      - validator_name: values
-        params:
-          values:
-            - O horizon
-            - A horizon
-            - B horizon
-            - C horizon
-            - E horizon
-            - R horizon
-          error_level: warning
-          description: Soil horizon
-
-  - name: characteristics[land use]
-    ontology_accession: ENVO:00000111
-    description: Land use type at sampling site
-    requirement: optional
-    allow_not_applicable: true
-    allow_not_available: true
-    validators:
-      - validator_name: pattern
-        params:
-          pattern: ^.+$
-          description: Land use type
-          examples:
-            - agricultural
-            - forest
-            - urban
-            - grassland
-            - wetland
-
-  - name: characteristics[vegetation]
-    ontology_accession: ENVO:01000623
-    description: Dominant vegetation at sampling site
-    requirement: optional
-    allow_not_applicable: true
-    allow_not_available: true
-    validators:
-      - validator_name: pattern
-        params:
-          pattern: ^.+$
-          description: Vegetation description
-          examples:
-            - deciduous forest
-            - corn field
-            - prairie
-            - tropical rainforest
-
-  # ==========================================================================
-  # HOST-ASSOCIATED SAMPLES
-  # ==========================================================================
-
-  - name: characteristics[host age]
-    ontology_accession: EFO:0000246
-    description: Age of host organism for host-associated microbiome samples
-    requirement: optional
-    allow_not_applicable: true
-    allow_not_available: true
-    validators:
-      - validator_name: pattern
-        params:
-          pattern: ^\d+[YMWDH]$
-          description: Age in standard format (Y=year, M=month, W=week, D=day, H=hour)
-          examples:
-            - 45Y
-            - 8W
-            - 3M
-            - P10D
-
-  - name: characteristics[body site]
-    ontology_accession: UBERON:0000061
-    description: Specific body site for host-associated microbiome samples
-    requirement: optional
-    allow_not_applicable: true
-    allow_not_available: true
-    validators:
-      - validator_name: ontology
-        params:
-          ontologies:
-            - uberon
-            - bto
-          error_level: warning
-          description: Body site should be a valid UBERON or BTO term
-          examples:
-            - stool
-            - oral cavity
-            - skin
-            - vaginal
-
-  - name: characteristics[host diet]
-    ontology_accession: NCIT:C17806
-    description: Diet information for the host organism
-    requirement: optional
-    allow_not_applicable: true
-    allow_not_available: true
-    validators:
-      - validator_name: pattern
-        params:
-          pattern: ^.+$
-          description: Diet description
-          examples:
-            - omnivore
-            - vegan
-            - western diet
-            - high-fiber
-
-  - name: characteristics[antibiotic treatment]
-    ontology_accession: NCIT:C274
-    description: Recent antibiotic exposure of the host
-    requirement: optional
-    allow_not_applicable: true
-    allow_not_available: true
-    validators:
-      - validator_name: pattern
-        params:
-          pattern: ^.+$
-          description: Antibiotic treatment description
-          examples:
-            - none
-            - amoxicillin 7 days prior
-            - broad-spectrum
 
   - name: characteristics[microbiome source]
-    ontology_accession: PRIDE:0000957
+    ontology_accession: PRIDE:0000986
     description: Source of the microbiome being studied (e.g., gut microbiome, rhizosphere microbiome)
     requirement: optional
     allow_not_applicable: true
@@ -510,57 +284,8 @@ columns:
             - oral microbiome
             - skin microbiome
 
-  # ==========================================================================
-  # MOCK COMMUNITY / QC
-  # ==========================================================================
-
-  - name: characteristics[mock community]
-    ontology_accession: PRIDE:0000958
-    description: Identifier or name of mock community standard used
-    requirement: optional
-    allow_not_applicable: true
-    allow_not_available: true
-    validators:
-      - validator_name: pattern
-        params:
-          pattern: ^.+$
-          description: Mock community identifier
-          examples:
-            - ZymoBIOMICS Microbial Community Standard
-            - ATCC MSA-1000
-
-  - name: characteristics[mock community composition]
-    ontology_accession: PRIDE:0000959
-    description: Description of mock community composition (species and ratios)
-    requirement: optional
-    allow_not_applicable: true
-    allow_not_available: true
-    validators:
-      - validator_name: pattern
-        params:
-          pattern: ^.+$
-          description: Community composition description
-          examples:
-            - 8 bacteria + 2 yeasts at defined ratios
-            - even mix of 10 species
-
-  - name: comment[expected organism list]
-    ontology_accession: PRIDE:0000960
-    description: Semicolon-separated list of organisms expected in mock community
-    requirement: optional
-    allow_not_applicable: true
-    allow_not_available: true
-    validators:
-      - validator_name: pattern
-        params:
-          pattern: ^.+$
-          description: Semicolon-separated organism list
-          examples:
-            - E. coli;B. subtilis;S. cerevisiae;L. fermentum
-            - Bacillus subtilis;Staphylococcus aureus
-
   - name: comment[biomass estimation]
-    ontology_accession: PRIDE:0000961
+    ontology_accession: PRIDE:0000990
     description: Estimated microbial biomass in the sample
     requirement: optional
     allow_not_applicable: true
@@ -576,7 +301,7 @@ columns:
             - low biomass
 
   - name: comment[host contamination]
-    ontology_accession: PRIDE:0000962
+    ontology_accession: PRIDE:0000991
     description: Level of host protein contamination if known
     requirement: optional
     allow_not_applicable: true
@@ -592,7 +317,7 @@ columns:
             - high (>20%)
 
   - name: comment[contaminant database]
-    ontology_accession: PRIDE:0000963
+    ontology_accession: PRIDE:0000992
     description: Contaminant database(s) used in database search
     requirement: optional
     allow_not_applicable: true
@@ -606,3 +331,52 @@ columns:
             - cRAP
             - MaxQuant contaminants
             - cRAP;MaxQuant contaminants
+
+  # ==========================================================================
+  # OPTIONAL COLUMNS - Mock Community / QC
+  # ==========================================================================
+
+  - name: characteristics[mock community]
+    ontology_accession: PRIDE:0000987
+    description: Identifier or name of mock community standard used
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: pattern
+        params:
+          pattern: ^.+$
+          description: Mock community identifier
+          examples:
+            - ZymoBIOMICS Microbial Community Standard
+            - ATCC MSA-1000
+
+  - name: characteristics[mock community composition]
+    ontology_accession: PRIDE:0000988
+    description: Description of mock community composition (species and ratios)
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: pattern
+        params:
+          pattern: ^.+$
+          description: Community composition description
+          examples:
+            - 8 bacteria + 2 yeasts at defined ratios
+            - even mix of 10 species
+
+  - name: comment[expected organism list]
+    ontology_accession: PRIDE:0000989
+    description: Semicolon-separated list of organisms expected in mock community
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: pattern
+        params:
+          pattern: ^.+$
+          description: Semicolon-separated organism list
+          examples:
+            - E. coli;B. subtilis;S. cerevisiae;L. fermentum
+            - Bacillus subtilis;Staphylococcus aureus

@@ -1,0 +1,235 @@
+name: soil
+description: >
+  SDRF template for soil metaproteomics. Extends metaproteomics with
+  soil-specific columns aligned with the GSC MIxS soil extension (0016012).
+  Combine with ms-proteomics for MS acquisition columns.
+documentation: |
+  The soil template adds soil-specific environmental metadata from the MIxS
+  soil extension. These columns describe soil properties, land use, and
+  chemical/physical context relevant to soil microbiome studies.
+
+  PRIDE ontology terms (PRIDE:0000828 children) include MIxS cross-references.
+
+  Usage: soil + ms-proteomics
+contributors:
+  - Yasset Perez-Riverol (yperez@ebi.ac.uk) - EMBL-EBI
+  - Deepti Jaiswal Kundu (jaiswal@ebi.ac.uk) - EMBL-EBI
+  - Nithu Sara John (nithu@ebi.ac.uk) - EMBL-EBI
+  - Nandana Madhusoodanan (nandana@ebi.ac.uk) - EMBL-EBI
+  - Asier Larrea (alarre@ebi.ac.uk) - EMBL-EBI
+  - Toan Phung (TPhung001@dundee.ac.uk) - University of Dundee
+  - Timo Sachsenberg (timo.sachsenberg@uni-tuebingen.de) - University of Tübingen
+version: 1.0.0-dev
+extends: metaproteomics
+usable_alone: false
+layer: sample
+mutually_exclusive_with:
+  - human-gut
+  - water
+columns:
+  # ==========================================================================
+  # RECOMMENDED COLUMNS
+  # ==========================================================================
+
+  - name: characteristics[soil type]
+    ontology_accession: PRIDE:0001001
+    description: Soil classification type (ENVO term)
+    requirement: recommended
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: ontology
+        params:
+          ontologies:
+            - envo
+          error_level: warning
+          description: Should be a valid ENVO soil type term
+          examples:
+            - sandy loam
+            - clay
+            - peat
+            - silt
+
+  # ==========================================================================
+  # OPTIONAL COLUMNS - Soil Properties
+  # ==========================================================================
+
+  - name: characteristics[soil horizon]
+    ontology_accession: PRIDE:0001002
+    description: Soil horizon from which sample was collected
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: values
+        params:
+          values:
+            - O horizon
+            - A horizon
+            - B horizon
+            - C horizon
+            - E horizon
+            - R horizon
+          error_level: warning
+          description: Soil horizon
+
+  - name: characteristics[land use]
+    ontology_accession: PRIDE:0000713
+    description: Land use type at sampling site
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: pattern
+        params:
+          pattern: ^.+$
+          description: Land use type
+          examples:
+            - agricultural
+            - forest
+            - urban
+            - grassland
+            - wetland
+
+  - name: characteristics[vegetation]
+    ontology_accession: PRIDE:0001003
+    description: Dominant vegetation at sampling site
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: pattern
+        params:
+          pattern: ^.+$
+          description: Vegetation description
+          examples:
+            - deciduous forest
+            - corn field
+            - prairie
+            - tropical rainforest
+
+  - name: characteristics[total organic carbon]
+    ontology_accession: PRIDE:0000749
+    description: Total organic carbon content. Corresponds to MIxS tot_org_carb (MIXS:0000533).
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: pattern
+        params:
+          pattern: ^[\d.]+\s*(mg/kg|g/kg|%)$
+          description: Total organic carbon with unit
+          examples:
+            - 15.2 g/kg
+            - 2.5 %
+
+  - name: characteristics[total nitrogen]
+    ontology_accession: PRIDE:0000751
+    description: Total nitrogen content. Corresponds to MIxS tot_nitro_content (MIXS:0000530).
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: pattern
+        params:
+          pattern: ^[\d.]+\s*(mg/kg|g/kg|%)$
+          description: Total nitrogen with unit
+          examples:
+            - 1.2 g/kg
+            - 0.15 %
+
+  - name: characteristics[water content]
+    ontology_accession: PRIDE:0000727
+    description: Water content of soil sample. Corresponds to MIxS water_content (MIXS:0000185).
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: pattern
+        params:
+          pattern: ^[\d.]+\s*(g/g|%)$
+          description: Water content with unit
+          examples:
+            - 25 %
+            - 0.25 g/g
+
+  - name: characteristics[soil texture measurement]
+    ontology_accession: PRIDE:0000744
+    description: Soil texture measurement (sand/silt/clay percentages). Corresponds to MIxS soil_text_measure (MIXS:0000335).
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: pattern
+        params:
+          pattern: ^.+$
+          description: Soil texture description
+          examples:
+            - sand 60%;silt 25%;clay 15%
+            - loamy sand
+
+  - name: characteristics[current vegetation]
+    ontology_accession: PRIDE:0000714
+    description: Current vegetation type at sampling site. Corresponds to MIxS cur_vegetation (MIXS:0000312).
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: ontology
+        params:
+          ontologies:
+            - envo
+          error_level: warning
+          description: Should be a valid ENVO vegetation term
+          examples:
+            - grassland
+            - deciduous forest
+            - cropland
+
+  - name: characteristics[crop rotation]
+    ontology_accession: PRIDE:0000718
+    description: Crop rotation history. Corresponds to MIxS crop_rotation (MIXS:0000318).
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: pattern
+        params:
+          pattern: ^.+$
+          description: Crop rotation description
+          examples:
+            - corn-soybean rotation
+            - wheat-fallow
+            - continuous corn
+
+  - name: characteristics[perturbation]
+    ontology_accession: PRIDE:0000700
+    description: Type of perturbation applied. Corresponds to MIxS perturbation (MIXS:0000754).
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: pattern
+        params:
+          pattern: ^.+$
+          description: Perturbation description
+          examples:
+            - fertilizer application
+            - tillage
+            - none
+
+  - name: characteristics[chemical administration]
+    ontology_accession: PRIDE:0000684
+    description: Chemical compounds administered to the site. Corresponds to MIxS chem_administration (MIXS:0000751).
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: pattern
+        params:
+          pattern: ^.+$
+          description: Chemical administration description
+          examples:
+            - nitrogen fertilizer
+            - pesticide
+            - none

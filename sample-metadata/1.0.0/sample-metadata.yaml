@@ -15,8 +15,6 @@ documentation: |
   - `comment[sample type]`: Classifies the sample's role in multiplexed experiments.
     Values include single cell, reference, bridge, carrier, empty, quality control sample,
     and various control types. This column replaces older per-template role columns.
-  - `comment[cell per well]`: General cell count for any experiment type. Single-cell
-    proteomics uses the more specific `comment[cells per well]` in the single-cell template.
   - `comment[tissue mass]`: Mass of tissue input with unit (mg, g, ug).
   - `characteristics[biosample accession number]`: Link to BioSample record (SAMN/SAMEA/SAMD).
 contributors:
@@ -142,7 +140,7 @@ columns:
           ontologies:
             - pride
           parent_term: PRIDE:0000895
-          error_level: warning
+          error_level: error
           description: Sample type should be a child of PRIDE:0000895 (sample type)
           examples:
             - single cell
@@ -200,23 +198,6 @@ columns:
             - synthetic
           error_level: warning
           description: Material type
-
-  - name: comment[cell per well]
-    ontology_accession: NCIT:C73636
-    description: Number of cells used per well or extraction event
-    requirement: optional
-    allow_not_applicable: true
-    allow_not_available: true
-    validators:
-      - validator_name: pattern
-        params:
-          pattern: ^\d+$
-          description: Number of cells (integer)
-          examples:
-            - 1
-            - 100
-            - 1000000
-            - 50000000
 
   - name: comment[tissue mass]
     ontology_accession: OBA:2045411

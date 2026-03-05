@@ -1,0 +1,249 @@
+name: water
+description: >
+  SDRF template for aquatic metaproteomics. Extends metaproteomics with
+  water-specific columns aligned with the GSC MIxS water extension (0016014).
+  Combine with ms-proteomics for MS acquisition columns.
+documentation: |
+  The water template adds aquatic environment metadata from the MIxS water
+  extension. These columns describe water body properties, chemical/physical
+  measurements, and sampling context for aquatic microbiome studies.
+
+  PRIDE ontology terms (PRIDE:0000829 children) include MIxS cross-references.
+
+  Usage: water + ms-proteomics
+contributors:
+  - Yasset Perez-Riverol (yperez@ebi.ac.uk) - EMBL-EBI
+  - Deepti Jaiswal Kundu (jaiswal@ebi.ac.uk) - EMBL-EBI
+  - Nithu Sara John (nithu@ebi.ac.uk) - EMBL-EBI
+  - Nandana Madhusoodanan (nandana@ebi.ac.uk) - EMBL-EBI
+  - Asier Larrea (alarre@ebi.ac.uk) - EMBL-EBI
+  - Toan Phung (TPhung001@dundee.ac.uk) - University of Dundee
+  - Timo Sachsenberg (timo.sachsenberg@uni-tuebingen.de) - University of Tübingen
+version: 1.0.0-dev
+extends: metaproteomics
+usable_alone: false
+layer: sample
+mutually_exclusive_with:
+  - human-gut
+  - soil
+columns:
+  # ==========================================================================
+  # RECOMMENDED COLUMNS
+  # ==========================================================================
+
+  - name: characteristics[water body type]
+    ontology_accession: PRIDE:0001004
+    description: Type of water body from which sample was collected (ENVO term)
+    requirement: recommended
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: ontology
+        params:
+          ontologies:
+            - envo
+          error_level: warning
+          description: Should be a valid ENVO term for water body type
+          examples:
+            - ocean
+            - lake
+            - river
+            - estuary
+            - pond
+
+  # ==========================================================================
+  # OPTIONAL COLUMNS - Water Chemistry
+  # ==========================================================================
+
+  - name: characteristics[salinity]
+    ontology_accession: PRIDE:0000701
+    description: Salinity measurement. Corresponds to MIxS salinity (MIXS:0000183).
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: pattern
+        params:
+          pattern: ^[\d.]+\s*(PSU|ppt|g/L)$|^(freshwater|brackish|marine)$
+          description: Salinity value with unit or descriptive term
+          examples:
+            - 35 PSU
+            - freshwater
+            - brackish
+
+  - name: characteristics[dissolved oxygen]
+    ontology_accession: PRIDE:0000788
+    description: Dissolved oxygen concentration. Corresponds to MIxS diss_oxygen (MIXS:0000119).
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: pattern
+        params:
+          pattern: ^[\d.]+\s*mg/L$|^(hypoxic|anoxic|oxic)$
+          description: Dissolved oxygen with unit or descriptive term
+          examples:
+            - 8.5 mg/L
+            - hypoxic
+            - anoxic
+
+  - name: characteristics[chlorophyll]
+    ontology_accession: PRIDE:0000775
+    description: Chlorophyll concentration if measured
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: number_with_unit
+        params:
+          units: [ug/L, mg/L]
+          error_level: warning
+          description: Chlorophyll concentration with unit
+          examples:
+            - 2.5 ug/L
+            - 0.1 mg/L
+
+  - name: characteristics[sampling depth zone]
+    ontology_accession: PRIDE:0001005
+    description: Ecological depth zone of the sampling site
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: values
+        params:
+          values:
+            - epipelagic
+            - mesopelagic
+            - bathypelagic
+            - abyssopelagic
+            - hadopelagic
+            - benthic
+            - surface
+          error_level: warning
+          description: Ocean depth zone
+
+  - name: characteristics[turbidity]
+    ontology_accession: PRIDE:0000827
+    description: Turbidity measurement. Corresponds to MIxS turbidity (MIXS:0000191).
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: pattern
+        params:
+          pattern: ^[\d.]+\s*(NTU|FNU)$
+          description: Turbidity with unit
+          examples:
+            - 5.2 NTU
+            - 12 FNU
+
+  - name: characteristics[alkalinity]
+    ontology_accession: PRIDE:0000760
+    description: Alkalinity measurement. Corresponds to MIxS alkalinity (MIXS:0000421).
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: number_with_unit
+        params:
+          units: [mg/L, meq/L]
+          error_level: warning
+          description: Alkalinity with unit
+          examples:
+            - 120 mg/L
+            - 2.5 meq/L
+
+  - name: characteristics[nitrate]
+    ontology_accession: PRIDE:0000796
+    description: Nitrate concentration. Corresponds to MIxS nitrate (MIXS:0000425).
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: number_with_unit
+        params:
+          units: [mg/L, umol/L]
+          error_level: warning
+          description: Nitrate concentration with unit
+          examples:
+            - 0.5 mg/L
+            - 10 umol/L
+
+  - name: characteristics[phosphate]
+    ontology_accession: PRIDE:0000805
+    description: Phosphate concentration. Corresponds to MIxS phosphate (MIXS:0000505).
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: number_with_unit
+        params:
+          units: [mg/L, umol/L]
+          error_level: warning
+          description: Phosphate concentration with unit
+          examples:
+            - 0.1 mg/L
+            - 1.5 umol/L
+
+  - name: characteristics[conductivity]
+    ontology_accession: PRIDE:0000776
+    description: Electrical conductivity of water sample. Corresponds to MIxS conduc (MIXS:0000544).
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: pattern
+        params:
+          pattern: ^[\d.]+\s*(uS/cm|mS/cm|S/m)$
+          description: Conductivity with unit
+          examples:
+            - 450 uS/cm
+            - 1.2 mS/cm
+
+  - name: characteristics[total dissolved solids]
+    ontology_accession: PRIDE:0001007
+    description: Total dissolved solids (TDS) concentration in the water sample.
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: number_with_unit
+        params:
+          units: [mg/L, g/L]
+          error_level: warning
+          description: TDS with unit
+          examples:
+            - 350 mg/L
+            - 1.2 g/L
+
+  - name: characteristics[light intensity]
+    ontology_accession: PRIDE:0000792
+    description: Light intensity at sampling depth. Corresponds to MIxS light_intensity (MIXS:0000706).
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: pattern
+        params:
+          pattern: ^[\d.]+\s*(lux|umol/m2/s)$
+          description: Light intensity with unit
+          examples:
+            - 500 lux
+            - 100 umol/m2/s
+
+  - name: characteristics[current]
+    ontology_accession: PRIDE:0001006
+    description: Water current velocity. Corresponds to MIxS current (MIXS:0000051).
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: number_with_unit
+        params:
+          units: [m/s, cm/s, knots]
+          error_level: warning
+          description: Current velocity with unit
+          examples:
+            - 0.5 m/s
+            - 15 cm/s

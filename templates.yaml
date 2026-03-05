@@ -100,15 +100,30 @@ templates:
     - layer: technology
     description: SDRF template for invertebrate samples (Drosophila, C. elegans, insects,
       etc.). Must be combined with a technology template (ms-proteomics or affinity-proteomics).
+  human-gut:
+    latest: 1.0.0-dev
+    versions:
+    - 1.0.0-dev
+    extends: metaproteomics
+    usable_alone: false
+    layer: sample
+    exclusive_with: [soil, water]
+    description: SDRF template for human gut metaproteomics. Extends metaproteomics
+      with host-associated columns aligned with the GSC MIxS human-gut extension.
+      Combine with ms-proteomics for MS acquisition columns.
   metaproteomics:
     latest: 1.0.0-dev
     versions:
     - 1.0.0-dev
-    extends: ms-proteomics
+    extends: base
     usable_alone: false
-    layer: experiment
-    description: SDRF template for metaproteomics experiments (microbial community
-      proteomics). Extends ms-proteomics with metaproteomics-specific columns.
+    layer: sample
+    exclusive_with: [human, vertebrates, invertebrates, plants]
+    excludes:
+      templates: [sample-metadata]
+    description: Base SDRF template for metaproteomics experiments (microbial community
+      proteomics). Extends base directly and defines MIxS-aligned sample metadata.
+      Use a child template (human-gut, soil, water) for environment-specific fields.
   ms-proteomics:
     latest: 1.1.0
     versions:
@@ -172,6 +187,17 @@ templates:
       with any organism - combine with appropriate sample template (human, vertebrates,
       invertebrates, or plants). Aligned with Nature Methods SCP guidelines (Gatto
       et al., 2023).
+  soil:
+    latest: 1.0.0-dev
+    versions:
+    - 1.0.0-dev
+    extends: metaproteomics
+    usable_alone: false
+    layer: sample
+    exclusive_with: [human-gut, water]
+    description: SDRF template for soil metaproteomics. Extends metaproteomics with
+      soil-specific columns aligned with the GSC MIxS soil extension. Combine with
+      ms-proteomics for MS acquisition columns.
   somascan:
     latest: 1.0.0
     versions:
@@ -195,3 +221,14 @@ templates:
     description: SDRF template for non-human vertebrate samples (mammals, birds, fish,
       reptiles, amphibians). Must be combined with a technology template (ms-proteomics
       or affinity-proteomics).
+  water:
+    latest: 1.0.0-dev
+    versions:
+    - 1.0.0-dev
+    extends: metaproteomics
+    usable_alone: false
+    layer: sample
+    exclusive_with: [human-gut, soil]
+    description: SDRF template for aquatic metaproteomics. Extends metaproteomics with
+      water-specific columns aligned with the GSC MIxS water extension. Combine with
+      ms-proteomics for MS acquisition columns.
