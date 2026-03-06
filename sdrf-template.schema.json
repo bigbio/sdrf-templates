@@ -261,6 +261,8 @@
             "ontology",
             "pattern",
             "number_with_unit",
+            "mz_value",
+            "mz_range_interval",
             "date",
             "accession",
             "identifier",
