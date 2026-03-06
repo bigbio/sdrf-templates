@@ -377,35 +377,33 @@ columns:
 
   - name: comment[ms min mz]
     ontology_accession: PRIDE:0000476
-    description: MS method-defined minimum precursor m/z setting used to acquire the data
+    description: MS method-defined minimum precursor (MS1) m/z setting used to acquire the data
     requirement: optional
     allow_not_applicable: true
     allow_not_available: true
     validators:
-      - validator_name: pattern
+      - validator_name: mz_value
         params:
-          pattern: ^[\d.]+$
-          description: Numeric m/z value
+          description: Precursor m/z value with unit
           examples:
-            - 100
-            - 200
-            - 350.5
+            - 100m/z
+            - 200m/z
+            - 350.5m/z
 
   - name: comment[ms max mz]
     ontology_accession: PRIDE:0000477
-    description: MS method-defined maximum precursor m/z setting used to acquire the data
+    description: MS method-defined maximum precursor (MS1) m/z setting used to acquire the data
     requirement: optional
     allow_not_applicable: true
     allow_not_available: true
     validators:
-      - validator_name: pattern
+      - validator_name: mz_value
         params:
-          pattern: ^[\d.]+$
-          description: Numeric m/z value
+          description: Precursor m/z value with unit
           examples:
-            - 1200
-            - 1600
-            - 2000
+            - 1200m/z
+            - 1600m/z
+            - 2000m/z
 
   - name: comment[ms min charge]
     ontology_accession: PRIDE:0000472
@@ -500,6 +498,108 @@ columns:
             - 1.3
             - 1.4
             - 1.6
+
+  # --- MS2/MS3 discrete min/max m/z columns ---
+
+  - name: comment[ms2 min mz]
+    ontology_accession: PRIDE:0001011
+    description: MS method-defined minimum product ion (MS2) m/z setting used to acquire the data
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: mz_value
+        params:
+          description: Product ion m/z value with unit
+          examples:
+            - 100m/z
+            - 200m/z
+
+  - name: comment[ms2 max mz]
+    ontology_accession: PRIDE:0001012
+    description: MS method-defined maximum product ion (MS2) m/z setting used to acquire the data
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: mz_value
+        params:
+          description: Product ion m/z value with unit
+          examples:
+            - 1800m/z
+            - 2000m/z
+
+  - name: comment[ms3 min mz]
+    ontology_accession: PRIDE:0001013
+    description: MS method-defined minimum product ion (MS3) m/z setting used to acquire the data
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: mz_value
+        params:
+          description: Product ion m/z value with unit
+          examples:
+            - 100m/z
+            - 200m/z
+
+  - name: comment[ms3 max mz]
+    ontology_accession: PRIDE:0001014
+    description: MS method-defined maximum product ion (MS3) m/z setting used to acquire the data
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: mz_value
+        params:
+          description: Product ion m/z value with unit
+          examples:
+            - 1500m/z
+            - 2000m/z
+
+  # --- Scan range interval columns (alternative to discrete min/max) ---
+
+  - name: comment[ms1 scan range]
+    ontology_accession: PRIDE:0001008
+    description: m/z scan range for MS1 spectra as an interval. Alternative to separate ms min mz / ms max mz columns
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: mz_range_interval
+        params:
+          description: m/z range interval for MS1 spectra
+          examples:
+            - 400m/z-1200m/z
+            - 350m/z-1600m/z
+
+  - name: comment[ms2 scan range]
+    ontology_accession: PRIDE:0001009
+    description: m/z scan range for MS2 spectra as an interval. Alternative to separate ms2 min mz / ms2 max mz columns
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: mz_range_interval
+        params:
+          description: m/z range interval for MS2 spectra
+          examples:
+            - 100m/z-2000m/z
+            - 200m/z-1800m/z
+
+  - name: comment[ms3 scan range]
+    ontology_accession: PRIDE:0001010
+    description: m/z scan range for MS3 spectra as an interval. Alternative to separate ms3 min mz / ms3 max mz columns
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: mz_range_interval
+        params:
+          description: m/z range interval for MS3 spectra
+          examples:
+            - 100m/z-1500m/z
+            - 200m/z-2000m/z
 
   - name: comment[elution conditions]
     ontology_accession: OBI:0302905
