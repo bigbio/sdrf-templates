@@ -127,6 +127,9 @@ columns:
         params:
           pattern: "^SN=.+(;SN=.+)*$"
           error_level: warning
+          description: Sample IDs for pooled samples using SN= prefix with semicolon separation
+          examples:
+            - SN=sample1;SN=sample2
 
   - name: comment[sample type]
     ontology_accession: PRIDE:0000895
@@ -171,9 +174,10 @@ columns:
             - mondo
             - efo
             - doid
+            - ncit
             - pato
           error_level: warning
-          description: The disease should be a valid MONDO, EFO, DOID, or PATO ontology term. Use 'normal' (PATO:0000461) for healthy samples.
+          description: The disease should be a valid MONDO, EFO, DOID, NCIT, or PATO ontology term. Use 'normal' (PATO:0000461) for healthy samples.
           examples:
             - normal
             - breast cancer
