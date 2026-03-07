@@ -32,6 +32,23 @@ mutually_exclusive_with:
   - vertebrates
   - invertebrates
 columns:
+  - name: characteristics[organism part]
+    ontology_accession: EFO:0000635
+    validators:
+      - validator_name: ontology
+        params:
+          ontologies:
+            - uberon
+            - bto
+            - po
+          error_level: warning
+          description: The organism part should be a valid UBERON, BTO, or Plant Ontology (PO) term
+          examples:
+            - flower bud
+            - leaf
+            - root
+            - seed
+
   - name: characteristics[disease]
     ontology_accession: EFO:0000408
     requirement: required
