@@ -15,7 +15,6 @@ documentation: |
   - `comment[sample type]`: Classifies the sample's role in multiplexed experiments.
     Values include single cell, reference, bridge, carrier, empty, quality control sample,
     and various control types. This column replaces older per-template role columns.
-  - `comment[tissue mass]`: Mass of tissue input with unit (mg, g, ug).
   - `characteristics[biosample accession number]`: Link to BioSample record (SAMN/SAMEA/SAMD).
 contributors:
   - Yasset Perez-Riverol (yperez@ebi.ac.uk) - EMBL-EBI
@@ -203,7 +202,7 @@ columns:
           error_level: warning
           description: Material type
 
-  - name: comment[tissue mass]
+  - name: characteristics[tissue mass]
     ontology_accession: OBA:2045411
     description: Mass of tissue used for extraction
     requirement: optional
