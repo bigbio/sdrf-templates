@@ -13,7 +13,7 @@ documentation: |
   - `characteristics[cell line]`: Required. Use standard cell line names from CLO/BTO/EFO.
   - `characteristics[disease]`: Required. The disease of the donor tissue from which the
     cell line was originally derived. Use `normal` for non-disease-derived cell lines.
-  - `comment[passage number]`: Recommended. Document passage for reproducibility.
+  - `characteristics[passage number]`: Recommended. Document passage for reproducibility.
     Passage drift can significantly affect proteomics results.
   - `characteristics[culture medium]`: Recommended. Use NCIT terms (DMEM, RPMI 1640).
   - `characteristics[cell line authentication]`: Optional but encouraged. STR profiling
@@ -102,7 +102,7 @@ columns:
             - kidney
             - breast
 
-  - name: comment[passage number]
+  - name: characteristics[passage number]
     ontology_accession: EFO:0007061
     description: Passage number of the cell line used in the experiment
     requirement: recommended
@@ -118,7 +118,7 @@ columns:
             - 15-20
             - 5
 
-  - name: comment[biorepository]
+  - name: characteristics[biorepository]
     ontology_accession: NCIT:C48800
     description: BioBank or source from which the cell line was obtained
     requirement: optional

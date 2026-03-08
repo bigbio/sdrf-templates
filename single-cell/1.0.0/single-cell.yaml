@@ -19,7 +19,7 @@ documentation: |
   - `characteristics[individual]`: Recommended. Links cells to the same donor/patient.
   - Flow cytometry data (forward/side scatter, enrichment markers): Optional but valuable
     for cell size and identity documentation.
-  - `comment[spatial coordinates]` / `comment[tissue section]`: For spatially resolved SCP
+  - `characteristics[spatial coordinates]` / `comment[tissue section]`: For spatially resolved SCP
     (e.g., LCM-based isolation from tissue sections).
   - Isolation method-specific parameters (all optional): `comment[facs nozzle size]`,
     `comment[facs sorting mode]`, `comment[microfluidics chip type]`,
@@ -262,7 +262,7 @@ columns:
   # OPTIONAL COLUMNS - Spatial Information
   # ==========================================================================
 
-  - name: comment[spatial coordinates]
+  - name: characteristics[spatial coordinates]
     ontology_accession: PRIDE:0000939
     description: X,Y coordinates if cells were isolated from a spatial context (e.g., LCM from tissue)
     requirement: optional
