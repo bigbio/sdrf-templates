@@ -125,9 +125,9 @@ columns:
           error_level: warning
       - validator_name: pattern
         params:
-          pattern: "^SN=.+(;SN=.+)*$"
+          pattern: "^(not pooled|pooled|SN=.+(;SN=.+)*)$"
           error_level: warning
-          description: Sample IDs for pooled samples using SN= prefix with semicolon separation
+          description: Use 'not pooled', 'pooled', or list sample IDs with SN= prefix
           examples:
             - SN=sample1;SN=sample2
 
@@ -301,11 +301,12 @@ columns:
     validators:
       - validator_name: pattern
         params:
-          pattern: ^CT=.+(;(QY|PS|AC|CN|CV)=.+)*$
-          description: Key-value format for spiked compound details
+          pattern: ^CT=.+(;(QY|PS|AC|CN|CV|SP)=.+)*$
+          description: Key-value format for spiked compound details (CT=type, SP=species, QY=quantity, PS=sequence, AC=accession, CN=name, CV=vendor)
           examples:
             - CT=peptide;PS=PEPTIDESEQ;QY=10 fmol
             - CT=protein;AC=A9WZ33;QY=20 nmol
+            - CT=protein;SP=Homo sapiens;QY=1 pmol;AC=P37840
             - CT=mixture;CN=iRT mixture;CV=Biognosys;QY=1 pmol
 
   - name: characteristics[enrichment process]
