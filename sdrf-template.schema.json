@@ -194,7 +194,7 @@
           "type": "string",
           "description": "Ontology/CV term accession for this column (e.g., PRIDE, MS, EFO).",
           "pattern": "^[A-Z]+:[A-Za-z0-9]+$",
-          "examples": ["PRIDE:0000623", "MS:1000031", "EFO:0000408"]
+          "examples": ["PRIDE:0000623", "MS:1000031", "MONDO:0000001"]
         },
         "description": {
           "type": "string",

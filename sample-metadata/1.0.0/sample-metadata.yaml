@@ -161,7 +161,7 @@ columns:
             - buffer control
 
   - name: characteristics[disease]
-    ontology_accession: EFO:0000408
+    ontology_accession: MONDO:0000001
     description: Disease state of the sample
     requirement: recommended
     allow_not_applicable: true
