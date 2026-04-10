@@ -38,7 +38,6 @@ columns:
     allow_not_applicable: true
     allow_not_available: false
     validators:
-      alidators:
       - validator_name: identifier
         params:
           charset: "[A-Za-z0-9_.-]"
@@ -46,8 +45,8 @@ columns:
           error_level: error
           description: sample name identifier
           examples:
-            Sample 1
-            Sample 2
+            - Sample 1
+            - Sample 2
 
   - name: characteristics[host organism]
     ontology_accession: PRIDE:0000998
@@ -312,7 +311,7 @@ columns:
             - breakfast 4 hours prior
             - fasting 12 hours
 
-- name: characteristics[host family relationship]
+ - name: characteristics[host family relationship]
     ontology_accession: PRIDE:0000691
     description: Relationships to other hosts in the same study; can include multiple relationships MIXS:0000872.
     requirement: optional
@@ -327,7 +326,7 @@ columns:
             - father
             - daughter
 
-- name: characteristics[host occupation]
+  - name: characteristics[host occupation]
     ontology_accession: PRIDE:0000697
     description: Most frequent job performed by subject MIXS:0000896.
     requirement: optional
@@ -490,9 +489,8 @@ columns:
             - 65 bpm
             - 72 bpm
             - 85 bpm
-            - none
 
-- name: characteristics[observed host symbionts]
+  - name: characteristics[observed host symbionts]
     ontology_accession: PRIDE:0000708
     description: The taxonomic name of the organism(s) found living in mutualistic, commensalistic, or parasitic symbiosis with the specific host (MIXS:0001298).
     requirement: optional
@@ -502,14 +500,14 @@ columns:
       - validator_name: ontology
         params:
         ontologies:
-        - ncbitaxon
+         - ncbitaxon
         error_level: warning
         description: Should be a valid NCBI Taxonomy term
         examples:
-          Bifidobacterium
-          Lactobacillus
+          - Bifidobacterium
+          - Lactobacillus
 
- - name: characteristics[medical history performed]
+  - name: characteristics[medical history performed]
     ontology_accession: PRIDE:0000698
     description: Whether full medical history was collected (MIXS:0000897).
     requirement: optional
@@ -523,44 +521,43 @@ columns:
           examples:
             - 45 year old male with a 2 week history of stomach pain.
 
- - name: characteristics[project name]
+  - name: characteristics[project name]
     ontology_accession: PRIDE:0000676
     description: Name of the project within which the sequencing was organized (MIXS:0000092).
     requirement: optional
     allow_not_applicable: true
     allow_not_available: false
     validators:
-      alidators:
       - validator_name: identifier
-        params:
+         params:
           charset: "[A-Za-z0-9_.-]"
           special_values: [anonymized]
           error_level: error
           description: project name identifier
           examples:
-            Human microbiome project
+            - Human microbiome project
 
   # ==========================================================================
   # OPTIONAL COLUMNS - Sampling and Storage
   # ==========================================================================
 
- - name: comment[sample storage temperature]
+  - name: comment[sample storage temperature]
     ontology_accession: PRIDE:0000705
     description: Temperature at which sample was stored (MIXS:0000110).
     requirement: optional
     allow_not_applicable: true
     allow_not_available: true
-     validators:
+    validators:
       - validator_name: number_with_unit
         params:
           units: ["°C"]
           error_level: warning
-          description: teperature in Celsius
+          description: temperature in Celsius
           examples:
             - -80 °C
             - -20 °C   
 
-- name: comment[sample storage location]
+  - name: comment[sample storage location]
     ontology_accession: PRIDE:0000709
     description: Location at which sample was stored (MIXS:0000755).
     requirement: optional
@@ -568,7 +565,7 @@ columns:
     allow_not_available: true
     validators:
       - validator_name: pattern
-        params:
+         params:
           pattern: ^.+$
           description: storage location description
           examples:
@@ -576,7 +573,7 @@ columns:
             - room
 
   - name: comment[sample storage duration]
-    ontology_accession: PRIDE:0000709
+    ontology_accession: PRIDE:0000707
     description: Duration for which the sample was stored (MIXS:0000116).
     requirement: optional
     allow_not_applicable: true
@@ -590,7 +587,7 @@ columns:
             - 40 days
             - 6 months      
 
- - name: comment[sample volume or weight for DNA extraction]
+  - name: comment[sample volume or weight for DNA extraction]
     ontology_accession: PRIDE:0000706
     description: Volume (ml) or mass (g) of total collected sample processed for DNA extraction (MIXS:0000111).
     requirement: optional
@@ -598,7 +595,7 @@ columns:
     allow_not_available: true
     validators:
        - validator_name: number_with_unit
-        params:
+         params:
           units: ["ml"]
           error_level: warning
           description: volume or weight of DNA extraction
@@ -613,7 +610,7 @@ columns:
     allow_not_applicable: true
     allow_not_available: true
     validators:
-       - validator_name: number_with_unit
+    - validator_name: number_with_unit
         params:
           units: ["CFU/ml"]
           error_level: warning
@@ -623,14 +620,14 @@ columns:
             - 2000 CFU/ml
 
   - name: comment[oxygenation status of sample]
-    ontology_accession: PRIDE:0000704
+    ontology_accession: PRIDE:0000702
     description: Oxygenation status of sample (MIXS:0000753).
     requirement: optional
     allow_not_applicable: true
     allow_not_available: true
     validators:
        - validator_name: number_with_unit
-        params:
+          params:
           units: ["mmHg"]
           error_level: warning
           description: Oxygenation status of sample in mmHg
