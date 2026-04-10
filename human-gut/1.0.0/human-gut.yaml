@@ -19,7 +19,7 @@ contributors:
   - Asier Larrea (alarre@ebi.ac.uk) - EMBL-EBI
   - Toan Phung (TPhung001@dundee.ac.uk) - University of Dundee
   - Timo Sachsenberg (timo.sachsenberg@uni-tuebingen.de) - University of Tübingen
-version: 1.0.0
+version: 1.0.1
 extends: metaproteomics@>=1.0.0
 usable_alone: false
 layer: sample
@@ -30,6 +30,24 @@ columns:
   # ==========================================================================
   # REQUIRED COLUMNS - Host Identity
   # ==========================================================================
+
+  - name: source name[sample name]
+    ontology_accession: PRIDE:0000623
+    description: Reference to the Sample. This term is used for cross-reference samples in SDRF for proteomics (MIXS:0001107).
+    requirement: required
+    allow_not_applicable: true
+    allow_not_available: false
+    validators:
+      alidators:
+      - validator_name: identifier
+        params:
+          charset: "[A-Za-z0-9_.-]"
+          special_values: [anonymized]
+          error_level: error
+          description: sample name identifier
+          examples:
+            Sample 1
+            Sample 2
 
   - name: characteristics[host organism]
     ontology_accession: PRIDE:0000998
@@ -107,6 +125,41 @@ columns:
             - oral cavity
             - colon
 
+  - name: characteristics[host genotype]
+    ontology_accession: PRIDE:0000692
+    description: Observed genotype MIXS:0000365.
+    requirement: recommended
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: ontology
+        params:
+          ontologies:
+            - efo
+            - gene
+          error_level: warning
+          description: should be a valid genotype ontology term
+          examples:
+            - homozygous
+            - heterozygous
+
+  - name: characteristics[host phenotype]
+    ontology_accession: PRIDE:0000693
+    description: Phenotype of human or other host MIXS:0000274.
+    requirement: recommended
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: ontology
+        params:
+          ontologies:
+            - pato
+            - hp
+          error_level: warning
+          description: Phenotype should be a valid PATO or HP term
+          examples:
+            - polydactyly
+            - arachnodactyly
   # ==========================================================================
   # OPTIONAL COLUMNS - Host Demographics
   # ==========================================================================
@@ -259,6 +312,35 @@ columns:
             - breakfast 4 hours prior
             - fasting 12 hours
 
+- name: characteristics[host family relationship]
+    ontology_accession: PRIDE:0000691
+    description: Relationships to other hosts in the same study; can include multiple relationships MIXS:0000872.
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: pattern
+        params:
+          pattern: ^.+$
+          description: family relationship description
+          examples:
+            - father
+            - daughter
+
+- name: characteristics[host occupation]
+    ontology_accession: PRIDE:0000697
+    description: Most frequent job performed by subject MIXS:0000896.
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: pattern
+        params:
+          pattern: ^.+$
+          description: occupation description
+          examples:
+            - teacher
+            - engineer
   # ==========================================================================
   # OPTIONAL COLUMNS - Host Clinical
   # ==========================================================================
@@ -390,4 +472,182 @@ columns:
           examples:
             - metformin 500mg daily
             - probiotics
+            - none
+
+  - name: characteristics[host pulse]
+    ontology_accession: PRIDE:0000699
+    description: Resting pulse, measured as beats per minutes (MIXS:0000333).
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: number_with_unit
+        params:
+          units: ["bpm"]
+          error_level: warning
+          description: Body pulse in bpm
+          examples:
+            - 65 bpm
+            - 72 bpm
+            - 85 bpm
+            - none
+
+- name: characteristics[observed host symbionts]
+    ontology_accession: PRIDE:0000708
+    description: The taxonomic name of the organism(s) found living in mutualistic, commensalistic, or parasitic symbiosis with the specific host (MIXS:0001298).
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: false
+    validators:
+      - validator_name: ontology
+        params:
+        ontologies:
+        - ncbitaxon
+        error_level: warning
+        description: Should be a valid NCBI Taxonomy term
+        examples:
+          Bifidobacterium
+          Lactobacillus
+
+ - name: characteristics[medical history performed]
+    ontology_accession: PRIDE:0000698
+    description: Whether full medical history was collected (MIXS:0000897).
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: pattern
+        params:
+          pattern: ^.+$
+          description: Medical history performed description
+          examples:
+            - 45 year old male with a 2 week history of stomach pain.
+
+ - name: characteristics[project name]
+    ontology_accession: PRIDE:0000676
+    description: Name of the project within which the sequencing was organized (MIXS:0000092).
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: false
+    validators:
+      alidators:
+      - validator_name: identifier
+        params:
+          charset: "[A-Za-z0-9_.-]"
+          special_values: [anonymized]
+          error_level: error
+          description: project name identifier
+          examples:
+            Human microbiome project
+
+  # ==========================================================================
+  # OPTIONAL COLUMNS - Sampling and Storage
+  # ==========================================================================
+
+ - name: comment[sample storage temperature]
+    ontology_accession: PRIDE:0000705
+    description: Temperature at which sample was stored (MIXS:0000110).
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+     validators:
+      - validator_name: number_with_unit
+        params:
+          units: ["°C"]
+          error_level: warning
+          description: teperature in Celsius
+          examples:
+            - -80 °C
+            - -20 °C   
+
+- name: comment[sample storage location]
+    ontology_accession: PRIDE:0000709
+    description: Location at which sample was stored (MIXS:0000755).
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: pattern
+        params:
+          pattern: ^.+$
+          description: storage location description
+          examples:
+            - freezer
+            - room
+
+  - name: comment[sample storage duration]
+    ontology_accession: PRIDE:0000709
+    description: Duration for which the sample was stored (MIXS:0000116).
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: pattern
+        params:
+          pattern: ^.+$
+          description: storage duration description
+          examples:
+            - 40 days
+            - 6 months      
+
+ - name: comment[sample volume or weight for DNA extraction]
+    ontology_accession: PRIDE:0000706
+    description: Volume (ml) or mass (g) of total collected sample processed for DNA extraction (MIXS:0000111).
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+       - validator_name: number_with_unit
+        params:
+          units: ["ml"]
+          error_level: warning
+          description: volume or weight of DNA extraction
+          examples:
+            - 1 ml
+            - 2 ml
+
+  - name: comment[organism count]
+    ontology_accession: PRIDE:0000704
+    description: Total cell count of any organism per gram, volume, or area of sample, including count (MIXS:0000103).
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+       - validator_name: number_with_unit
+        params:
+          units: ["CFU/ml"]
+          error_level: warning
+          description: organism  count in CFU/ml
+          examples:
+            - 500 CFU/ml
+            - 2000 CFU/ml
+
+  - name: comment[oxygenation status of sample]
+    ontology_accession: PRIDE:0000704
+    description: Oxygenation status of sample (MIXS:0000753).
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+       - validator_name: number_with_unit
+        params:
+          units: ["mmHg"]
+          error_level: warning
+          description: Oxygenation status of sample in mmHg
+          examples:
+            - 80 mmHg
+            - 100 mmHg
+
+  - name: comment[miscellaneous parameter]
+    ontology_accession: PRIDE:0000710
+    description: Any other measurement performed or parameter collected, that is not listed here (MIXS:0000752).
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: pattern
+        params:
+          pattern: ^.+$
+          description: miscellaneous parameter description
+          examples:
             - none
