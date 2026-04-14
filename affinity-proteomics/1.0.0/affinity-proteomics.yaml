@@ -8,8 +8,8 @@ documentation: |
 
   Key differences from ms-proteomics:
   - No sample preparation chemistry columns (no digestion, reduction, alkylation).
-  - `technology type` must be `protein expression profiling by antibody array` (Olink)
-    or `protein expression profiling by aptamer array` (SomaScan).
+  - `characteristics[sample type]` is required to distinguish biological samples from
+    controls and reference materials used for assay calibration/quality control.
   - `comment[platform]` identifies the specific instrument/platform.
   - `comment[quantification unit]`: NPX for Olink, RFU for SomaScan.
   - `comment[dilution]`: Recommended only for SomaScan workflows.
@@ -37,20 +37,25 @@ validators:
     params:
       min_columns: 8
 columns:
-  - name: technology type
-    ontology_accession: PRIDE:0000663
-    description: Type of technology used
+  - name: characteristics[sample type]
+    description: Distinguishes biological samples from controls/reference materials for assay interpretation and quality control
     requirement: required
     allow_not_applicable: false
     allow_not_available: false
     validators:
-      - validator_name: single_cardinality_validator
-        params: {}
-      - validator_name: values
+      - validator_name: ontology
         params:
-          values:
-            - protein expression profiling by antibody array
-            - protein expression profiling by aptamer array
+          ontologies:
+            - pride
+          error_level: error
+          description: Sample type should be a valid PRIDE ontology term
+          examples:
+            - negative control
+            - positive control
+            - calibrator
+            - reference
+            - standard
+            - buffer control
 
   - name: comment[platform]
     description: Affinity proteomics platform used (e.g. Olink Explore HT, SomaScan Assay 7K)
