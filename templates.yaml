@@ -3,7 +3,7 @@
 # To update: merge PR to master branch
 
 schema_version: '1.0'
-generated_at: '2026-03-13T14:40:36.171684+00:00'
+generated_at: '2026-04-14T08:55:19.047630+00:00'
 templates:
   affinity-proteomics:
     latest: 1.0.0
@@ -125,15 +125,6 @@ templates:
     layer: technology
     description: Base SDRF template for mass spectrometry-based proteomics. This is
       the minimum valid template for any MS experiment.
-  olink:
-    latest: 1.0.0
-    versions:
-    - 1.0.0
-    extends: affinity-proteomics@>=1.0.0
-    usable_alone: false
-    layer: experiment
-    description: SDRF template for Olink Proximity Extension Assay (PEA) experiments.
-      Extends affinity-proteomics with Olink-specific columns.
   oncology-metadata:
     latest: 1.0.0
     versions:
@@ -184,15 +175,6 @@ templates:
     layer: sample
     description: |
       SDRF template for soil metaproteomics. Extends metaproteomics with soil-specific columns aligned with the GSC MIxS soil extension (0016012). Combine with ms-proteomics for MS acquisition columns.
-  somascan:
-    latest: 1.0.0
-    versions:
-    - 1.0.0
-    extends: affinity-proteomics@>=1.0.0
-    usable_alone: false
-    layer: experiment
-    description: SDRF template for SomaScan aptamer-based proteomics experiments.
-      Extends affinity-proteomics with SomaScan-specific columns.
   vertebrates:
     latest: 1.1.0
     versions:
