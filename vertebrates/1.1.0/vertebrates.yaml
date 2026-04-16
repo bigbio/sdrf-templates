@@ -5,7 +5,7 @@ documentation: |
   rat, zebrafish, and other mammals, birds, fish, reptiles, and amphibians.
 
   Key guidance:
-  - `characteristics[strain or breed]`: Recommended. Use standard strain/breed names
+  - `characteristics[strain or breed]`: Recommended. Use NCBI Taxonomy strain names
     (C57BL/6, BALB/c, Sprague-Dawley, Wistar for mammals; AB, TU for zebrafish).
   - `characteristics[developmental stage]`: Required. Use EFO or UBERON terms
     (adult, embryo, juvenile, larval stage).
@@ -61,10 +61,11 @@ columns:
     allow_not_applicable: true
     allow_not_available: true
     validators:
-      - validator_name: pattern
+      - validator_name: ontology
         params:
+          ontologies:
+            - ncbitaxon
           error_level: warning
-          pattern: ^.+$
           description: The strain or breed should be documented
           examples:
             - C57BL/6
