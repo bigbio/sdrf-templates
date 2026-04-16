@@ -45,8 +45,8 @@ columns:
           error_level: error
           description: sample name identifier
           examples:
-            - Sample 1
-            - Sample 2
+            - Sample_1
+            - Sample_2
 
   - name: characteristics[host organism]
     ontology_accession: PRIDE:0000998
@@ -471,7 +471,6 @@ columns:
           examples:
             - metformin 500mg daily
             - probiotics
-            - none
 
   - name: characteristics[host pulse]
     ontology_accession: PRIDE:0000699
@@ -500,7 +499,7 @@ columns:
       - validator_name: ontology
         params:
         ontologies:
-         - ncbitaxon
+          - ncbitaxon
         error_level: warning
         description: Should be a valid NCBI Taxonomy term
         examples:
@@ -595,8 +594,8 @@ columns:
     allow_not_applicable: true
     allow_not_available: true
     validators:
-       - validator_name: number_with_unit
-         params:
+      - validator_name: number_with_unit
+        params:
           units: ["ml,g"]
           error_level: warning
           description: volume or weight of DNA extraction
@@ -628,13 +627,13 @@ columns:
     allow_not_available: true
     validators:
        - validator_name: number_with_unit
-          params:
-          units: ["mmHg"]
-          error_level: warning
-          description: Oxygenation status of sample in mmHg
-          examples:
-            - 80 mmHg
-            - 100 mmHg
+         params:
+           units: ["mmHg"]
+           error_level: warning
+           description: Oxygenation status of sample in mmHg
+           examples:
+             - 80 mmHg
+             - 100 mmHg
 
   - name: comment[miscellaneous parameter]
     ontology_accession: PRIDE:0000710

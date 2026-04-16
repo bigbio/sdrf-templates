@@ -895,22 +895,6 @@ columns:
             - 1.92 umol/L
             - 1 umol/L
 
-  - name: characteristics[particulate organic carbon]
-    ontology_accession: PRIDE:0000801
-    description: Particulate organic carbon concentration. Corresponds to MIxS (MIXS:0000515).
-    requirement: optional
-    allow_not_applicable: true
-    allow_not_available: true
-    validators:
-      - validator_name: number_with_unit
-        params:
-          units: [umol/L]
-          error_level: warning
-          description: Particulate organic carbon concentration with unit
-          examples:
-            - 1.92 umol/L
-            - 1 umol/L
-
   - name: characteristics[particulate organic nitrogen]
     ontology_accession: PRIDE:0000802
     description: Particulate organic nitrogen concentration. Corresponds to MIxS (MIXS:0000719).
@@ -1074,22 +1058,6 @@ columns:
             - 0.253 mol/L/hr
             - 0.123 mol/L/hr
 
-  - name: characteristics[aminopeptidase activity]
-    ontology_accession: PRIDE:0000763
-    description: Aminopeptidase activity measurement (MIXS:0000172)
-    requirement: optional
-    allow_not_applicable: true
-    allow_not_available: true
-    validators:
-      - validator_name: number_with_unit
-        params:
-          units: ["mol/L/hr"]
-          error_level: warning
-          description: aminopeptidase activity with unit
-          examples:
-            - 0.253 mol/L/hr
-            - 0.123 mol/L/hr
-
   - name: characteristics[glucosidase activity]
     ontology_accession: PRIDE:0000791
     description: glucosidase activity measurement (MIXS:0000137)
@@ -1131,7 +1099,7 @@ columns:
     validators:
       - validator_name: number_with_unit
         params:
-          units: ["ton, kg, g"]
+          units: ["ton", "kg", "g"]
           error_level: warning
           description: biomass with unit
           examples:
@@ -1183,12 +1151,12 @@ columns:
     validators:
         - validator_name: number_with_unit
           params:
-          units: ["mol/L"]
-          error_level: warning
-          description: Alkyl diethers in unit
-          examples:
-            - 0.005 mol/L
-            - 0.003 mol/L
+            units: ["mol/L"]
+            error_level: warning
+            description: Alkyl diethers in unit
+            examples:
+              - 0.005 mol/L
+              - 0.003 mol/L
 
   - name: characteristics[diether lipids]
     ontology_accession: PRIDE:0000778
@@ -1199,12 +1167,12 @@ columns:
     validators:
         - validator_name: number_with_unit
           params:
-          units: ["ng/L"]
-          error_level: warning
-          description: Diether lipids in unit
-          examples:
-            - 0.5 ng/L
-            - 0.3 ng/L
+            units: ["ng/L"]
+            error_level: warning
+            description: Diether lipids in unit
+            examples:
+              - 0.5 ng/L
+              - 0.3 ng/L
 
   - name: characteristics[bishomohopanol]
     ontology_accession: PRIDE:0000770
@@ -1215,12 +1183,12 @@ columns:
     validators:
         - validator_name: number_with_unit
           params:
-          units: ["ug/L, ug/g"]
-          error_level: warning
-          description: bishomohopanol in unit
-          examples:
-            - 14 ug/L
-            - 4 ug/g
+            units: ["ug/L, ug/g"]
+            error_level: warning
+            description: bishomohopanol in unit
+            examples:
+              - 14 ug/L
+              - 4 ug/g
 
   - name: characteristics[phospholipid fatty acid]
     ontology_accession: PRIDE:0000806
@@ -1232,10 +1200,10 @@ columns:
        - validator_name: pattern
          params:
           pattern: ^.+$
-          description: Phospholipid fatty acid name and measurement value
-          examples:
-            - Linoleic acid; 2.8 mg/L
-            - Palmitic acid; 1.5 mg/L
+            description: Phospholipid fatty acid name and measurement value
+            examples:
+              - Linoleic acid; 2.8 mg/L
+              - Palmitic acid; 1.5 mg/L
 
   - name: characteristics[petroleum hydrocarbon]
     ontology_accession: PRIDE:0000803
@@ -1246,12 +1214,12 @@ columns:
     validators:
         - validator_name: number_with_unit
           params:
-          units: ["umol/L"]
-          error_level: warning
-          description: petroleum hydrocarbon in unit
-          examples:
-            - 0.05 umol/L
-            - 0.02 umol/L
+            units: ["umol/L"]
+            error_level: warning
+            description: petroleum hydrocarbon in unit
+            examples:
+              - 0.05 umol/L
+              - 0.02 umol/L
 
   # ==========================================================================
   # OPTIONAL COLUMNS - Sample handling
@@ -1365,20 +1333,20 @@ columns:
             - dietary intervention
             - none
 
- - name: comment[miscellaneous parameter]
-   ontology_accession: PRIDE:0000710
-   description: Any additional parameter not captured by other fields; should include a name and value.(MIXS:0000752)
-   requirement: optional
-   allow_not_applicable: true
-   allow_not_available: true
-   validators:
-     - validator_name: pattern
-       params:
-         pattern: ^.+:.+$
-         description: Parameter name and value in key:value format
-         examples:
-           - enzyme_activity: high
-           - soil_color: dark brown
+  - name: comment[miscellaneous parameter]
+    ontology_accession: PRIDE:0000710
+    description: Any additional parameter not captured by other fields; should include a name and value.(MIXS:0000752)
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: pattern
+        params:
+          pattern: ^.+:.+$
+          description: Parameter name and value in key:value format
+          examples:
+            - enzyme_activity: high
+            - soil_color: dark brown
 
 
  
