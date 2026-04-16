@@ -610,7 +610,7 @@ columns:
     allow_not_applicable: true
     allow_not_available: true
     validators:
-    - validator_name: number_with_unit
+      - validator_name: number_with_unit
         params:
           units: ["CFU/ml"]
           error_level: warning

@@ -408,37 +408,37 @@ columns:
           error_level: warning
           description: FAO soil classification
 
- - name: characteristics[link classification information]
-   ontology_accession: PRIDE:0000736
-   description: Link to digitized soil maps or other soil classification information (MIXS:0000329).
-   requirement: optional
-   allow_not_applicable: true
-   allow_not_available: true
-   validators:
-    - validator_name: pattern
-      params:
-        pattern: ^(https?:\/\/|doi:|PMID:).+$
-        description: URL, DOI, or PMID linking to classification information
-        examples:
-          - https://example.com/soil-map
-          - doi:10.1000/xyz123
-          - PMID:12345678
+  - name: characteristics[link classification information]
+    ontology_accession: PRIDE:0000736
+    description: Link to digitized soil maps or other soil classification information (MIXS:0000329).
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+     - validator_name: pattern
+       params:
+         pattern: ^(https?:\/\/|doi:|PMID:).+$
+         description: URL, DOI, or PMID linking to classification information
+         examples:
+           - https://example.com/soil-map
+           - doi:10.1000/xyz123
+           - PMID:12345678
 
- - name: characteristics[soil taxonomic local classification]
-   ontology_accession: PRIDE:0000738
-   description: Soil classification based on local soil classification system (MIXS:0000330). 
-   requirement: optional
-   allow_not_applicable: true
-   allow_not_available: true
-   validators:
-    - validator_name: pattern
-      params:
-        pattern: ^.+$
-        description: Local soil classification term or description
-        examples:
-          - Chernozem
-          - Podzol
-          - Local classification type A
+  - name: characteristics[soil taxonomic local classification]
+    ontology_accession: PRIDE:0000738
+    description: Soil classification based on local soil classification system (MIXS:0000330). 
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+     - validator_name: pattern
+       params:
+         pattern: ^.+$
+         description: Local soil classification term or description
+         examples:
+           - Chernozem
+           - Podzol
+           - Local classification type A
 
   - name: characteristics[soil local classification method]
     ontology_accession: PRIDE:0000739
