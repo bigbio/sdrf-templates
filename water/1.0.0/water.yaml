@@ -103,7 +103,6 @@ columns:
             - 10 feet
             - 30 feet 
             - 2 cm
-          error_level: warning
           description: elevation with unit
 
   - name: characteristics[tidal stage]
@@ -136,7 +135,6 @@ columns:
             - 35 m
             - 10 m
             - 200 m
-          error_level: warning
           description: total depth of water volume with unit
 
   - name: characteristics[water current]
@@ -178,12 +176,13 @@ columns:
     allow_not_applicable: true
     allow_not_available: true
     validators:
-      - validator_name: pattern
+      - validator_name: number_with_unit
         params:
-          values:
-            - 0.015 m/s
-            - 0.045 m/s 
+          units: [m/s]
           error_level: warning
+          examples:
+            - 0.015 m/s
+            - 0.045 m/s
           description: mean peak friction velocity with unit 
 
   - name: characteristics[pressure]
