@@ -711,7 +711,7 @@ columns:
             - 0.01 ppm
 
   - name: characteristics[atmospheric data]
-    ontology_accession: PRIDE:0000771
+    ontology_accession: PRIDE:0000765
     description: Measurement of atmospheric data; can include multiple data (MIXS:0001097).
     requirement: optional
     allow_not_applicable: true
@@ -1251,12 +1251,11 @@ columns:
   # OPTIONAL COLUMNS - Sample handling
   # ==========================================================================        
 
- - name: comment[sample storage temperature]
+  - name: comment[sample storage temperature]
     ontology_accession: PRIDE:0000705
     description: Temperature at which sample was stored (MIXS:0000110).
     requirement: optional
-    allow_not_applicable: true
-    allow_not_available: true
+    allow_negative: true
     validators:
       - validator_name: number_with_unit
         params:
