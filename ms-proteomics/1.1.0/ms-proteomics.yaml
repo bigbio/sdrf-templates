@@ -53,20 +53,6 @@ validators:
         - source name
         - assay name
 columns:
-  - name: technology type
-    ontology_accession: PRIDE:0000663
-    description: Type of technology used
-    requirement: required
-    allow_not_applicable: false
-    allow_not_available: false
-    validators:
-      - validator_name: single_cardinality_validator
-        params: {}
-      - validator_name: values
-        params:
-          values:
-            - proteomic profiling by mass spectrometry
-
   - name: comment[proteomics data acquisition method]
     ontology_accession: PRIDE:0000659
     description: Mass spectrometry acquisition method
