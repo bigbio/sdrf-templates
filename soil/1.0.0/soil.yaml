@@ -742,20 +742,20 @@ columns:
   # OPTIONAL COLUMNS - Extreme or Unusual Properties
   # ==========================================================================
 
-   - name: characteristics[extreme unusual properties of heavy metals]
-     ontology_accession: PRIDE:0000756
-     description: Concentration of heavy metals in the sample, including elements such as lead, cadmium, mercury, and others.(MIXS:0000652)
-     requirement: optional
-     allow_not_applicable: true
-     allow_not_available: true
-     validators:
-       - validator_name: pattern
-         params:
-           pattern: ^.+$
-           description: Heavy metal concentrations with units or description
-           examples:
-             - Pb 50 mg/kg; Cd 2 mg/kg
-             - Hg 0.5 mg/kg
+  - name: characteristics[extreme unusual properties of heavy metals]
+    ontology_accession: PRIDE:0000756
+    description: Concentration of heavy metals in the sample, including elements such as lead, cadmium, mercury, and others.(MIXS:0000652)
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: pattern
+        params:
+          pattern: ^.+$
+          description: Heavy metal concentrations with units or description
+          examples:
+            - Pb 50 mg/kg; Cd 2 mg/kg
+            - Hg 0.5 mg/kg
 
   - name: characteristics[extreme unusual properties of heavy metals method]
     ontology_accession: PRIDE:0000757
