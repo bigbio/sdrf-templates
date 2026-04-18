@@ -1199,11 +1199,11 @@ columns:
     validators:
        - validator_name: pattern
          params:
-          pattern: ^.+$
-            description: Phospholipid fatty acid name and measurement value
-            examples:
-              - Linoleic acid; 2.8 mg/L
-              - Palmitic acid; 1.5 mg/L
+           pattern: ^.+$
+           description: Phospholipid fatty acid name and measurement value
+           examples:
+             - Linoleic acid; 2.8 mg/L
+             - Palmitic acid; 1.5 mg/L
 
   - name: characteristics[petroleum hydrocarbon]
     ontology_accession: PRIDE:0000803

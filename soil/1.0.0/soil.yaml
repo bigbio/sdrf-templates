@@ -869,34 +869,34 @@ columns:
             - 4°C short-term storage
             - room temperature
 
- - name: comment[link to additional analysis]
-   ontology_accession: PRIDE:0000755
-   description: Link to additional analysis results or external resources related to the sample.(MIXS:0000340)
-   requirement: optional
-   allow_not_applicable: true
-   allow_not_available: true
-   validators:
-     - validator_name: pattern
-       params:
-         pattern: ^(https?:\/\/|doi:|PMID:).+$
-         description: URL, DOI, or PMID linking to additional analysis
-         examples:
-           - https://example.com/analysis-results
-           - doi:10.1000/analysis123
-           - PMID:12345678
+  - name: comment[link to additional analysis]
+    ontology_accession: PRIDE:0000755
+    description: Link to additional analysis results or external resources related to the sample.(MIXS:0000340)
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: pattern
+        params:
+          pattern: ^(https?:\/\/|doi:|PMID:).+$
+          description: URL, DOI, or PMID linking to additional analysis
+          examples:
+            - https://example.com/analysis-results
+            - doi:10.1000/analysis123
+            - PMID:12345678
 
- - name: comment[miscellaneous parameter]
-   ontology_accession: PRIDE:0000710
-   description: Any additional parameter not captured by other fields; should include a name and value.(MIXS:0000752)
-   requirement: optional
-   allow_not_applicable: true
-   allow_not_available: true
-   validators:
-     - validator_name: pattern
-       params:
-         pattern: ^.+:.+$
-         description: Parameter name and value in key:value format
-         examples:
-           - enzyme_activity: high
-           - soil_color: dark brown
+  - name: comment[miscellaneous parameter]
+    ontology_accession: PRIDE:0000710
+    description: Any additional parameter not captured by other fields; should include a name and value.(MIXS:0000752)
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: pattern
+        params:
+          pattern: ^.+:.+$
+          description: Parameter name and value in key:value format
+          examples:
+            - enzyme_activity: high
+            - soil_color: dark brown
 
