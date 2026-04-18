@@ -4,17 +4,19 @@ documentation: |
   The affinity-proteomics template is one of two usable-alone technology templates. It covers
   antibody-based (Olink PEA) and aptamer-based (SomaScan) proteomics platforms.
 
-  Use this template directly for generic affinity experiments, or combine with olink/somascan
-  for platform-specific columns. Always combine with an organism template.
+  Use this template directly for affinity experiments and combine with an organism template.
 
   Key differences from ms-proteomics:
   - No sample preparation chemistry columns (no digestion, reduction, alkylation).
-  - `technology type` must be `protein expression profiling by antibody array` (Olink)
-    or `protein expression profiling by aptamer array` (SomaScan).
+  - `characteristics[assay role]` is required to distinguish study samples from controls and
+    reference materials used for assay calibration/quality control.
   - `comment[platform]` identifies the specific instrument/platform.
-  - `comment[panel name]` and `comment[panel version]` track the commercial panel used.
+  - `comment[panel name]` is RECOMMENDED, but it MUST be provided when `comment[platform]`
+    refers to a platform family with multiple panels/menus and the panel/menu cannot be
+    uniquely inferred (e.g., `Olink Target 96`, `SomaScan Assay v5.0`).
   - `comment[quantification unit]`: NPX for Olink, RFU for SomaScan.
-  - `characteristics[sample matrix]`: The biological fluid analyzed (serum, plasma, CSF, etc.).
+  - `comment[dilution]`: Optional; commonly used for SomaScan workflows.
+  - `comment[lot number]`: Optional reagent lot for traceability.
   - `comment[normalization method]`: How data was normalized (plate control, bridge, etc.).
 
   Mutually exclusive with ms-proteomics.
@@ -38,20 +40,26 @@ validators:
     params:
       min_columns: 8
 columns:
-  - name: technology type
-    ontology_accession: PRIDE:0000663
-    description: Type of technology used
+  - name: characteristics[assay role]
+    description: Role of the sample in the assay. Distinguishes study samples from controls/reference materials for assay interpretation and quality control
     requirement: required
     allow_not_applicable: false
     allow_not_available: false
     validators:
-      - validator_name: single_cardinality_validator
-        params: {}
-      - validator_name: values
+      - validator_name: ontology
         params:
-          values:
-            - protein expression profiling by antibody array
-            - protein expression profiling by aptamer array
+          ontologies:
+            - pride
+          parent_term: PRIDE:0000895
+          description: Sample type should be a child of PRIDE:0000895 (sample type)
+          examples:
+            - study sample
+            - negative control
+            - positive control
+            - calibrator
+            - reference
+            - standard
+            - buffer control
 
   - name: comment[platform]
     description: Affinity proteomics platform used (e.g. Olink Explore HT, SomaScan Assay 7K)
@@ -92,7 +100,7 @@ columns:
             - Agilent SureScan Microarray Scanner
 
   - name: comment[panel name]
-    description: Name of the commercial panel used
+    description: Commercial panel/menu identifier within the platform. RECOMMENDED, but MUST be provided when not uniquely inferable from comment[platform].
     requirement: recommended
     allow_not_applicable: true
     allow_not_available: true
@@ -100,28 +108,13 @@ columns:
       - validator_name: pattern
         params:
           pattern: ^.+$
-          description: Panel name
+          error_level: warning
+          description: Panel/menu identifier
           examples:
-            - Olink Explore 3072
-            - Olink Explore 1536
-            - Olink Target 96 Inflammation
+            - Target 96 Inflammation
+            - Explore 1536
             - SomaScan 7K
             - SomaScan 11K
-
-  - name: comment[panel version]
-    description: Version of the assay panel
-    requirement: optional
-    allow_not_applicable: true
-    allow_not_available: true
-    validators:
-      - validator_name: pattern
-        params:
-          pattern: ^.+$
-          description: Panel version
-          examples:
-            - v4.1
-            - 2023-01
-            - 7K v4.1
 
   - name: comment[quantification unit]
     ontology_accession: PRIDE:0000392
@@ -152,26 +145,6 @@ columns:
             - 1
             - 2
 
-  - name: characteristics[sample matrix]
-    description: Type of biological matrix used as input (e.g. serum, plasma, CSF, urine)
-    requirement: recommended
-    allow_not_applicable: true
-    allow_not_available: true
-    validators:
-      - validator_name: ontology
-        params:
-          ontologies:
-            - uberon
-            - bto
-          error_level: warning
-          description: Sample matrix should be a valid UBERON or BTO term
-          examples:
-            - serum
-            - plasma
-            - cerebrospinal fluid
-            - urine
-            - saliva
-
   - name: comment[normalization method]
     description: Normalization method applied to quantification values
     requirement: optional
@@ -188,9 +161,26 @@ columns:
             - median normalization
             - not normalized
 
-  - name: comment[fraction identifier]
-    ontology_accession: MS:1000858
-    description: Fraction or dilution series identifier. While fractionation is rare in affinity proteomics, dilution series are used in some protocols (e.g. SomaScan alternative matrix validation).
+  - name: comment[dilution]
+    ontology_accession: OBI:0002483
+    description: Sample dilution factor used (commonly used for SomaScan workflows)
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: pattern
+        params:
+          pattern: ^((0\.005|0\.5|20|40)%|[0-9]+(\.[0-9]+)?%?|1:[0-9]+)$
+          description: Dilution factor; SomaScan commonly uses 0.005%, 0.5%, 20%, 40%
+          examples:
+            - 0.005%
+            - 0.5%
+            - 20%
+            - 40%
+            - 1:200
+
+  - name: comment[lot number]
+    description: Reagent lot number for traceability
     requirement: optional
     allow_not_applicable: true
     allow_not_available: true
@@ -198,8 +188,7 @@ columns:
       - validator_name: pattern
         params:
           pattern: ^.+$
-          description: Fraction or dilution identifier
+          description: Lot number
           examples:
-            - 1
-            - 2
-            - 3
+            - SS-2023-001
+            - lot_12345
