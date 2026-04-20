@@ -32,7 +32,7 @@ jobs:
 
           errors = []
           repo_root = Path('.')
-          skip_dirs = {'scripts', '.git', '.github', '__pycache__'}
+          skip_dirs = {'scripts', 'docs', '.git', '.github', '__pycache__'}
 
           for template_dir in repo_root.iterdir():
               if not template_dir.is_dir() or template_dir.name in skip_dirs or template_dir.name.startswith('.'):
