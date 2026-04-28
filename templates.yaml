@@ -3,7 +3,7 @@
 # To update: merge PR to master branch
 
 schema_version: '1.0'
-generated_at: '2026-03-13T14:40:36.171684+00:00'
+generated_at: '2026-04-28T13:37:05.554089+00:00'
 templates:
   affinity-proteomics:
     latest: 1.0.0
@@ -46,7 +46,8 @@ templates:
     layer: sample
     description: SDRF template for clinical study samples with treatment, demographics,
       and lifestyle metadata. Applicable to any organism. Combine with organism template
-      (human, vertebrates) and technology template (ms-proteomics, affinity-proteomics).
+      (human, vertebrates) and technology template (ms-proteomics, affinity-proteomics,
+      or ms-metabolomics).
   crosslinking:
     latest: 1.0.0
     versions:
@@ -65,6 +66,15 @@ templates:
     layer: experiment
     description: SDRF template for Data-independent acquisition (DIA) experiments.
       Extends ms-proteomics with DIA-specific columns.
+  gc-ms-metabolomics:
+    latest: 1.0.0-dev
+    versions:
+    - 1.0.0-dev
+    extends: ms-metabolomics@>=1.0.0-dev
+    usable_alone: false
+    layer: experiment
+    description: SDRF template for GC-MS-based metabolomics experiments. Extends ms-metabolomics
+      with derivatization and GC-specific columns.
   human:
     latest: 1.1.0
     versions:
@@ -73,7 +83,8 @@ templates:
     usable_alone: false
     layer: sample
     description: Human SDRF template with human-specific sample metadata fields. Must
-      be combined with a technology template (ms-proteomics or affinity-proteomics).
+      be combined with a technology template (ms-proteomics, affinity-proteomics,
+      or ms-metabolomics).
   human-gut:
     latest: 1.0.0
     versions:
@@ -101,7 +112,17 @@ templates:
     usable_alone: false
     layer: sample
     description: SDRF template for invertebrate samples (Drosophila, C. elegans, insects,
-      etc.). Must be combined with a technology template (ms-proteomics or affinity-proteomics).
+      etc.). Must be combined with a technology template (ms-proteomics, affinity-proteomics,
+      or ms-metabolomics).
+  lc-ms-metabolomics:
+    latest: 1.0.0-dev
+    versions:
+    - 1.0.0-dev
+    extends: ms-metabolomics@>=1.0.0-dev
+    usable_alone: false
+    layer: experiment
+    description: SDRF template for LC-MS-based metabolomics experiments. Extends ms-metabolomics
+      with chromatography-specific columns.
   metaproteomics:
     latest: 1.0.0
     versions:
@@ -116,6 +137,15 @@ templates:
       - sample-metadata
     description: |
       Base SDRF template for metaproteomics experiments (microbial community proteomics). Extends base directly and defines MIxS-aligned sample metadata. When combined with ms-proteomics, sample-metadata columns (organism, disease, cell type) are excluded. Use a child template (human-gut, soil, water) for environment-specific fields.
+  ms-metabolomics:
+    latest: 1.0.0-dev
+    versions:
+    - 1.0.0-dev
+    extends: sample-metadata@>=1.0.0
+    usable_alone: true
+    layer: technology
+    description: Base SDRF template for mass spectrometry-based metabolomics. This
+      is the parent template for LC-MS and GC-MS metabolomics experiments.
   ms-proteomics:
     latest: 1.1.0
     versions:
@@ -125,15 +155,6 @@ templates:
     layer: technology
     description: Base SDRF template for mass spectrometry-based proteomics. This is
       the minimum valid template for any MS experiment.
-  olink:
-    latest: 1.0.0
-    versions:
-    - 1.0.0
-    extends: affinity-proteomics@>=1.0.0
-    usable_alone: false
-    layer: experiment
-    description: SDRF template for Olink Proximity Extension Assay (PEA) experiments.
-      Extends affinity-proteomics with Olink-specific columns.
   oncology-metadata:
     latest: 1.0.0
     versions:
@@ -144,7 +165,7 @@ templates:
     description: SDRF template for cancer/oncology study samples with tumor staging,
       grading, and clinical outcome metadata. Extends clinical-metadata with oncology-specific
       columns. Combine with organism template (human, vertebrates) and technology
-      template (ms-proteomics, affinity-proteomics).
+      template (ms-proteomics, affinity-proteomics, or ms-metabolomics).
   plants:
     latest: 1.1.0
     versions:
@@ -153,7 +174,8 @@ templates:
     usable_alone: false
     layer: sample
     description: SDRF template for plant samples (Arabidopsis, crops, etc.). Must
-      be combined with a technology template (ms-proteomics or affinity-proteomics).
+      be combined with a technology template (ms-proteomics, affinity-proteomics,
+      or ms-metabolomics).
   sample-metadata:
     latest: 1.0.0
     versions:
@@ -184,15 +206,6 @@ templates:
     layer: sample
     description: |
       SDRF template for soil metaproteomics. Extends metaproteomics with soil-specific columns aligned with the GSC MIxS soil extension (0016012). Combine with ms-proteomics for MS acquisition columns.
-  somascan:
-    latest: 1.0.0
-    versions:
-    - 1.0.0
-    extends: affinity-proteomics@>=1.0.0
-    usable_alone: false
-    layer: experiment
-    description: SDRF template for SomaScan aptamer-based proteomics experiments.
-      Extends affinity-proteomics with SomaScan-specific columns.
   vertebrates:
     latest: 1.1.0
     versions:
@@ -201,8 +214,8 @@ templates:
     usable_alone: false
     layer: sample
     description: SDRF template for non-human vertebrate samples (mammals, birds, fish,
-      reptiles, amphibians). Must be combined with a technology template (ms-proteomics
-      or affinity-proteomics).
+      reptiles, amphibians). Must be combined with a technology template (ms-proteomics,
+      affinity-proteomics, or ms-metabolomics).
   water:
     latest: 1.0.0
     versions:

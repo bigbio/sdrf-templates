@@ -1,5 +1,5 @@
 name: clinical-metadata
-description: SDRF template for clinical study samples with treatment, demographics, and lifestyle metadata. Applicable to any organism. Combine with organism template (human, vertebrates) and technology template (ms-proteomics, affinity-proteomics).
+description: SDRF template for clinical study samples with treatment, demographics, and lifestyle metadata. Applicable to any organism. Combine with organism template (human, vertebrates) and technology template (ms-proteomics, affinity-proteomics, or ms-metabolomics).
 documentation: |
   The clinical-metadata template captures treatment, demographics, and lifestyle data for
   interventional and observational studies. It extends sample-metadata and is also the parent
@@ -15,8 +15,11 @@ documentation: |
     partial response, progressive disease, stable disease).
   - `characteristics[sampling time]`: Time of collection with unit (0 hour, 24 hour,
     7 day). Critical for time-course and pharmacokinetic studies.
-  - `characteristics[sampling site]`: Anatomical context (tumor, normal tissue adjacent to
-    tumor). Important for matched tissue designs.
+  - `characteristics[tissue supergroup]`: Optional broader anatomical bucket inherited from
+    `sample-metadata` when grouping by organ system is useful.
+  - `characteristics[sampling site]`: Local anatomical context or provenance relative to the
+    normalized `characteristics[organism part]` (tumor, normal tissue adjacent to tumor,
+    heart left ventricle). Important for matched tissue designs.
   - `characteristics[genotype]`: Known genetic variants (BRCA1 mutation carrier, wild type).
   - `characteristics[phenotype]`: Observable characteristics (drug resistant, HER2-positive).
 contributors:
@@ -312,4 +315,3 @@ columns:
             - KRAS G12D mutant
             - wild type
             - TP53 R175H
-

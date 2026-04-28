@@ -1,5 +1,5 @@
 name: plants
-description: SDRF template for plant samples (Arabidopsis, crops, etc.). Must be combined with a technology template (ms-proteomics or affinity-proteomics).
+description: SDRF template for plant samples (Arabidopsis, crops, etc.). Must be combined with a technology template (ms-proteomics, affinity-proteomics, or ms-metabolomics).
 documentation: |
   The plants template covers Arabidopsis thaliana, rice, maize, wheat, and other plant species.
 
@@ -108,4 +108,3 @@ columns:
 
   - name: characteristics[treatment]
     requirement: recommended
-

@@ -1,0 +1,490 @@
+name: ms-metabolomics
+description: Base SDRF template for mass spectrometry-based metabolomics. This is the parent template for LC-MS and GC-MS metabolomics experiments.
+documentation: |
+  The ms-metabolomics template is a usable-alone technology template for mass-spectrometry-based
+  metabolomics. It is the third sibling technology under sample-metadata, alongside ms-proteomics
+  and affinity-proteomics, and is mutually exclusive with both. It serves as the parent for the
+  technique-specific templates lc-ms-metabolomics and gc-ms-metabolomics.
+
+  Combine with an organism template (human, vertebrates, invertebrates, plants) to add
+  species-specific columns. Add clinical-metadata or oncology-metadata for clinical studies.
+
+  Naming conventions follow SDRF-Proteomics: lowercase column names, comment[...]/characteristics[...]
+  brackets, and the flat row model (one row = one sample x acquisition). MetaboBank
+  (MAGE-TAB-style) submissions can be mapped onto this template via the mapping document at
+  docs/mappings/metabobank-sdrf-mapping.md.
+
+  Key annotation guidance:
+  - `comment[scan polarity]`: Use `positive scan` (MS:1000130) or `negative scan` (MS:1000129)
+    for single-polarity acquisitions. Reserve `polarity switching` only for true in-method
+    polarity switching that produces a single combined raw file. When a sample is acquired in
+    both POS and NEG modes producing two distinct raw files, use TWO ROWS per source name —
+    one row per (source name x polarity), each with its own comment[data file].
+  - `comment[ion source]`: PSI-MS term (MS:1000008 child) such as ESI, APCI, EI, MALDI.
+    Children of this template (lc-ms / gc-ms) further constrain the set of valid sources.
+  - `comment[acquisition method]`: Free-text or PRIDE term — DDA, DIA, SIM, MRM, full scan.
+  - `comment[data file]` (inherited from base): vendor raw or open format (mzML, mzXML, .raw, .d).
+  - `comment[metabolite assignment file]`: Per-assay constant pointer to the MAF result file.
+    Repeated identically across all rows of the same assay for SDRF self-containment, mirroring
+    MetaboBank semantics.
+  - `comment[*md5]` columns: Optional MD5 integrity hashes for raw / processed / MAF files.
+    32-character lowercase or uppercase hex.
+
+  Mutually exclusive with ms-proteomics and affinity-proteomics.
+contributors:
+  - Yasset Perez-Riverol (yperez@ebi.ac.uk) - EMBL-EBI
+  - Mathias Mattano (mmattano@bmb.sdu.dk) - University of Southern Denmark
+  - Deepti Jaiswal Kundu (jaiswal@ebi.ac.uk) - EMBL-EBI
+version: 1.0.0-dev
+extends: sample-metadata@>=1.0.0
+usable_alone: true
+layer: technology
+mutually_exclusive_with:
+  - ms-proteomics
+  - affinity-proteomics
+validators:
+  - validator_name: min_columns
+    params:
+      min_columns: 12
+  - validator_name: combination_of_columns_no_duplicate_validator
+    params:
+      column_name:
+        - source name
+        - assay name
+        - comment[data file]
+      column_name_warning:
+        - source name
+        - assay name
+columns:
+  # --- Acquisition core (required) ---
+
+  - name: technology type
+    ontology_accession: PRIDE:0000663
+    description: Type of technology used
+    requirement: required
+    allow_not_applicable: false
+    allow_not_available: false
+    validators:
+      - validator_name: single_cardinality_validator
+        params: {}
+      - validator_name: values
+        params:
+          values:
+            - metabolite profiling by mass spectrometry
+            - LC-MS-based metabolomics
+            - GC-MS-based metabolomics
+
+  - name: comment[instrument]
+    ontology_accession: MS:1000031
+    description: Mass spectrometer instrument used
+    requirement: required
+    cardinality: multiple
+    allow_not_applicable: false
+    allow_not_available: false
+    validators:
+      - validator_name: ontology
+        params:
+          ontologies:
+            - psi-ms
+            - pride
+          error_level: warning
+          description: The instrument should be a valid PSI-MS or PRIDE ontology term
+          examples:
+            - Q Exactive
+            - Xevo G2-S QTof
+            - Orbitrap Fusion Lumos
+            - timsTOF Pro
+
+  - name: comment[ion source]
+    ontology_accession: MS:1000008
+    description: Ion source used for ionization (e.g. ESI, APCI, EI, MALDI). Should be a child of MS:1000008.
+    requirement: required
+    allow_not_applicable: false
+    allow_not_available: false
+    validators:
+      - validator_name: ontology
+        params:
+          ontologies:
+            - psi-ms
+          parent_term: MS:1000008
+          error_level: warning
+          description: Ion source should be a child term of MS:1000008
+          examples:
+            - electrospray ionization
+            - atmospheric pressure chemical ionization
+            - electron ionization
+            - matrix-assisted laser desorption ionization
+
+  - name: comment[scan polarity]
+    ontology_accession: MS:1000465
+    description: Scan polarity (positive scan, negative scan, or polarity switching). Polarity switching is reserved for true in-method switching producing a single file; otherwise use two rows per sample (one per polarity).
+    requirement: required
+    allow_not_applicable: false
+    allow_not_available: false
+    validators:
+      - validator_name: single_cardinality_validator
+        params: {}
+      - validator_name: values
+        params:
+          values:
+            - positive scan
+            - negative scan
+            - polarity switching
+          error_level: error
+          description: Scan polarity must be one of positive scan, negative scan, polarity switching
+
+  - name: comment[acquisition method]
+    ontology_accession: PRIDE:0000659
+    description: Mass spectrometry acquisition method (DDA, DIA, SIM, MRM, full scan)
+    requirement: required
+    allow_not_applicable: false
+    allow_not_available: false
+    validators:
+      - validator_name: ontology
+        params:
+          ontologies:
+            - pride
+          error_level: warning
+          description: Acquisition method should be a valid PRIDE ontology term
+          examples:
+            - data-dependent acquisition
+            - data-independent acquisition
+            - selected reaction monitoring
+            - parallel reaction monitoring
+            - full scan
+
+  - name: comment[metabolite assignment file]
+    description: Pointer to the metabolite assignment file (MAF) for this assay. Per-assay constant — the same value is repeated across all rows of the same assay. Mirrors the MetaboBank semantics of Comment[Metabolite Assignment File].
+    requirement: recommended
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: pattern
+        params:
+          pattern: ^.+$
+          description: Path or filename of the MAF file
+          examples:
+            - m_MTBLS1129_LC-MS_positive_reverse-phase_metabolite_profiling_v2_maf.tsv
+            - maf_pos_lipidomics.tsv
+
+  # --- Sample preparation (recommended) ---
+
+  - name: comment[extraction method]
+    description: Sample extraction method used to obtain the metabolite fraction
+    requirement: recommended
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: pattern
+        params:
+          pattern: ^.+$
+          description: Free-text extraction method, optionally CHMO-style NT=...;AC=CHMO:NNNNNNN
+          examples:
+            - methanol-water extraction
+            - MTBE extraction
+            - Bligh-Dyer extraction
+            - Folch extraction
+            - "NT=methanol-water extraction;AC=CHMO:0001568"
+
+  - name: comment[extraction solvent]
+    description: Solvent or solvent mixture used for metabolite extraction
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: ontology
+        params:
+          ontologies:
+            - chebi
+          error_level: warning
+          description: Extraction solvent should be a valid ChEBI term when possible
+          examples:
+            - methanol
+            - chloroform
+            - methyl tert-butyl ether
+            - acetonitrile
+
+  - name: characteristics[analyte class]
+    description: Class of metabolites targeted by the extraction and acquisition method
+    requirement: recommended
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: values
+        params:
+          values:
+            - polar metabolites
+            - lipids
+            - amino acids
+            - fatty acids
+            - bile acids
+            - nucleotides
+            - sugars
+            - volatiles
+            - untargeted
+          error_level: warning
+          description: Analyte class describes the metabolite fraction targeted
+
+  - name: comment[internal standard]
+    description: Internal standard(s) spiked into the sample for normalization or retention-time calibration
+    requirement: optional
+    cardinality: multiple
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: ontology
+        params:
+          ontologies:
+            - chebi
+          error_level: warning
+          description: Internal standard should be a valid ChEBI term when possible
+          examples:
+            - caffeine-d9
+            - L-tryptophan-d5
+            - palmitic acid-d31
+
+  - name: characteristics[sample matrix]
+    description: Type of biological matrix used as input (e.g. serum, plasma, CSF, urine, tissue extract)
+    requirement: recommended
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: ontology
+        params:
+          ontologies:
+            - uberon
+            - bto
+          error_level: warning
+          description: Sample matrix should be a valid UBERON or BTO term
+          examples:
+            - serum
+            - plasma
+            - cerebrospinal fluid
+            - urine
+            - tissue extract
+
+  # --- QC & batch (optional, mirrored from ms-proteomics) ---
+
+  - name: comment[sample preparation batch]
+    description: Batch identifier for sample preparation (plate, chip, processing batch). Useful for batch-effect correction.
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: pattern
+        params:
+          pattern: ^.+$
+          description: Sample preparation batch identifier
+          examples:
+            - plate1
+            - batch_20220601
+            - prep_A
+
+  - name: comment[lc batch]
+    description: Liquid chromatography batch identifier for batch-effect tracking (e.g. column changes, LC system swaps)
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: pattern
+        params:
+          pattern: ^.+$
+          description: LC batch identifier
+          examples:
+            - LC1
+            - column_A
+
+  - name: comment[acquisition date]
+    description: Date of MS data acquisition (ISO 8601 format recommended). Useful for tracking instrument drift and batch effects.
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: pattern
+        params:
+          pattern: ^.+$
+          description: Acquisition date/time
+          examples:
+            - "2022-06-01"
+            - "2022-06-01T18:28:37"
+
+  # --- Method ranges (optional, duplicated verbatim from ms-proteomics; future: extract into a shared mixin) ---
+
+  - name: comment[ms2 mass analyzer]
+    ontology_accession: MS:1000443
+    description: Mass analyzer used for MS2 acquisition
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: ontology
+        params:
+          ontologies:
+            - psi-ms
+          error_level: warning
+          description: Should be a valid PSI-MS ontology term
+          examples:
+            - orbitrap
+            - ion trap
+            - TOF
+
+  - name: comment[ms min mz]
+    ontology_accession: PRIDE:0000476
+    description: MS method-defined minimum precursor (MS1) m/z setting used to acquire the data
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: mz_value
+        params:
+          description: Precursor m/z value with unit
+          examples:
+            - 100m/z
+            - 200m/z
+
+  - name: comment[ms max mz]
+    ontology_accession: PRIDE:0000477
+    description: MS method-defined maximum precursor (MS1) m/z setting used to acquire the data
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: mz_value
+        params:
+          description: Precursor m/z value with unit
+          examples:
+            - 1200m/z
+            - 1600m/z
+
+  - name: comment[ms1 scan range]
+    ontology_accession: PRIDE:0001008
+    description: m/z scan range for MS1 spectra as an interval. Alternative to separate ms min mz / ms max mz columns.
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: mz_range_interval
+        params:
+          description: m/z range interval for MS1 spectra
+          examples:
+            - 70m/z-1000m/z
+            - 100m/z-1500m/z
+
+  - name: comment[ms2 scan range]
+    ontology_accession: PRIDE:0001009
+    description: m/z scan range for MS2 spectra as an interval. Alternative to separate ms2 min mz / ms2 max mz columns.
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: mz_range_interval
+        params:
+          description: m/z range interval for MS2 spectra
+          examples:
+            - 50m/z-1000m/z
+            - 100m/z-1500m/z
+
+  - name: comment[precursor mass tolerance]
+    ontology_accession: PRIDE:0000575
+    description: Precursor mass tolerance for feature detection / database search
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: number_with_unit
+        params:
+          units: [ppm, Da, mmu]
+          error_level: error
+          description: Mass tolerance with unit (ppm, Da, or mmu)
+          examples:
+            - 5 ppm
+            - 10 ppm
+            - 0.01 Da
+
+  - name: comment[fragment mass tolerance]
+    ontology_accession: PRIDE:0000576
+    description: Fragment mass tolerance for feature detection / database search
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: number_with_unit
+        params:
+          units: [ppm, Da, mmu]
+          error_level: error
+          description: Mass tolerance with unit (ppm, Da, or mmu)
+          examples:
+            - 0.02 Da
+            - 20 ppm
+
+  - name: comment[collision energy]
+    ontology_accession: MS:1000045
+    description: Collision energy used for fragmentation
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: pattern
+        params:
+          pattern: ^\d+(\.\d+)?%?\s*(NCE|eV)(;\d+(\.\d+)?%?\s*(NCE|eV))*$
+          description: "Collision energy format: {value} {unit} where unit is NCE or eV. For multiple values, use semicolon-separated entries."
+          examples:
+            - 30 NCE
+            - 25 eV
+            - 25 NCE;27 NCE;30 NCE
+
+  # --- MetaboBank-mirror MD5 columns (optional; not present in base / proteomics templates) ---
+
+  - name: comment[raw data file md5]
+    description: MD5 integrity hash for the raw data file referenced in comment[data file]. Mirrors MetaboBank Comment[Raw Data File md5].
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: pattern
+        params:
+          pattern: ^[a-fA-F0-9]{32}$
+          description: 32-character hex MD5 hash
+          examples:
+            - d41d8cd98f00b204e9800998ecf8427e
+            - 9e107d9d372bb6826bd81d3542a419d6
+
+  - name: comment[processed data file]
+    description: Pointer to the processed data file (e.g. peak table, feature matrix). Mirrors MetaboBank Comment[Processed Data File].
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: pattern
+        params:
+          pattern: ^.+$
+          description: Path or filename of the processed data file
+          examples:
+            - features_pos.tsv
+            - peak_table_lipidomics.csv
+
+  - name: comment[processed data file md5]
+    description: MD5 integrity hash for the processed data file. Mirrors MetaboBank Comment[Processed Data File md5].
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: pattern
+        params:
+          pattern: ^[a-fA-F0-9]{32}$
+          description: 32-character hex MD5 hash
+          examples:
+            - d41d8cd98f00b204e9800998ecf8427e
+
+  - name: comment[metabolite assignment file md5]
+    description: MD5 integrity hash for the metabolite assignment file. Mirrors MetaboBank Comment[Metabolite Assignment File md5].
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: pattern
+        params:
+          pattern: ^[a-fA-F0-9]{32}$
+          description: 32-character hex MD5 hash
+          examples:
+            - d41d8cd98f00b204e9800998ecf8427e
