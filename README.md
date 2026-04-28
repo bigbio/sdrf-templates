@@ -4,7 +4,7 @@ Versioned templates and validation rules for SDRF-Proteomics.
 
 [![Validate Templates](https://github.com/bigbio/sdrf-templates/actions/workflows/validate-templates.yml/badge.svg?branch=main)](https://github.com/bigbio/sdrf-templates/actions/workflows/validate-templates.yml)
 [![Generate Manifest](https://github.com/bigbio/sdrf-templates/actions/workflows/generate-manifest.yml/badge.svg?branch=main)](https://github.com/bigbio/sdrf-templates/actions/workflows/generate-manifest.yml)
-[![License: MIT](https://img.shields.io/github/license/bigbio/sdrf-templates)](https://github.com/bigbio/sdrf-templates/blob/main/LICENSE)
+[![License](https://img.shields.io/github/license/bigbio/sdrf-templates)](https://github.com/bigbio/sdrf-templates/blob/main/LICENSE)
 
 ## Overview
 
