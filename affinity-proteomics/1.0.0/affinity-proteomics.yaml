@@ -8,7 +8,7 @@ documentation: |
 
   Key differences from ms-proteomics:
   - No sample preparation chemistry columns (no digestion, reduction, alkylation).
-  - `characteristics[assay role]` is required to distinguish study samples from controls and
+  - `characteristics[sample type]` is required to distinguish study samples from controls and
     reference materials used for assay calibration/quality control.
   - `comment[platform]` identifies the specific instrument/platform.
   - `comment[panel name]` is RECOMMENDED, but it MUST be provided when `comment[platform]`
@@ -40,7 +40,7 @@ validators:
     params:
       min_columns: 8
 columns:
-  - name: characteristics[assay role]
+  - name: characteristics[sample type]
     description: Role of the sample in the assay. Distinguishes study samples from controls/reference materials for assay interpretation and quality control
     requirement: required
     allow_not_applicable: false
