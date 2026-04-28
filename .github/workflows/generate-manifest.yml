@@ -13,6 +13,9 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+    outputs:
+      templates_sha: ${{ steps.resolve-head.outputs.templates_sha }}
+      templates_ref: ${{ steps.resolve-head.outputs.templates_ref }}
 
     steps:
       - name: Checkout repository
@@ -49,3 +52,49 @@ jobs:
           git add templates.yaml
           git commit -m "chore: update templates.yaml manifest [skip ci]"
           git push
+
+      - name: Resolve latest templates HEAD
+        id: resolve-head
+        run: |
+          git fetch origin "${GITHUB_REF_NAME}"
+          echo "templates_sha=$(git rev-parse "origin/${GITHUB_REF_NAME}")" >> "$GITHUB_OUTPUT"
+          echo "templates_ref=${GITHUB_REF_NAME}" >> "$GITHUB_OUTPUT"
+
+  dispatch-downstream-sync:
+    name: Trigger downstream sync PRs
+    runs-on: ubuntu-latest
+    needs: generate
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: Check downstream sync token
+        env:
+          DOWNSTREAM_SYNC_TOKEN: ${{ secrets.DOWNSTREAM_SYNC_TOKEN }}
+        run: |
+          if [ -z "${DOWNSTREAM_SYNC_TOKEN}" ]; then
+            echo "::error::Missing DOWNSTREAM_SYNC_TOKEN secret in sdrf-templates."
+            exit 1
+          fi
+
+      - name: Dispatch sync to sdrf-pipelines
+        uses: peter-evans/repository-dispatch@v3
+        with:
+          token: ${{ secrets.DOWNSTREAM_SYNC_TOKEN }}
+          repository: bigbio/sdrf-pipelines
+          event-type: sync-sdrf-templates
+          client-payload: >-
+            {"templates_sha":"${{ needs.generate.outputs.templates_sha }}",
+             "templates_ref":"${{ needs.generate.outputs.templates_ref }}",
+             "source_repo":"${{ github.repository }}",
+             "source_run_id":"${{ github.run_id }}"}
+
+      - name: Dispatch sync to proteomics-sample-metadata
+        uses: peter-evans/repository-dispatch@v3
+        with:
+          token: ${{ secrets.DOWNSTREAM_SYNC_TOKEN }}
+          repository: bigbio/proteomics-sample-metadata
+          event-type: sync-sdrf-templates
+          client-payload: >-
+            {"templates_sha":"${{ needs.generate.outputs.templates_sha }}",
+             "templates_ref":"${{ needs.generate.outputs.templates_ref }}",
+             "source_repo":"${{ github.repository }}",
+             "source_run_id":"${{ github.run_id }}"}
