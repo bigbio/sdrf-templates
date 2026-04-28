@@ -1,0 +1,47 @@
+# SDRF Templates
+
+> Versioned SDRF template definitions for proteomics and related omics, including inheritance rules, column metadata, and the generated manifest used by downstream tooling.
+
+Use this repository when you need the canonical YAML template definitions for SDRF sample
+metadata and acquisition metadata. Start with the README for repository structure, then consult
+the generated manifest and the specific template YAML files you need. Template inheritance is
+important: most concrete templates extend shared layers such as `base` and `sample-metadata`.
+
+When interpreting `comment[sdrf template]`, prefer the most specific leaf templates instead of
+repeating every inherited parent. Downstream validators should resolve inheritance transitively.
+
+## Core files
+
+- [README](https://raw.githubusercontent.com/bigbio/sdrf-templates/dev/README.md): Repository overview, structure, manifest usage, and inheritance model.
+- [Manifest](https://raw.githubusercontent.com/bigbio/sdrf-templates/dev/templates.yaml): Generated index of all templates, versions, and inheritance metadata.
+- [Schema](https://raw.githubusercontent.com/bigbio/sdrf-templates/dev/sdrf-template.schema.json): JSON schema describing the YAML template structure.
+- [Manifest generator](https://raw.githubusercontent.com/bigbio/sdrf-templates/dev/scripts/generate_manifest.py): Script that discovers templates and regenerates `templates.yaml`.
+
+## Shared template layers
+
+- [base](https://raw.githubusercontent.com/bigbio/sdrf-templates/dev/base/1.1.0/base.yaml): Core SDRF infrastructure columns such as source name, assay name, technology type, and template declarations.
+- [sample-metadata](https://raw.githubusercontent.com/bigbio/sdrf-templates/dev/sample-metadata/1.0.0/sample-metadata.yaml): Shared biological sample metadata layer used by organism and technology templates.
+- [clinical-metadata](https://raw.githubusercontent.com/bigbio/sdrf-templates/dev/clinical-metadata/1.0.0/clinical-metadata.yaml): Shared clinical annotation layer for treatment, demographics, and provenance.
+- [oncology-metadata](https://raw.githubusercontent.com/bigbio/sdrf-templates/dev/oncology-metadata/1.0.0/oncology-metadata.yaml): Cancer-focused extension of the clinical layer.
+
+## Technology templates
+
+- [ms-proteomics](https://raw.githubusercontent.com/bigbio/sdrf-templates/dev/ms-proteomics/1.1.0/ms-proteomics.yaml): Mass-spectrometry proteomics template.
+- [dia-acquisition](https://raw.githubusercontent.com/bigbio/sdrf-templates/dev/dia-acquisition/1.1.0/dia-acquisition.yaml): DIA-specific extension of `ms-proteomics`.
+- [affinity-proteomics](https://raw.githubusercontent.com/bigbio/sdrf-templates/dev/affinity-proteomics/1.0.0/affinity-proteomics.yaml): Affinity assay template family.
+- [ms-metabolomics](https://raw.githubusercontent.com/bigbio/sdrf-templates/dev/ms-metabolomics/1.0.0-dev/ms-metabolomics.yaml): Shared mass-spectrometry metabolomics layer.
+- [lc-ms-metabolomics](https://raw.githubusercontent.com/bigbio/sdrf-templates/dev/lc-ms-metabolomics/1.0.0-dev/lc-ms-metabolomics.yaml): LC-MS metabolomics specialization.
+- [gc-ms-metabolomics](https://raw.githubusercontent.com/bigbio/sdrf-templates/dev/gc-ms-metabolomics/1.0.0-dev/gc-ms-metabolomics.yaml): GC-MS metabolomics specialization.
+
+## Organism and sample-context templates
+
+- [human](https://raw.githubusercontent.com/bigbio/sdrf-templates/dev/human/1.1.0/human.yaml): Human-specific sample annotations.
+- [vertebrates](https://raw.githubusercontent.com/bigbio/sdrf-templates/dev/vertebrates/1.1.0/vertebrates.yaml): Non-human vertebrate sample annotations.
+- [invertebrates](https://raw.githubusercontent.com/bigbio/sdrf-templates/dev/invertebrates/1.1.0/invertebrates.yaml): Invertebrate sample annotations.
+- [plants](https://raw.githubusercontent.com/bigbio/sdrf-templates/dev/plants/1.1.0/plants.yaml): Plant-specific sample annotations.
+- [cell-lines](https://raw.githubusercontent.com/bigbio/sdrf-templates/dev/cell-lines/1.1.0/cell-lines.yaml): Cell line metadata built on top of the shared sample layer.
+
+## Related repositories
+
+- [proteomics-sample-metadata](https://github.com/bigbio/proteomics-sample-metadata): SDRF specification and end-user documentation.
+- [sdrf-pipelines](https://github.com/bigbio/sdrf-pipelines): Validation, parsing, and automation pipelines that consume these templates.
