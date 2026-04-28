@@ -9,9 +9,9 @@ documentation: |
   - `characteristics[organism part]`: Use UBERON or BTO terms. Supports multiple cardinality
     for mixed-tissue samples (add multiple columns with the same header). This is the main
     normalized anatomy field used for integration across studies.
-  - `characteristics[tissue supergroup]`: Optional broader anatomical bucket (major organ or
-    anatomical system) used alongside `characteristics[organism part]` when higher-level
-    grouping is useful.
+  - `characteristics[tissue supergroup]`: Optional broader anatomical bucket (for example
+    `heart`, `liver`, `brain`, or a higher-level system such as `gastrointestinal tract`)
+    used alongside `characteristics[organism part]` when higher-level grouping is useful.
   - `characteristics[disease]`: Use `normal` (PATO:0000461) for healthy/control samples.
     Organism templates (human, vertebrates, etc.) override this to required.
   - `characteristics[biological replicate]`: Integer starting from 1. Use `pooled` for
@@ -86,11 +86,11 @@ columns:
             - uberon
             - bto
           error_level: warning
-          description: Tissue supergroup should be a valid broad UBERON or BTO anatomy term when possible
+          description: Tissue supergroup should be a valid UBERON or BTO anatomy term such as heart, liver, brain, or gastrointestinal tract when possible
           examples:
-            - digestive system
-            - nervous system
-            - cardiovascular system
+            - heart
+            - liver
+            - brain
             - gastrointestinal tract
 
   - name: characteristics[cell type]

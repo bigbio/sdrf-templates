@@ -16,7 +16,8 @@ documentation: |
   - `characteristics[sampling time]`: Time of collection with unit (0 hour, 24 hour,
     7 day). Critical for time-course and pharmacokinetic studies.
   - `characteristics[tissue supergroup]`: Optional broader anatomical bucket inherited from
-    `sample-metadata` when grouping by organ system is useful.
+    `sample-metadata` for values such as `heart`, `liver`, `brain`, or a broader system like
+    `gastrointestinal tract`.
   - `characteristics[sampling site]`: Local anatomical context or provenance relative to the
     normalized `characteristics[organism part]` (tumor, normal tissue adjacent to tumor,
     heart left ventricle). Important for matched tissue designs.
