@@ -15,7 +15,8 @@ documentation: |
   - `characteristics[disease]`: Required. The disease of the donor tissue from which the
     cell line was originally derived. Use `normal` for non-disease-derived cell lines.
   - `characteristics[tissue supergroup]`: Optional broader anatomical bucket inherited from
-    `sample-metadata` for higher-level grouping of tissue of origin.
+    `sample-metadata` for higher-level grouping of tissue of origin, for example `heart`,
+    `liver`, `brain`, or `gastrointestinal tract`.
   - `characteristics[sampling site]`: Preserve the original Cellosaurus source term, local
     provenance, or finer tissue-of-origin context. It can be equal to
     `characteristics[organism part]` when no better distinction exists.
