@@ -14,6 +14,11 @@ documentation: |
   - `characteristics[cell line]`: Required. Use standard cell line names from CLO/BTO/EFO.
   - `characteristics[disease]`: Required. The disease of the donor tissue from which the
     cell line was originally derived. Use `normal` for non-disease-derived cell lines.
+  - `characteristics[tissue supergroup]`: Optional broader anatomical bucket inherited from
+    `sample-metadata` for higher-level grouping of tissue of origin.
+  - `characteristics[sampling site]`: Preserve the original Cellosaurus source term, local
+    provenance, or finer tissue-of-origin context. It can be equal to
+    `characteristics[organism part]` when no better distinction exists.
   - `characteristics[passage number]`: Recommended. Document passage for reproducibility.
     Passage drift can significantly affect proteomics results.
   - `characteristics[culture medium]`: Recommended. Use NCIT terms (DMEM, RPMI 1640).
@@ -86,7 +91,7 @@ columns:
 
   - name: characteristics[sampling site]
     ontology_accession: EFO:0000688
-    description: Tissue or organ from which the cell line was derived
+    description: Original source term, local provenance, or finer tissue-of-origin context for the cell line
     requirement: optional
     allow_not_applicable: true
     allow_not_available: true
@@ -97,7 +102,7 @@ columns:
             - uberon
             - bto
           error_level: warning
-          description: The sampling site should be a valid UBERON or BTO term
+          description: The sampling site should be a valid UBERON or BTO term when it is expressed as a normalized anatomy term
           examples:
             - cervix
             - kidney

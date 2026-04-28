@@ -15,8 +15,11 @@ documentation: |
     partial response, progressive disease, stable disease).
   - `characteristics[sampling time]`: Time of collection with unit (0 hour, 24 hour,
     7 day). Critical for time-course and pharmacokinetic studies.
-  - `characteristics[sampling site]`: Anatomical context (tumor, normal tissue adjacent to
-    tumor). Important for matched tissue designs.
+  - `characteristics[tissue supergroup]`: Optional broader anatomical bucket inherited from
+    `sample-metadata` when grouping by organ system is useful.
+  - `characteristics[sampling site]`: Local anatomical context or provenance relative to the
+    normalized `characteristics[organism part]` (tumor, normal tissue adjacent to tumor,
+    heart left ventricle). Important for matched tissue designs.
   - `characteristics[genotype]`: Known genetic variants (BRCA1 mutation carrier, wild type).
   - `characteristics[phenotype]`: Observable characteristics (drug resistant, HER2-positive).
 contributors:
