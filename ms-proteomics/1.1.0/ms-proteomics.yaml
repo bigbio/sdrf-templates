@@ -1,10 +1,10 @@
 name: ms-proteomics
 description: Base SDRF template for mass spectrometry-based proteomics. This is the minimum valid template for any MS experiment.
 documentation: |
-  The ms-proteomics template is one of two usable-alone technology templates (the other
-  is affinity-proteomics). It provides all columns needed for a basic MS proteomics
-  experiment and serves as the parent for specialized experiment templates (DIA, XL-MS,
-  immunopeptidomics, single-cell, metaproteomics).
+  The ms-proteomics template is one of three usable-alone technology templates (the others
+  are affinity-proteomics and ms-metabolomics). It provides all columns needed for a basic
+  MS proteomics experiment and serves as the parent for specialized experiment templates
+  (DIA, XL-MS, immunopeptidomics, single-cell, metaproteomics).
 
   Combine with an organism template (human, vertebrates, invertebrates, plants) to add
   species-specific columns. Add clinical-metadata or oncology-metadata for clinical studies.
@@ -24,7 +24,7 @@ documentation: |
   - MS range columns (`comment[ms min/max mz/charge/rt/im]`): Optional method parameters
     for documenting acquisition settings.
 
-  Mutually exclusive with affinity-proteomics.
+  Mutually exclusive with affinity-proteomics and ms-metabolomics.
 contributors:
   - Yasset Perez-Riverol (yperez@ebi.ac.uk) - EMBL-EBI
   - Deepti Jaiswal Kundu (jaiswal@ebi.ac.uk) - EMBL-EBI

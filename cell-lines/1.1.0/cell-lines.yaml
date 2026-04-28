@@ -5,7 +5,8 @@ documentation: |
   Cellosaurus as the primary reference database.
 
   Required combination: technology template + organism template (based on cell line origin).
-  Example: HeLa study = cell-lines + human + ms-proteomics.
+  Example: HeLa study = cell-lines + human + ms-proteomics. The same sample-layer
+  combination can also be paired with ms-metabolomics when the experiment is metabolomics.
 
   Key guidance:
   - `characteristics[cellosaurus accession]`: Required. Look up accessions at
@@ -31,7 +32,7 @@ extends: sample-metadata@>=1.0.0
 usable_alone: false
 layer: experiment
 requires:
-  - layer: technology   # ms-proteomics or affinity-proteomics
+  - layer: technology   # ms-proteomics, affinity-proteomics, or ms-metabolomics
   - layer: sample       # human, vertebrates, or invertebrates (based on cell line origin)
 columns:
   - name: characteristics[cell line]

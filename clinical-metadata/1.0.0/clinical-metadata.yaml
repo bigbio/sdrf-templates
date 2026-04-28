@@ -1,5 +1,5 @@
 name: clinical-metadata
-description: SDRF template for clinical study samples with treatment, demographics, and lifestyle metadata. Applicable to any organism. Combine with organism template (human, vertebrates) and technology template (ms-proteomics, affinity-proteomics).
+description: SDRF template for clinical study samples with treatment, demographics, and lifestyle metadata. Applicable to any organism. Combine with organism template (human, vertebrates) and technology template (ms-proteomics, affinity-proteomics, or ms-metabolomics).
 documentation: |
   The clinical-metadata template captures treatment, demographics, and lifestyle data for
   interventional and observational studies. It extends sample-metadata and is also the parent
@@ -312,4 +312,3 @@ columns:
             - KRAS G12D mutant
             - wild type
             - TP53 R175H
-

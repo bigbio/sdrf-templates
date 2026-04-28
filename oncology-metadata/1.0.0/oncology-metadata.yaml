@@ -1,5 +1,5 @@
 name: oncology-metadata
-description: SDRF template for cancer/oncology study samples with tumor staging, grading, and clinical outcome metadata. Extends clinical-metadata with oncology-specific columns. Combine with organism template (human, vertebrates) and technology template (ms-proteomics, affinity-proteomics).
+description: SDRF template for cancer/oncology study samples with tumor staging, grading, and clinical outcome metadata. Extends clinical-metadata with oncology-specific columns. Combine with organism template (human, vertebrates) and technology template (ms-proteomics, affinity-proteomics, or ms-metabolomics).
 documentation: |
   The oncology-metadata template extends clinical-metadata with cancer-specific staging,
   grading, and outcome columns. It supports multiple standardized staging systems.
