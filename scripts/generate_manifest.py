@@ -26,7 +26,7 @@ REPO_ROOT = Path(__file__).parent.parent
 MANIFEST_FILE = REPO_ROOT / "templates.yaml"
 
 # Directories to skip (not templates)
-SKIP_DIRS = {"scripts", "docs", ".git", ".github", "__pycache__"}
+SKIP_DIRS = {"scripts", ".git", ".github", "__pycache__"}
 
 
 def find_template_versions(template_dir: Path) -> list[dict]:
