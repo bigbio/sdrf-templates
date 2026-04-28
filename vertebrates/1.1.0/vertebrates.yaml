@@ -1,5 +1,5 @@
 name: vertebrates
-description: SDRF template for non-human vertebrate samples (mammals, birds, fish, reptiles, amphibians). Must be combined with a technology template (ms-proteomics or affinity-proteomics).
+description: SDRF template for non-human vertebrate samples (mammals, birds, fish, reptiles, amphibians). Must be combined with a technology template (ms-proteomics, affinity-proteomics, or ms-metabolomics).
 documentation: |
   The vertebrates template covers all non-human vertebrate model organisms including mouse,
   rat, zebrafish, and other mammals, birds, fish, reptiles, and amphibians.
@@ -88,4 +88,3 @@ columns:
             - hermaphrodite
           error_level: warning
           description: Sex should be one of the allowed values
-

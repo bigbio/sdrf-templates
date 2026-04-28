@@ -1,8 +1,8 @@
 name: affinity-proteomics
 description: SDRF template for affinity-based proteomics experiments (Olink, SomaScan). This is the base template for all affinity proteomics experiments.
 documentation: |
-  The affinity-proteomics template is one of two usable-alone technology templates. It covers
-  antibody-based (Olink PEA) and aptamer-based (SomaScan) proteomics platforms.
+  The affinity-proteomics template is one of three usable-alone technology templates. It
+  covers antibody-based (Olink PEA) and aptamer-based (SomaScan) proteomics platforms.
 
   Use this template directly for affinity experiments and combine with an organism template.
 
@@ -19,7 +19,7 @@ documentation: |
   - `comment[lot number]`: Optional reagent lot for traceability.
   - `comment[normalization method]`: How data was normalized (plate control, bridge, etc.).
 
-  Mutually exclusive with ms-proteomics.
+  Mutually exclusive with ms-proteomics and ms-metabolomics.
 contributors:
   - Yasset Perez-Riverol (yperez@ebi.ac.uk) - EMBL-EBI
   - Deepti Jaiswal Kundu (jaiswal@ebi.ac.uk) - EMBL-EBI

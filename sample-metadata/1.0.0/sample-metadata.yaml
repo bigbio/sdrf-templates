@@ -7,7 +7,11 @@ documentation: |
   Key columns and guidance:
   - `characteristics[organism]`: Use NCBI Taxonomy names in lowercase (e.g., `homo sapiens`).
   - `characteristics[organism part]`: Use UBERON or BTO terms. Supports multiple cardinality
-    for mixed-tissue samples (add multiple columns with the same header).
+    for mixed-tissue samples (add multiple columns with the same header). This is the main
+    normalized anatomy field used for integration across studies.
+  - `characteristics[tissue supergroup]`: Optional broader anatomical bucket (major organ or
+    anatomical system) used alongside `characteristics[organism part]` when higher-level
+    grouping is useful.
   - `characteristics[disease]`: Use `normal` (PATO:0000461) for healthy/control samples.
     Organism templates (human, vertebrates, etc.) override this to required.
   - `characteristics[biological replicate]`: Integer starting from 1. Use `pooled` for
@@ -51,7 +55,7 @@ columns:
 
   - name: characteristics[organism part]
     ontology_accession: EFO:0000635
-    description: Anatomical part of the organism from which sample was derived
+    description: Main normalized anatomical term for the sample
     requirement: required
     cardinality: multiple
     allow_not_applicable: true
@@ -69,6 +73,25 @@ columns:
             - brain
             - heart
             - blood
+
+  - name: characteristics[tissue supergroup]
+    description: Broader anatomical grouping or system-level bucket for the sample, used alongside the organism part for higher-level grouping
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: ontology
+        params:
+          ontologies:
+            - uberon
+            - bto
+          error_level: warning
+          description: Tissue supergroup should be a valid broad UBERON or BTO anatomy term when possible
+          examples:
+            - digestive system
+            - nervous system
+            - cardiovascular system
+            - gastrointestinal tract
 
   - name: characteristics[cell type]
     ontology_accession: EFO:0000324

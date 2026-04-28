@@ -1,5 +1,5 @@
 name: human
-description: Human SDRF template with human-specific sample metadata fields. Must be combined with a technology template (ms-proteomics or affinity-proteomics).
+description: Human SDRF template with human-specific sample metadata fields. Must be combined with a technology template (ms-proteomics, affinity-proteomics, or ms-metabolomics).
 documentation: |
   The human template adds demographic and individual-level tracking columns for Homo sapiens
   samples. It overrides `characteristics[disease]` to required and adds age, sex, ancestry,
@@ -143,4 +143,3 @@ columns:
             - subject_12
             - anonymized
             - pooled
-

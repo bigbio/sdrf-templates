@@ -5,7 +5,8 @@ documentation: |
   Cellosaurus as the primary reference database.
 
   Required combination: technology template + organism template (based on cell line origin).
-  Example: HeLa study = cell-lines + human + ms-proteomics.
+  Example: HeLa study = cell-lines + human + ms-proteomics. The same sample-layer
+  combination can also be paired with ms-metabolomics when the experiment is metabolomics.
 
   Key guidance:
   - `characteristics[cellosaurus accession]`: Required. Look up accessions at
@@ -13,6 +14,11 @@ documentation: |
   - `characteristics[cell line]`: Required. Use standard cell line names from CLO/BTO/EFO.
   - `characteristics[disease]`: Required. The disease of the donor tissue from which the
     cell line was originally derived. Use `normal` for non-disease-derived cell lines.
+  - `characteristics[tissue supergroup]`: Optional broader anatomical bucket inherited from
+    `sample-metadata` for higher-level grouping of tissue of origin.
+  - `characteristics[sampling site]`: Preserve the original Cellosaurus source term, local
+    provenance, or finer tissue-of-origin context. It can be equal to
+    `characteristics[organism part]` when no better distinction exists.
   - `characteristics[passage number]`: Recommended. Document passage for reproducibility.
     Passage drift can significantly affect proteomics results.
   - `characteristics[culture medium]`: Recommended. Use NCIT terms (DMEM, RPMI 1640).
@@ -31,7 +37,7 @@ extends: sample-metadata@>=1.0.0
 usable_alone: false
 layer: experiment
 requires:
-  - layer: technology   # ms-proteomics or affinity-proteomics
+  - layer: technology   # ms-proteomics, affinity-proteomics, or ms-metabolomics
   - layer: sample       # human, vertebrates, or invertebrates (based on cell line origin)
 columns:
   - name: characteristics[cell line]
@@ -85,7 +91,7 @@ columns:
 
   - name: characteristics[sampling site]
     ontology_accession: EFO:0000688
-    description: Tissue or organ from which the cell line was derived
+    description: Original source term, local provenance, or finer tissue-of-origin context for the cell line
     requirement: optional
     allow_not_applicable: true
     allow_not_available: true
@@ -96,7 +102,7 @@ columns:
             - uberon
             - bto
           error_level: warning
-          description: The sampling site should be a valid UBERON or BTO term
+          description: The sampling site should be a valid UBERON or BTO term when it is expressed as a normalized anatomy term
           examples:
             - cervix
             - kidney
