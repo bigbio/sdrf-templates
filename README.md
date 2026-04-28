@@ -36,6 +36,33 @@ The `templates.yaml` manifest is auto-generated on merge to `main`. It contains:
 - Version history
 - Inheritance relationships (`extends`)
 
+## Downstream Synchronization
+
+After merges to `main`, the manifest workflow also dispatches sync events to the downstream
+consumer repositories:
+
+- [proteomics-metadata-standard](https://github.com/bigbio/proteomics-sample-metadata)
+- [sdrf-pipelines](https://github.com/bigbio/sdrf-pipelines)
+
+Those repositories listen for the dispatch event, update their vendored `sdrf-templates`
+submodule to the exact merged commit SHA, regenerate derived files if needed, and open or
+refresh a pull request automatically.
+
+### Required secret
+
+To enable the cross-repository dispatch, configure a secret named `DOWNSTREAM_SYNC_TOKEN` for
+this repository. An organization secret is a good fit because all repositories live under the
+same GitHub organization, but the workflow still needs an explicit token with access to the
+downstream repositories.
+
+Recommended scopes:
+
+- dispatch access to `bigbio/sdrf-pipelines`
+- dispatch access to `bigbio/proteomics-sample-metadata`
+
+The default `GITHUB_TOKEN` for `sdrf-templates` is repository-scoped, so it cannot be relied on
+to send cross-repository events by itself.
+
 ## Usage
 
 ### Finding the latest version
