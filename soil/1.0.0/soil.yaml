@@ -32,9 +32,9 @@ columns:
   # REQUIRED COLUMNS - Sample Identification
   # ==========================================================================
 
-  - name: source name[sample name]
+  - name: source name
     ontology_accession: PRIDE:0000623
-    description: Reference to the Sample. This term is used for cross-reference samples in SDRF for proteomics (MIXS:0001107).
+    description: Reference to the sample name in MIxS package. This term is used for cross-reference samples in SDRF for proteomics (MIXS:0001107).
     requirement: required
     allow_not_applicable: true
     allow_not_available: false
