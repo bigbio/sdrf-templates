@@ -29,27 +29,6 @@ mutually_exclusive_with:
 columns:
 
   # ==========================================================================
-  # REQUIRED COLUMNS - Sample Identification
-  # ==========================================================================
-
-  - name: project name
-    ontology_accession: PRIDE:0000676
-    description: Name of the project within which the sequencing was organized (MIXS:0000092).
-    requirement: required
-    allow_not_applicable: true
-    allow_not_available: false
-    validators:
-      - validator_name: identifier
-        params:
-          charset: "[A-Za-z0-9_.-]"
-          special_values: [anonymized]
-          error_level: error
-          description: project name identifier
-          examples:
-            - Bermuda_Atlantic_Time-series_Study
-            - Metaproteomes_of_Seawater_Microbial_Communities
-
-  # ==========================================================================
   # RECOMMENDED COLUMNS
   # ==========================================================================
 

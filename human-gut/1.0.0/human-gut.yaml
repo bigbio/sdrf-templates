@@ -503,22 +503,6 @@ columns:
           examples:
             - 45 year old male with a 2 week history of stomach pain.
 
-  - name: characteristics[project name]
-    ontology_accession: PRIDE:0000676
-    description: Name of the project within which the sequencing was organized (MIXS:0000092).
-    requirement: optional
-    allow_not_applicable: true
-    allow_not_available: false
-    validators:
-      - validator_name: identifier
-        params:
-          charset: "[A-Za-z0-9_.-]"
-          special_values: [anonymized]
-          error_level: error
-          description: project name identifier
-          examples:
-            - Human_microbiome_project
-
   # ==========================================================================
   # OPTIONAL COLUMNS - Sampling and Storage
   # ==========================================================================
