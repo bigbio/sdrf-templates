@@ -56,6 +56,23 @@ columns:
   # REQUIRED COLUMNS
   # ==========================================================================
 
+  - name: characteristics[sample name]
+    ontology_accession: PRIDE:0000623
+    description: Identifier of the sample, provided for backward compatibility with MIxS samp_name (MIXS:0001107). May be identical to `source name` (defined in base); use this column when preserving the original MIxS sample label is required.
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: identifier
+        params:
+          charset: "[A-Za-z0-9_.-]"
+          special_values: [anonymized]
+          error_level: error
+          description: sample name identifier
+          examples:
+            - Sample_1
+            - Sample_2
+
   - name: characteristics[environmental sample type]
     ontology_accession: PRIDE:0000993
     description: Type of environmental sample analyzed (ENVO or EFO term). Corresponds to MIxS env_medium (MIXS:0000014).
@@ -80,6 +97,22 @@ columns:
   # ==========================================================================
   # RECOMMENDED COLUMNS
   # ==========================================================================
+
+  - name: characteristics[project name]
+    ontology_accession: PRIDE:0000676
+    description: Name of the project within which the sequencing was organized (MIXS:0000092).
+    requirement: recommended
+    allow_not_applicable: true
+    validators:
+      - validator_name: identifier
+        params:
+          charset: "[A-Za-z0-9_.-]"
+          special_values: [anonymized]
+          error_level: error
+          description: project name identifier
+          examples:
+            - Bermuda_Atlantic_Time-series_Study
+            - Metaproteomes_of_Seawater_Microbial_Communities
 
   - name: characteristics[geographic location]
     ontology_accession: PRIDE:0000995

@@ -1,0 +1,131 @@
+name: lc-ms-metabolomics
+description: SDRF template for LC-MS-based metabolomics experiments. Extends ms-metabolomics with chromatography-specific columns.
+documentation: |
+  The lc-ms-metabolomics template constrains technology type to LC-MS-based metabolomics and
+  adds chromatography columns (chromatography type, column, mobile phases, gradient, flow rate).
+
+  Polarity-switching annotation rule (also documented on the parent ms-metabolomics):
+  - When a sample is acquired in both positive and negative ion modes producing TWO distinct
+    raw files, use TWO ROWS per source name — one row per (source name x scan polarity), each
+    with its own comment[data file]. Do NOT use comment[scan polarity] = polarity switching
+    in this case.
+  - Reserve the value `polarity switching` for true in-method polarity switching that produces
+    a single combined raw file.
+
+  Combine with an organism template (human, vertebrates, invertebrates, plants) and optionally
+  with clinical-metadata or oncology-metadata for clinical studies.
+contributors:
+  - Yasset Perez-Riverol (yperez@ebi.ac.uk) - EMBL-EBI
+  - Mathias Mattano (mmattano@bmb.sdu.dk) - University of Southern Denmark
+version: 1.0.0-dev
+extends: ms-metabolomics@>=1.0.0-dev
+usable_alone: false
+layer: experiment
+validators:
+  - validator_name: min_columns
+    params:
+      min_columns: 14
+columns:
+  - name: technology type
+    requirement: required
+    validators:
+      - validator_name: single_cardinality_validator
+        params: {}
+      - validator_name: values
+        params:
+          values:
+            - LC-MS-based metabolomics
+          error_level: error
+          description: For lc-ms-metabolomics the technology type must be 'LC-MS-based metabolomics'
+
+  - name: comment[chromatography type]
+    description: Chromatography mode used for separation. Should be a CHMO term (e.g. CHMO:0002302 reversed-phase chromatography, CHMO:0001025 hydrophilic interaction chromatography).
+    requirement: required
+    allow_not_applicable: false
+    allow_not_available: false
+    validators:
+      - validator_name: pattern
+        params:
+          pattern: ^(NT=.+;AC=CHMO:\d{7}|reversed-phase chromatography|hydrophilic interaction chromatography|normal-phase chromatography|ion-exchange chromatography|size-exclusion chromatography)$
+          description: Chromatography type as a CHMO-style ontology term (NT=...;AC=CHMO:NNNNNNN) or one of the common short names. Strict CHMO ontology validation is a follow-up.
+          examples:
+            - "NT=reversed-phase chromatography;AC=CHMO:0002302"
+            - "NT=hydrophilic interaction chromatography;AC=CHMO:0001025"
+            - reversed-phase chromatography
+            - hydrophilic interaction chromatography
+
+  - name: comment[chromatography column]
+    description: LC column used for separation, including manufacturer, model, and dimensions
+    requirement: recommended
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: pattern
+        params:
+          pattern: ^.+$
+          description: Free-text chromatography column description
+          examples:
+            - Waters ACQUITY HSS T3 100 x 2.1 mm 1.8 um
+            - Phenomenex Kinetex C18 150 x 2.1 mm 2.6 um
+            - SeQuant ZIC-pHILIC 150 x 2.1 mm 5 um
+
+  - name: comment[mobile phase a]
+    description: Composition of mobile phase A
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: pattern
+        params:
+          pattern: ^.+$
+          description: Free-text composition of mobile phase A
+          examples:
+            - 0.1% formic acid in water
+            - 10 mM ammonium acetate in water pH 9.0
+            - 5 mM ammonium formate in water
+
+  - name: comment[mobile phase b]
+    description: Composition of mobile phase B
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: pattern
+        params:
+          pattern: ^.+$
+          description: Free-text composition of mobile phase B
+          examples:
+            - 0.1% formic acid in acetonitrile
+            - 10 mM ammonium acetate in 90% acetonitrile pH 9.0
+            - methanol
+
+  - name: comment[gradient]
+    description: Free-text description of the chromatographic gradient program
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: pattern
+        params:
+          pattern: ^.+$
+          description: Free-text gradient description
+          examples:
+            - 5% B 0-1 min, ramp to 95% B at 15 min, hold 3 min, re-equilibrate
+            - isocratic 50% B for 10 min
+            - 0-100% B in 30 min
+
+  - name: comment[flow rate]
+    description: Mobile-phase flow rate
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: number_with_unit
+        params:
+          units: [nL/min, uL/min, mL/min]
+          error_level: warning
+          description: Flow rate with unit
+          examples:
+            - 300 nL/min
+            - 250 uL/min
+            - 0.4 mL/min

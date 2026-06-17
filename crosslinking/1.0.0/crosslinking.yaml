@@ -28,6 +28,7 @@ contributors:
   - Asier Larrea (alarre@ebi.ac.uk) - EMBL-EBI
   - Toan Phung (TPhung001@dundee.ac.uk) - University of Dundee
   - Timo Sachsenberg (timo.sachsenberg@uni-tuebingen.de) - University of Tübingen
+  - Diogo Borges Lima (diogobor@gmail.com) - Exact Sciences Corp.
 version: 1.0.0
 extends: ms-proteomics@>=1.1.0
 usable_alone: false

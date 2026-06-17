@@ -1,5 +1,5 @@
 name: invertebrates
-description: SDRF template for invertebrate samples (Drosophila, C. elegans, insects, etc.). Must be combined with a technology template (ms-proteomics or affinity-proteomics).
+description: SDRF template for invertebrate samples (Drosophila, C. elegans, insects, etc.). Must be combined with a technology template (ms-proteomics, affinity-proteomics, or ms-metabolomics).
 documentation: |
   The invertebrates template covers Drosophila, C. elegans, insects, and other arthropods.
 
@@ -31,7 +31,7 @@ mutually_exclusive_with:
   - plants
 columns:
   - name: characteristics[disease]
-    ontology_accession: EFO:0000408
+    ontology_accession: MONDO:0000001
     requirement: required
 
   - name: characteristics[developmental stage]
@@ -87,4 +87,3 @@ columns:
             - wild type
             - daf-2(e1370)
             - w[*]; P{GAL4}
-

@@ -1,0 +1,128 @@
+name: gc-ms-metabolomics
+description: SDRF template for GC-MS-based metabolomics experiments. Extends ms-metabolomics with derivatization and GC-specific columns.
+documentation: |
+  The gc-ms-metabolomics template constrains technology type to GC-MS-based metabolomics and
+  adds derivatization and GC-specific columns (derivatization, GC column, carrier gas, oven
+  program). It also tightens comment[ion source] to GC-typical sources (EI, CI).
+
+  Polar metabolite analyses on GC-MS routinely require derivatization (e.g. methoximation
+  followed by silylation with MSTFA), so comment[derivatization] is required. Use `none` to
+  explicitly indicate that no derivatization was performed (rare for polar metabolites,
+  acceptable for volatiles).
+
+  Combine with an organism template (human, vertebrates, invertebrates, plants) and optionally
+  with clinical-metadata or oncology-metadata for clinical studies.
+contributors:
+  - Yasset Perez-Riverol (yperez@ebi.ac.uk) - EMBL-EBI
+  - Mathias Mattano (mmattano@bmb.sdu.dk) - University of Southern Denmark
+version: 1.0.0-dev
+extends: ms-metabolomics@>=1.0.0-dev
+usable_alone: false
+layer: experiment
+validators:
+  - validator_name: min_columns
+    params:
+      min_columns: 14
+columns:
+  - name: technology type
+    requirement: required
+    validators:
+      - validator_name: single_cardinality_validator
+        params: {}
+      - validator_name: values
+        params:
+          values:
+            - GC-MS-based metabolomics
+          error_level: error
+          description: For gc-ms-metabolomics the technology type must be 'GC-MS-based metabolomics'
+
+  - name: comment[ion source]
+    requirement: required
+    validators:
+      - validator_name: values
+        params:
+          values:
+            - electron ionization
+            - chemical ionization
+            - electron impact ionization
+          error_level: warning
+          description: GC-MS typically uses electron ionization (EI) or chemical ionization (CI)
+
+  - name: comment[derivatization]
+    description: Derivatization protocol applied to the sample prior to GC injection. Use `none` if no derivatization was performed (e.g. volatiles analysis).
+    requirement: required
+    allow_not_applicable: false
+    allow_not_available: false
+    validators:
+      - validator_name: pattern
+        params:
+          pattern: ^.+$
+          description: Free-text derivatization protocol
+          examples:
+            - MSTFA
+            - MOX + MSTFA
+            - BSTFA
+            - methoximation followed by trimethylsilylation
+            - none
+
+  - name: comment[derivatization agent]
+    description: Chemical reagent(s) used for derivatization
+    requirement: recommended
+    cardinality: multiple
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: ontology
+        params:
+          ontologies:
+            - chebi
+          error_level: warning
+          description: Derivatization agent should be a valid ChEBI term when possible
+          examples:
+            - N-methyl-N-(trimethylsilyl)trifluoroacetamide
+            - N,O-bis(trimethylsilyl)trifluoroacetamide
+            - methoxyamine hydrochloride
+
+  - name: comment[gc column]
+    description: GC column used for separation, including stationary phase and dimensions
+    requirement: recommended
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: pattern
+        params:
+          pattern: ^.+$
+          description: Free-text GC column description
+          examples:
+            - DB-5MS 30 m x 0.25 mm x 0.25 um
+            - HP-5MS 30 m x 0.25 mm x 0.25 um
+            - Rxi-5Sil MS 30 m x 0.25 mm x 0.25 um
+
+  - name: comment[carrier gas]
+    description: Carrier gas used in the GC system
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: values
+        params:
+          values:
+            - helium
+            - hydrogen
+            - nitrogen
+          error_level: warning
+          description: Carrier gas should be helium, hydrogen, or nitrogen
+
+  - name: comment[oven program]
+    description: Free-text description of the GC oven temperature program
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: pattern
+        params:
+          pattern: ^.+$
+          description: Free-text oven program description
+          examples:
+            - 60C 1 min, ramp 10C/min to 300C, hold 5 min
+            - 70C 2 min, ramp 5C/min to 320C, hold 10 min
