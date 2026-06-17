@@ -14,6 +14,8 @@ documentation: |
   - `comment[platform]` identifies the specific instrument/platform.
   - `comment[panel name]` and `comment[panel version]` track the commercial panel used.
   - `comment[quantification unit]`: NPX for Olink, RFU for SomaScan.
+  - `characteristics[sample type]`: Required. Role of each well in the assay (study sample,
+    negative control, positive control, calibrator, plate control, quality control sample, etc.).
   - `characteristics[sample matrix]`: The biological fluid analyzed (serum, plasma, CSF, etc.).
   - `comment[normalization method]`: How data was normalized (plate control, bridge, etc.).
 
@@ -38,6 +40,30 @@ validators:
     params:
       min_columns: 8
 columns:
+  - name: characteristics[sample type]
+    ontology_accession: PRIDE:0000895
+    description: Role of the sample in the assay. Distinguishes study samples from controls and reference materials for assay interpretation and quality control.
+    requirement: required
+    allow_not_applicable: false
+    allow_not_available: false
+    validators:
+      - validator_name: ontology
+        params:
+          ontologies:
+            - pride
+          parent_term: PRIDE:0000895
+          error_level: error
+          description: Sample type should be a child of PRIDE:0000895 (sample type)
+          examples:
+            - study sample
+            - negative control
+            - positive control
+            - calibrator
+            - plate control
+            - quality control sample
+            - buffer control
+            - bridge
+
   - name: technology type
     ontology_accession: PRIDE:0000663
     description: Type of technology used
