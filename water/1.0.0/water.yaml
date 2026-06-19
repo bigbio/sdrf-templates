@@ -554,7 +554,7 @@ columns:
 
   - name: characteristics[calcium]
     ontology_accession: PRIDE:0000772
-    description: Calcium concentration. Corresponds to MIxS(MIXS:0000421).
+    description: Calcium concentration. Corresponds to MIxS:0000432.
     requirement: optional
     allow_not_applicable: true
     allow_not_available: true
@@ -570,7 +570,7 @@ columns:
 
   - name: characteristics[magnesium]
     ontology_accession: PRIDE:0000793
-    description: Magnesium concentration. Corresponds to MIxS(MIXS:0000431).
+    description: Magnesium concentration. Corresponds to MIxS:0000431.
     requirement: optional
     allow_not_applicable: true
     allow_not_available: true
@@ -765,7 +765,7 @@ columns:
 
   - name: characteristics[dissolved hydrogen]
     ontology_accession: PRIDE:0000780
-    description: Dissolved hydrogen concentration. Corresponds to MIxS (MIXS:0000205).
+    description: Dissolved hydrogen concentration. Corresponds to MIxS (MIXS:0000179).
     requirement: optional
     allow_not_applicable: true
     allow_not_available: true
@@ -921,6 +921,22 @@ columns:
           examples:
             - 0.5 mg/L
             - 1 mg/L
+
+  - name: characteristics[n-alkanes]
+    ontology_accession: MIXS:0000503
+    description: Concentration or composition of n-alkanes present in the sample. n-Alkanes are straight-chain saturated hydrocarbons that can be used as indicators of organic matter sources and environmental conditions.
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: pattern
+        params:
+          pattern: ^.+$
+          description: n-alkane concentration, composition, or distribution
+          examples:
+            - C17: 12 mg/kg; C29: 45 mg/kg
+            - C15-C35 n-alkane profile determined by GC-MS
+            - Total n-alkanes 150 µg/g dry weight
 
   # ==========================================================================
   # OPTIONAL COLUMNS - Biological Activity

@@ -59,7 +59,7 @@ columns:
   - name: characteristics[sample name]
     ontology_accession: PRIDE:0000623
     description: Identifier of the sample, provided for backward compatibility with MIxS samp_name (MIXS:0001107). May be identical to `source name` (defined in base); use this column when preserving the original MIxS sample label is required.
-    requirement: optional
+    requirement: required
     allow_not_applicable: true
     allow_not_available: true
     validators:
@@ -73,25 +73,24 @@ columns:
             - Sample_1
             - Sample_2
 
-  - name: characteristics[environmental sample type]
-    ontology_accession: PRIDE:0000993
-    description: Type of environmental sample analyzed (ENVO or EFO term). Corresponds to MIxS env_medium (MIXS:0000014).
+  - name: characteristics[environmental medium]
+    ontology_accession: PRIDE:0000994
+    description: Environmental material from which the sample was obtained (ENVO term). Corresponds to MIxS env_medium (MIXS:0000014).
     requirement: required
-    allow_not_applicable: false
-    allow_not_available: false
+    allow_not_applicable: true
+    allow_not_available: true
     validators:
       - validator_name: ontology
         params:
           ontologies:
             - envo
-            - efo
-          error_level: warning
-          description: Should be a valid ENVO or EFO term
+          error_level: error
+          description: Should be a valid ENVO environmental material term
           examples:
             - soil
             - seawater
-            - gut microbiome
-            - wastewater
+            - freshwater
+            - feces
             - biofilm
 
   # ==========================================================================
@@ -131,26 +130,6 @@ columns:
             - Pacific Ocean
             - Amazon rainforest
             - 47.6062 N, 122.3321 W
-
-  - name: characteristics[environmental medium]
-    ontology_accession: PRIDE:0000994
-    description: Environmental material from which the sample was obtained (ENVO term). Corresponds to MIxS env_medium (MIXS:0000014).
-    requirement: recommended
-    allow_not_applicable: true
-    allow_not_available: true
-    validators:
-      - validator_name: ontology
-        params:
-          ontologies:
-            - envo
-          error_level: warning
-          description: Should be a valid ENVO environmental material term
-          examples:
-            - soil
-            - seawater
-            - freshwater
-            - feces
-            - biofilm
 
   # ==========================================================================
   # OPTIONAL COLUMNS - Environmental Context
