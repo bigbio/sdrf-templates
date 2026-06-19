@@ -934,7 +934,6 @@ columns:
           pattern: ^.+$
           description: n-alkane concentration, composition, or distribution
           examples:
-            - C17: 12 mg/kg; C29: 45 mg/kg
             - C15-C35 n-alkane profile determined by GC-MS
             - Total n-alkanes 150 µg/g dry weight
 
