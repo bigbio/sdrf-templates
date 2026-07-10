@@ -9,12 +9,14 @@ documentation: |
   Key differences from ms-proteomics:
   - No sample preparation chemistry columns (no digestion, reduction, alkylation).
   - `characteristics[sample type]` is required to distinguish study samples from controls and
-    reference materials used for assay calibration/quality control.
+    reference materials used for assay calibration/quality control (e.g. study sample,
+    negative control, positive control, calibrator, plate control, quality control sample).
   - `comment[platform]` identifies the specific instrument/platform.
   - `comment[panel name]` is RECOMMENDED, but it MUST be provided when `comment[platform]`
     refers to a platform family with multiple panels/menus and the panel/menu cannot be
     uniquely inferred (e.g., `Olink Target 96`, `SomaScan Assay v5.0`).
   - `comment[quantification unit]`: NPX for Olink, RFU for SomaScan.
+  - `characteristics[sample matrix]`: The biological fluid analyzed (serum, plasma, CSF, etc.).
   - `comment[dilution]`: Optional; commonly used for SomaScan workflows.
   - `comment[lot number]`: Optional reagent lot for traceability.
   - `comment[normalization method]`: How data was normalized (plate control, bridge, etc.).
@@ -41,7 +43,8 @@ validators:
       min_columns: 8
 columns:
   - name: characteristics[sample type]
-    description: Role of the sample in the assay. Distinguishes study samples from controls/reference materials for assay interpretation and quality control
+    ontology_accession: PRIDE:0000895
+    description: Role of the sample in the assay. Distinguishes study samples from controls and reference materials for assay interpretation and quality control.
     requirement: required
     allow_not_applicable: false
     allow_not_available: false
@@ -51,15 +54,19 @@ columns:
           ontologies:
             - pride
           parent_term: PRIDE:0000895
+          error_level: error
           description: Sample type should be a child of PRIDE:0000895 (sample type)
           examples:
             - study sample
             - negative control
             - positive control
             - calibrator
+            - plate control
+            - quality control sample
+            - buffer control
             - reference
             - standard
-            - buffer control
+            - bridge
 
   - name: comment[platform]
     description: Affinity proteomics platform used (e.g. Olink Explore HT, SomaScan Assay 7K)
@@ -144,6 +151,26 @@ columns:
           examples:
             - 1
             - 2
+
+  - name: characteristics[sample matrix]
+    description: Type of biological matrix used as input (e.g. serum, plasma, CSF, urine)
+    requirement: recommended
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: ontology
+        params:
+          ontologies:
+            - uberon
+            - bto
+          error_level: warning
+          description: Sample matrix should be a valid UBERON or BTO term
+          examples:
+            - serum
+            - plasma
+            - cerebrospinal fluid
+            - urine
+            - saliva
 
   - name: comment[normalization method]
     description: Normalization method applied to quantification values

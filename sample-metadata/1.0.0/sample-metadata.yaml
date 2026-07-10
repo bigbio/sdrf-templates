@@ -16,9 +16,11 @@ documentation: |
     Organism templates (human, vertebrates, etc.) override this to required.
   - `characteristics[biological replicate]`: Integer starting from 1. Use `pooled` for
     pooled reference samples only.
-  - `characteristics[sample type]`: Classifies the sample's role in multiplexed experiments.
-    Values include single cell, reference, bridge, carrier, empty, quality control sample,
-    and various control types. This column replaces older per-template role columns.
+  - `characteristics[sample type]`: Classifies the sample's role in the experiment.
+    Use `study sample` for biological samples under investigation. Control wells use
+    PRIDE control terms (e.g. negative control, positive control, calibrator, plate control,
+    quality control sample). Multiplexed or plate-normalization roles include reference,
+    bridge, carrier, pooled, and empty.
   - `characteristics[biosample accession number]`: Link to BioSample record (SAMN/SAMEA/SAMD).
 contributors:
   - Yasset Perez-Riverol (yperez@ebi.ac.uk) - EMBL-EBI
@@ -155,7 +157,7 @@ columns:
 
   - name: characteristics[sample type]
     ontology_accession: PRIDE:0000895
-    description: Classification of the sample role in the experiment. Distinguishes experimental samples from controls, references, and other roles in multiplexed or plate-based experiments.
+    description: Classification of the sample role in the experiment. Distinguishes study samples under investigation from controls, references, and other roles in multiplexed or plate-based experiments.
     requirement: optional
     allow_not_applicable: true
     allow_not_available: true
@@ -168,20 +170,22 @@ columns:
           error_level: error
           description: Sample type should be a child of PRIDE:0000895 (sample type)
           examples:
+            - study sample
             - single cell
+            - environmental sample
             - reference
             - bridge
             - carrier
             - pooled
             - empty
-            - quality control sample
             - negative control
             - positive control
             - bulk control
-            - standard
-            - calibrator
-            - plate control
             - buffer control
+            - plate control
+            - quality control sample
+            - calibrator
+            - standard
 
   - name: characteristics[disease]
     ontology_accession: MONDO:0000001
