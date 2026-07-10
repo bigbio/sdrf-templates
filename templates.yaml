@@ -3,7 +3,7 @@
 # To update: merge PR to master branch
 
 schema_version: '1.0'
-generated_at: '2026-05-11T10:55:36.940993+00:00'
+generated_at: '2026-07-10T11:25:38.820474+00:00'
 templates:
   affinity-proteomics:
     latest: 1.0.0
