@@ -133,6 +133,23 @@ columns:
             - very poorly drained
           error_level: warning
           description: drainage classification
+          
+  - name: characteristics[soil type method]
+    ontology_accession: PRIDE:0001009
+    description: Method used to determine or classify soil type, including the classification system, field assessment protocol, or laboratory procedure applied (MIXS:0000334).
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: pattern
+        params:
+          pattern: ^.+$
+          description: Description of the soil type determination or classification method
+          examples:
+            - USDA Soil Taxonomy classification
+            - WRB soil classification system
+            - Field assessment according to FAO Guidelines for Soil Description
+            - National Soil Resources Institute classification protocol      
 
   # ==========================================================================
   # OPTIONAL COLUMNS - Land Use & vegetation
