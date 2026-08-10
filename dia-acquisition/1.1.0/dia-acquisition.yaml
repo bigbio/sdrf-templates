@@ -8,9 +8,7 @@ documentation: |
   - `comment[proteomics data acquisition method]`: Must be DIA or a DIA
     descendant of PRIDE:0000659. Recommended form:
     `NT=data-independent acquisition;AC=PRIDE:0000450`. Plain free-text
-    `data-independent acquisition` is also allowed. Named variants such as
-    `diaPASEF` or `SWATH MS` may be used when that is the true method; finer
-    DIA detail can also go in `comment[dia method]`.
+    `data-independent acquisition` is also allowed.
   - `comment[scan window lower limit]` / `comment[scan window upper limit]`: The overall
     m/z range of the DIA method (e.g., 400-1200 for a typical SWATH experiment).
   - `comment[isolation window width]`: Width of individual isolation windows in m/z.
