@@ -117,7 +117,7 @@ columns:
             - 100
 
   - name: comment[carrier channel]
-    ontology_accession: PRIDE:0000941
+    ontology_accession: PRIDE:0000901
     description: TMT/TMTpro channel used for the carrier proteome
     requirement: recommended
     allow_not_applicable: true
@@ -133,7 +133,7 @@ columns:
             - TMT126
 
   - name: comment[reference channel]
-    ontology_accession: PRIDE:0000942
+    ontology_accession: PRIDE:0000899
     description: TMT/TMTpro channel used for the reference sample (for normalization across sets)
     requirement: recommended
     allow_not_applicable: true
