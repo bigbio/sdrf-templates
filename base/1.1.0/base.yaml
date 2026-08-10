@@ -30,6 +30,8 @@ usable_alone: false
 validators:
   - validator_name: trailing_whitespace_validator
     params: {}
+  - validator_name: column_name_validator
+    params: {}
   - validator_name: column_order
     params: {}
   - validator_name: empty_cells

@@ -139,6 +139,7 @@
           "type": "string",
           "enum": [
             "trailing_whitespace_validator",
+            "column_name_validator",
             "column_order",
             "empty_cells",
             "combination_of_columns_no_duplicate_validator",
