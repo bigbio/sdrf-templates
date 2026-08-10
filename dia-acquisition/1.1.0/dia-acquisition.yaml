@@ -48,6 +48,8 @@ columns:
           ontologies:
             - pride
           error_level: error
+          parent_accession: PRIDE:0000659
+          recommend_nt_ac: true
           description: >
             Must be a PRIDE ontology term under proteomics data acquisition
             method (PRIDE:0000659). Prefer a DIA term.
