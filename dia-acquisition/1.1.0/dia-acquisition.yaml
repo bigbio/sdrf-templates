@@ -1,12 +1,16 @@
 name: dia-acquisition
 description: SDRF template for Data-independent acquisition (DIA) experiments. Extends ms-proteomics with DIA-specific columns.
 documentation: |
-  The dia-acquisition template restricts the acquisition method to Data-independent
-  acquisition and adds DIA-specific window parameters.
+  The dia-acquisition template restricts the acquisition method to DIA (or a DIA
+  descendant under PRIDE:0000659) and adds DIA-specific window parameters.
 
   Key guidance:
-  - `comment[proteomics data acquisition method]`: Automatically restricted to
-    `Data-independent acquisition`. This is enforced by the template.
+  - `comment[proteomics data acquisition method]`: Must be DIA or a DIA
+    descendant of PRIDE:0000659. Recommended form:
+    `NT=data-independent acquisition;AC=PRIDE:0000450`. Plain free-text
+    `data-independent acquisition` is also allowed. Named variants such as
+    `diaPASEF` or `SWATH MS` may be used when that is the true method; finer
+    DIA detail can also go in `comment[dia method]`.
   - `comment[scan window lower limit]` / `comment[scan window upper limit]`: The overall
     m/z range of the DIA method (e.g., 400-1200 for a typical SWATH experiment).
   - `comment[isolation window width]`: Width of individual isolation windows in m/z.
@@ -31,19 +35,42 @@ layer: experiment
 columns:
   - name: comment[proteomics data acquisition method]
     ontology_accession: PRIDE:0000659
-    description: Mass spectrometry acquisition method (restricted to DIA for this template)
+    description: >
+      Mass spectrometry acquisition method restricted to DIA or a DIA descendant
+      under PRIDE:0000659. Prefer NT=data-independent acquisition;AC=PRIDE:0000450;
+      plain free-text labels are allowed.
     requirement: required
     allow_not_applicable: false
     allow_not_available: false
     validators:
       - validator_name: single_cardinality_validator
         params: {}
+      - validator_name: ontology
+        params:
+          ontologies:
+            - pride
+          error_level: error
+          description: >
+            Must be a PRIDE ontology term under proteomics data acquisition
+            method (PRIDE:0000659). Prefer a DIA term.
+          examples:
+            - NT=data-independent acquisition;AC=PRIDE:0000450
+            - data-independent acquisition
+            - NT=diaPASEF;AC=PRIDE:0000650
+            - NT=SWATH MS;AC=PRIDE:0000447
       - validator_name: values
         params:
           values:
-            - Data-independent acquisition
+            - data-independent acquisition
+            - NT=data-independent acquisition;AC=PRIDE:0000450
+            - diaPASEF
+            - NT=diaPASEF;AC=PRIDE:0000650
+            - SWATH MS
+            - NT=SWATH MS;AC=PRIDE:0000447
           error_level: error
-          description: This template requires Data-independent acquisition
+          description: >
+            This template requires DIA or a named DIA descendant under
+            PRIDE:0000659 (plain label or recommended NT+AC form)
 
   - name: comment[scan window lower limit]
     ontology_accession: MS:1000501

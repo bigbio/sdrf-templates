@@ -55,7 +55,11 @@ validators:
 columns:
   - name: comment[proteomics data acquisition method]
     ontology_accession: PRIDE:0000659
-    description: Mass spectrometry acquisition method
+    description: >
+      Mass spectrometry acquisition method. Values MUST be descendants of
+      PRIDE:0000659. Recommended form is lowercase NT+AC
+      (e.g. NT=data-dependent acquisition;AC=PRIDE:0000627); plain free-text
+      OLS labels are also allowed.
     requirement: required
     allow_not_applicable: false
     allow_not_available: false
@@ -65,12 +69,17 @@ columns:
           ontologies:
             - pride
           error_level: error
-          description: The proteomics data acquisition method should be a valid PRIDE ontology term
+          description: >
+            Must be a PRIDE ontology term under proteomics data acquisition
+            method (PRIDE:0000659). Prefer lowercase NT=<label>;AC=<accession>;
+            plain free-text OLS labels are allowed.
           examples:
+            - NT=data-dependent acquisition;AC=PRIDE:0000627
+            - NT=data-independent acquisition;AC=PRIDE:0000450
+            - NT=parallel reaction monitoring;AC=PRIDE:0000629
+            - NT=selected reaction monitoring;AC=PRIDE:0000630
             - data-dependent acquisition
             - data-independent acquisition
-            - parallel reaction monitoring
-            - selected reaction monitoring
 
   - name: comment[instrument]
     ontology_accession: MS:1000031
