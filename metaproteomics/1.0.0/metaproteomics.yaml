@@ -19,8 +19,6 @@ documentation: |
     soil + ms-proteomics
 
   Key columns:
-  - `characteristics[environmental sample type]`: Required. ENVO/EFO term describing
-    the environmental material (soil, seawater, gut microbiome, biofilm).
   - `characteristics[geographic location]`: Recommended. GAZ term or coordinates.
   - `characteristics[collection date]`: ISO 8601 date of sample collection.
   - `characteristics[environmental medium]`: ENVO term for the environmental material.
