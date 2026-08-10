@@ -1,18 +1,20 @@
 name: dia-acquisition
 description: SDRF template for Data-independent acquisition (DIA) experiments. Extends ms-proteomics with DIA-specific columns.
 documentation: |
-  The dia-acquisition template restricts the acquisition method to Data-independent
-  acquisition and adds DIA-specific window parameters.
+  The dia-acquisition template restricts the acquisition method to DIA (or a DIA
+  descendant under PRIDE:0000659) and adds DIA-specific window parameters.
 
   Key guidance:
-  - `comment[proteomics data acquisition method]`: Automatically restricted to
-    `Data-independent acquisition`. This is enforced by the template.
+  - `comment[proteomics data acquisition method]`: Must be DIA or a DIA
+    descendant of PRIDE:0000659. Recommended form:
+    `NT=Data-independent acquisition;AC=PRIDE:0000450`. Plain free-text
+    `Data-independent acquisition` is also allowed. Specific DIA variants
+    (e.g. diaPASEF, SWATH MS) are recorded in this same column as DIA
+    descendants, e.g. `NT=diaPASEF;AC=PRIDE:0000650`.
   - `comment[scan window lower limit]` / `comment[scan window upper limit]`: The overall
     m/z range of the DIA method (e.g., 400-1200 for a typical SWATH experiment).
   - `comment[isolation window width]`: Width of individual isolation windows in m/z.
     Common values: 25 (wide SWATH), 8 (narrow windows), 4 (high-resolution DIA).
-  - `comment[dia method]`: The specific DIA variant used. Common values:
-    SWATH-MS, diaPASEF (Bruker timsTOF), MSE (Waters), All ion fragmentation.
 
   This template inherits all ms-proteomics columns (instrument, label, cleavage agent, etc.).
   The ms-proteomics range columns (ms min/max mz, rt, im) are also relevant for DIA methods.
@@ -31,19 +33,44 @@ layer: experiment
 columns:
   - name: comment[proteomics data acquisition method]
     ontology_accession: PRIDE:0000659
-    description: Mass spectrometry acquisition method (restricted to DIA for this template)
+    description: >
+      Mass spectrometry acquisition method restricted to DIA or a DIA descendant
+      under PRIDE:0000659. Prefer NT=Data-independent acquisition;AC=PRIDE:0000450;
+      plain free-text labels are allowed.
     requirement: required
     allow_not_applicable: false
     allow_not_available: false
     validators:
       - validator_name: single_cardinality_validator
         params: {}
+      - validator_name: ontology
+        params:
+          ontologies:
+            - pride
+          error_level: error
+          parent_accession: PRIDE:0000659
+          recommend_nt_ac: true
+          description: >
+            Must be a PRIDE ontology term under proteomics data acquisition
+            method (PRIDE:0000659). Prefer a DIA term.
+          examples:
+            - NT=Data-independent acquisition;AC=PRIDE:0000450
+            - Data-independent acquisition
+            - NT=diaPASEF;AC=PRIDE:0000650
+            - NT=SWATH MS;AC=PRIDE:0000447
       - validator_name: values
         params:
           values:
             - Data-independent acquisition
+            - NT=Data-independent acquisition;AC=PRIDE:0000450
+            - diaPASEF
+            - NT=diaPASEF;AC=PRIDE:0000650
+            - SWATH MS
+            - NT=SWATH MS;AC=PRIDE:0000447
           error_level: error
-          description: This template requires Data-independent acquisition
+          description: >
+            This template requires DIA or a named DIA descendant under
+            PRIDE:0000659 (plain label or recommended NT+AC form)
 
   - name: comment[scan window lower limit]
     ontology_accession: MS:1000501
@@ -90,22 +117,3 @@ columns:
             - 25
             - 8
             - 4
-
-  - name: comment[dia method]
-    ontology_accession: PRIDE:0000450
-    description: Specific DIA method variant used
-    requirement: recommended
-    allow_not_applicable: true
-    allow_not_available: true
-    validators:
-      - validator_name: ontology
-        params:
-          ontologies:
-            - pride
-          error_level: warning
-          description: Should be a valid PRIDE ontology term for DIA methods
-          examples:
-            - SWATH-MS
-            - MSE
-            - All ion fragmentation
-            - diaPASEF
