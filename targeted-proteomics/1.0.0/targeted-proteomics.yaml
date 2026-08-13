@@ -1,0 +1,198 @@
+name: targeted-proteomics
+description: SDRF template for targeted proteomics experiments. This is the base template for all targeted proteomics experiments which will allow for absolute quantification of proteins.
+documentation: |
+  The targeted-proteomics template is currently available with ProtemEdge workflow for absolute quantification of proteins (https://www.protemedge.com/).
+
+  Use this template directly for targeted experiments and combine with an organism template.
+
+  Key differences from ms-proteomics:
+  - `characteristics[sample type]` is required to distinguish study samples from controls and
+    reference materials used for assay calibration/quality control (e.g. study sample,
+    negative control, positive control, calibrator, plate control, quality control sample).
+  - `comment[platform]` identifies the specific instrument/platform.
+  - `comment[panel name]` is RECOMMENDED, but it MUST be provided when `comment[platform]`
+    refers to a platform family with multiple panels/menus and the panel/menu cannot be
+    uniquely inferred (e.g., `Olink Target 96`, `SomaScan Assay v5.0`).
+  - `comment[quantification unit]`: NPX for Olink, RFU for SomaScan.
+  - `characteristics[sample matrix]`: The biological fluid analyzed (serum, plasma, CSF, etc.).
+  - `comment[dilution]`: Optional; commonly used for SomaScan workflows.
+  - `comment[lot number]`: Optional reagent lot for traceability.
+  - `comment[normalization method]`: How data was normalized (plate control, bridge, etc.).
+
+  Mutually exclusive with ms-proteomics and ms-metabolomics.
+contributors:
+  - Thanadol Sutantiwanichkul (thanadol@kth.se) - KTH Royal Institute of Technology/SciLifeLab
+  - Yasset Perez-Riverol (yperez@ebi.ac.uk) - EMBL-EBI
+  - Fredrik Edfors (edfors@kth.se) - KTH Royal Institute of Technology/SciLifeLab
+version: 1.0.0
+extends: sample-metadata@>=1.0.0
+usable_alone: true
+layer: technology
+mutually_exclusive_with:
+  - ms-proteomics
+validators:
+  - validator_name: min_columns
+    params:
+      min_columns: 8
+columns:
+  - name: characteristics[sample type]
+    ontology_accession: PRIDE:0000895
+    description: Role of the sample in the assay. Distinguishes study samples from controls and reference materials for assay interpretation and quality control.
+    requirement: required
+    allow_not_applicable: false
+    allow_not_available: false
+    validators:
+      - validator_name: ontology
+        params:
+          ontologies:
+            - pride
+          parent_term: PRIDE:0000895
+          error_level: error
+          description: Sample type should be a child of PRIDE:0000895 (sample type)
+          examples:
+            - study sample
+            - negative control
+            - positive control
+            - calibrator
+            - plate control
+            - quality control sample
+            - buffer control
+            - reference
+            - standard
+            - bridge
+
+  - name: comment[platform]
+    description: Affinity proteomics platform used (e.g. Olink Explore HT, SomaScan Assay 7K)
+    requirement: required
+    allow_not_applicable: false
+    allow_not_available: false
+    validators:
+      - validator_name: single_cardinality_validator
+        params: {}
+      - validator_name: ontology
+        params:
+          ontologies:
+            - pride
+          error_level: error
+          description: The platform should be a valid PRIDE ontology term for affinity platforms
+          examples:
+            - Olink Explore HT
+            - Olink Target 96
+            - SomaScan Assay 11K
+
+  - name: comment[instrument]
+    ontology_accession: MS:1000031
+    description: Instrument used for data acquisition (e.g. sequencer, qPCR machine, microarray reader)
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: ontology
+        params:
+          ontologies:
+            - ms
+            - pride
+          error_level: warning
+          description: The instrument should be a valid PSI-MS ontology term
+          examples:
+            - Illumina NovaSeq X
+            - Illumina NextSeq 2000
+            - Agilent SureScan Microarray Scanner
+
+  - name: comment[panel name]
+    description: Commercial panel/menu identifier within the platform. RECOMMENDED, but MUST be provided when not uniquely inferable from comment[platform].
+    requirement: recommended
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: pattern
+        params:
+          pattern: ^.+$
+          error_level: warning
+          description: Panel/menu identifier
+          examples:
+            - Target 96 Inflammation
+            - Explore 1536
+            - SomaScan 7K
+            - SomaScan 11K
+
+  - name: comment[quantification unit]
+    ontology_accession: PRIDE:0000392
+    description: Unit of quantification for the assay (platform-specific)
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: values
+        params:
+          values:
+            - NPX
+            - RFU
+          error_level: warning
+          description: Quantification unit
+
+  - name: comment[plate]
+    description: Plate identifier for batch effect analysis
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: pattern
+        params:
+          pattern: ^.+$
+          description: Plate identifier
+          examples:
+            - 1
+            - 2
+
+  - name: characteristics[sample matrix]
+    description: Type of biological matrix used as input (e.g. serum, plasma, CSF, urine)
+    requirement: recommended
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: ontology
+        params:
+          ontologies:
+            - uberon
+            - bto
+          error_level: warning
+          description: Sample matrix should be a valid UBERON or BTO term
+          examples:
+            - serum
+            - plasma
+            - cerebrospinal fluid
+            - urine
+            - saliva
+
+  - name: comment[dilution]
+    ontology_accession: OBI:0002483
+    description: Sample dilution factor used (commonly used for SomaScan workflows)
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: pattern
+        params:
+          pattern: ^((0\.005|0\.5|20|40)%|[0-9]+(\.[0-9]+)?%?|1:[0-9]+)$
+          description: Dilution factor; SomaScan commonly uses 0.005%, 0.5%, 20%, 40%
+          examples:
+            - 0.005%
+            - 0.5%
+            - 20%
+            - 40%
+            - 1:200
+
+  - name: comment[lot number]
+    description: Reagent lot number for traceability
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: pattern
+        params:
+          pattern: ^.+$
+          description: Lot number
+          examples:
+            - SS-2023-001
+            - lot_12345
