@@ -1,29 +1,27 @@
 name: targeted-proteomics
 description: SDRF template for targeted proteomics experiments. This is the base template for all targeted proteomics experiments which will allow for absolute quantification of proteins.
 documentation: |
-  The targeted-proteomics template is currently available with ProtemEdge workflow for absolute quantification of proteins (https://www.protemedge.com/).
-
-  Use this template directly for targeted experiments and combine with an organism template.
+  The targeted-proteomics template is currently aonly vailable with ProtemEdge workflow for absolute quantification of proteins (https://www.protemedge.com/). 
+  This template is not usable alone, it must be combined with the list of target proteins and their spiked-in levels inorder to calculate absolute quantification.
 
   Key differences from ms-proteomics:
-  - `characteristics[sample type]` is required to distinguish study samples from controls and
-    reference materials used for assay calibration/quality control (e.g. study sample,
-    negative control, positive control, calibrator, plate control, quality control sample).
-  - `comment[platform]` identifies the specific instrument/platform.
-  - `comment[panel name]` is RECOMMENDED, but it MUST be provided when `comment[platform]`
-    refers to a platform family with multiple panels/menus and the panel/menu cannot be
-    uniquely inferred (e.g., `Olink Target 96`, `SomaScan Assay v5.0`).
-  - `comment[quantification unit]`: NPX for Olink, RFU for SomaScan.
-  - `characteristics[sample matrix]`: The biological fluid analyzed (serum, plasma, CSF, etc.).
-  - `comment[dilution]`: Optional; commonly used for SomaScan workflows.
-  - `comment[lot number]`: Optional reagent lot for traceability.
-  - `comment[normalization method]`: How data was normalized (plate control, bridge, etc.).
+  # - `characteristics[sample type]` is required to distinguish study samples from controls and
+  #   reference materials used for assay calibration/quality control (e.g. study sample,
+  #   negative control, positive control, calibrator, plate control, quality control sample).
+  # - `comment[platform]` identifies the specific instrument/platform.
+  # - `comment[panel name]` is RECOMMENDED, but it MUST be provided when `comment[platform]`
+  #   refers to a platform family with multiple panels/menus and the panel/menu cannot be
+  #   uniquely inferred (e.g., `Olink Target 96`, `SomaScan Assay v5.0`).
+  # - `comment[quantification unit]`: NPX for Olink, RFU for SomaScan.
+  # - `characteristics[sample matrix]`: The biological fluid analyzed (serum, plasma, CSF, etc.).
+  # - `comment[dilution]`: Optional; commonly used for SomaScan workflows.
+  # - `comment[lot number]`: Optional reagent lot for traceability.
+  # - `comment[normalization method]`: How data was normalized (plate control, bridge, etc.).
 
   Mutually exclusive with ms-proteomics and ms-metabolomics.
 contributors:
   - Thanadol Sutantiwanichkul (thanadol@kth.se) - KTH Royal Institute of Technology/SciLifeLab
   - Yasset Perez-Riverol (yperez@ebi.ac.uk) - EMBL-EBI
-  - Fredrik Edfors (edfors@kth.se) - KTH Royal Institute of Technology/SciLifeLab
 version: 1.0.0
 extends: sample-metadata@>=1.0.0
 usable_alone: true
@@ -35,57 +33,58 @@ validators:
     params:
       min_columns: 8
 columns:
-  - name: characteristics[sample type]
-    ontology_accession: PRIDE:0000895
-    description: Role of the sample in the assay. Distinguishes study samples from controls and reference materials for assay interpretation and quality control.
-    requirement: required
-    allow_not_applicable: false
-    allow_not_available: false
-    validators:
-      - validator_name: ontology
-        params:
-          ontologies:
-            - pride
-          parent_term: PRIDE:0000895
-          error_level: error
-          description: Sample type should be a child of PRIDE:0000895 (sample type)
-          examples:
-            - study sample
-            - negative control
-            - positive control
-            - calibrator
-            - plate control
-            - quality control sample
-            - buffer control
-            - reference
-            - standard
-            - bridge
+  # - name: characteristics[sample type]
+  #   ontology_accession: PRIDE:0000895
+  #   description: Role of the sample in the assay. Distinguishes study samples from controls and reference materials for assay interpretation and quality control.
+  #   requirement: required
+  #   allow_not_applicable: false
+  #   allow_not_available: false
+  #   validators:
+  #     - validator_name: ontology
+  #       params:
+  #         ontologies:
+  #           - pride
+  #         parent_term: PRIDE:0000895
+  #         error_level: error
+  #         description: Sample type should be a child of PRIDE:0000895 (sample type)
+  #         examples:
+  #           - study sample
+  #           - negative control
+  #           - positive control
+  #           - calibrator
+  #           - plate control
+  #           - quality control sample
+  #           - buffer control
+  #           - reference
+  #           - standard
+  #           - bridge
 
-  - name: comment[platform]
-    description: Affinity proteomics platform used (e.g. Olink Explore HT, SomaScan Assay 7K)
-    requirement: required
-    allow_not_applicable: false
-    allow_not_available: false
-    validators:
-      - validator_name: single_cardinality_validator
-        params: {}
-      - validator_name: ontology
-        params:
-          ontologies:
-            - pride
-          error_level: error
-          description: The platform should be a valid PRIDE ontology term for affinity platforms
-          examples:
-            - Olink Explore HT
-            - Olink Target 96
-            - SomaScan Assay 11K
+  # - name: comment[platform]
+  #   description: Affinity proteomics platform used (e.g. Olink Explore HT, SomaScan Assay 7K)
+  #   requirement: required
+  #   allow_not_applicable: false
+  #   allow_not_available: false
+  #   validators:
+  #     - validator_name: single_cardinality_validator
+  #       params: {}
+  #     - validator_name: ontology
+  #       params:
+  #         ontologies:
+  #           - pride
+  #         error_level: error
+  #         description: The platform should be a valid PRIDE ontology term for affinity platforms
+  #         examples:
+  #           - Olink Explore HT
+  #           - Olink Target 96
+  #           - SomaScan Assay 11K
 
   - name: comment[instrument]
     ontology_accession: MS:1000031
-    description: Instrument used for data acquisition (e.g. sequencer, qPCR machine, microarray reader)
-    requirement: optional
-    allow_not_applicable: true
-    allow_not_available: true
+    description: Mass spectrometer instrument used. Mostly the triple quadrupole instruments but can be any instrument that can be used for absolute quantification of proteins.
+    requirement: required
+    cardinality: multiple
+    allow_not_applicable: false
+    allow_not_available: false
     validators:
       - validator_name: ontology
         params:
@@ -93,11 +92,13 @@ columns:
             - ms
             - pride
           error_level: warning
-          description: The instrument should be a valid PSI-MS ontology term
+          description: The instrument should be a valid MS or PRIDE ontology term
           examples:
-            - Illumina NovaSeq X
-            - Illumina NextSeq 2000
-            - Agilent SureScan Microarray Scanner
+            - LTQ Orbitrap
+            - Q Exactive
+            - Orbitrap Fusion Lumos
+            - timsTOF Pro
+
 
   - name: comment[panel name]
     description: Commercial panel/menu identifier within the platform. RECOMMENDED, but MUST be provided when not uniquely inferable from comment[platform].
