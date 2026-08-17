@@ -236,6 +236,40 @@ columns:
             - "5.5"
             - "8.2"
 
+  - name: characteristics[broad-scale environmental context]
+    ontology_accession: MIXS:0000012
+    description: Report the major environmental system the sample or specimen came from. This term describes the broad ecological context or biome and is typically represented using controlled vocabulary terms such as ENVO.
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: pattern
+        params:
+          pattern: ^.+$
+          description: Broad environmental context or biome
+          examples:
+            - temperate forest biome
+            - marine pelagic biome
+            - agricultural field
+            - desert biome   
+
+  - name: characteristics[local environmental context]
+    ontology_accession: MIXS:0000013
+    description: Report the specific environmental setting or feature surrounding the sample within the broader ecosystem. This term provides finer-scale environmental context and is typically represented using controlled vocabulary terms such as ENVO.
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: pattern
+        params:
+          pattern: ^.+$
+          description: Local environmental context
+          examples:
+            - rhizosphere
+            - estuarine sediment
+            - leaf litter
+            - coral reef   
+
   # ==========================================================================
   # OPTIONAL COLUMNS - Sample Storage and Processing
   # ==========================================================================
