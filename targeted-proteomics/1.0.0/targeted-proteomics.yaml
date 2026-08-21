@@ -1,22 +1,17 @@
 name: targeted-proteomics
 description: SDRF template for targeted proteomics experiments. This is the base template for all targeted proteomics experiments which will allow for absolute quantification of proteins.
 documentation: |
-  The targeted-proteomics template is currently aonly vailable with ProtemEdge workflow for absolute quantification of proteins (https://www.protemedge.com/). 
+  The targeted-proteomics template is built based on ms-proteomics template. It provides additional information for spiked-in targets in targeted experiments.
+  The currrent version is based on ProtemEdge workflow for absolute quantification of proteins (https://www.protemedge.com/).
+
   This template is not usable alone, it must be combined with the list of target proteins and their spiked-in levels inorder to calculate absolute quantification.
 
   Key differences from ms-proteomics:
-  # - `characteristics[sample type]` is required to distinguish study samples from controls and
-  #   reference materials used for assay calibration/quality control (e.g. study sample,
-  #   negative control, positive control, calibrator, plate control, quality control sample).
-  # - `comment[platform]` identifies the specific instrument/platform.
-  # - `comment[panel name]` is RECOMMENDED, but it MUST be provided when `comment[platform]`
-  #   refers to a platform family with multiple panels/menus and the panel/menu cannot be
-  #   uniquely inferred (e.g., `Olink Target 96`, `SomaScan Assay v5.0`).
-  # - `comment[quantification unit]`: NPX for Olink, RFU for SomaScan.
-  # - `characteristics[sample matrix]`: The biological fluid analyzed (serum, plasma, CSF, etc.).
-  # - `comment[dilution]`: Optional; commonly used for SomaScan workflows.
-  # - `comment[lot number]`: Optional reagent lot for traceability.
-  # - `comment[normalization method]`: How data was normalized (plate control, bridge, etc.).
+  - Additional columns for targeted proteomics experiments are added to the template. These columns are relevant for identification of the spiked-in targets.
+  - `comment[targeted vendor]`: Vendor of the spiked-in panel where the panel was provided by.
+  - `comment[targeted technique]`: Technique used to produce recombinant proteins for the spiked-in panel.
+  - `comment[targeted panel]`: Name of the spiked-in panel. Mostly identifiable by the vendor name and the technique used. This will also provide the target protein/peptide list.
+  - `comment[panel lot]`: Lot number of the spiked-in panel that was used for the experiment.
 
   Mutually exclusive with ms-proteomics and ms-metabolomics.
 contributors:
@@ -31,52 +26,8 @@ mutually_exclusive_with:
 validators:
   - validator_name: min_columns
     params:
-      min_columns: 8
+      min_columns: 12
 columns:
-  # - name: characteristics[sample type]
-  #   ontology_accession: PRIDE:0000895
-  #   description: Role of the sample in the assay. Distinguishes study samples from controls and reference materials for assay interpretation and quality control.
-  #   requirement: required
-  #   allow_not_applicable: false
-  #   allow_not_available: false
-  #   validators:
-  #     - validator_name: ontology
-  #       params:
-  #         ontologies:
-  #           - pride
-  #         parent_term: PRIDE:0000895
-  #         error_level: error
-  #         description: Sample type should be a child of PRIDE:0000895 (sample type)
-  #         examples:
-  #           - study sample
-  #           - negative control
-  #           - positive control
-  #           - calibrator
-  #           - plate control
-  #           - quality control sample
-  #           - buffer control
-  #           - reference
-  #           - standard
-  #           - bridge
-
-  # - name: comment[platform]
-  #   description: Affinity proteomics platform used (e.g. Olink Explore HT, SomaScan Assay 7K)
-  #   requirement: required
-  #   allow_not_applicable: false
-  #   allow_not_available: false
-  #   validators:
-  #     - validator_name: single_cardinality_validator
-  #       params: {}
-  #     - validator_name: ontology
-  #       params:
-  #         ontologies:
-  #           - pride
-  #         error_level: error
-  #         description: The platform should be a valid PRIDE ontology term for affinity platforms
-  #         examples:
-  #           - Olink Explore HT
-  #           - Olink Target 96
-  #           - SomaScan Assay 11K
 
   - name: comment[instrument]
     ontology_accession: MS:1000031
@@ -99,38 +50,28 @@ columns:
             - Orbitrap Fusion Lumos
             - timsTOF Pro
 
-
-  - name: comment[panel name]
-    description: Commercial panel/menu identifier within the platform. RECOMMENDED, but MUST be provided when not uniquely inferable from comment[platform].
-    requirement: recommended
-    allow_not_applicable: true
-    allow_not_available: true
+  - name: comment[proteomics data acquisition method]
+    ontology_accession: MS:1000031
+    description: Proteomics data acquisition method used.
+    requirement: required
+    cardinality: single
+    allow_not_applicable: false
+    allow_not_available: false
     validators:
-      - validator_name: pattern
+      - validator_name: ontology
         params:
-          pattern: ^.+$
+          ontologies:
+            - ms
+            - pride
           error_level: warning
-          description: Panel/menu identifier
+          description: The proteomics data acquisition method should be a valid MS or PRIDE ontology term
           examples:
-            - Target 96 Inflammation
-            - Explore 1536
-            - SomaScan 7K
-            - SomaScan 11K
-
-  - name: comment[quantification unit]
-    ontology_accession: PRIDE:0000392
-    description: Unit of quantification for the assay (platform-specific)
-    requirement: optional
-    allow_not_applicable: true
-    allow_not_available: true
-    validators:
-      - validator_name: values
-        params:
-          values:
-            - NPX
-            - RFU
-          error_level: warning
-          description: Quantification unit
+            - Data-dependent acquisition
+            - Data-independent acquisition
+            - Parallel reaction monitoring
+            - Selected reaction monitoring
+            - Data-dependent acquisition
+            - Data-independent acquisition
 
   - name: comment[plate]
     description: Plate identifier for batch effect analysis
@@ -166,27 +107,58 @@ columns:
             - urine
             - saliva
 
-  - name: comment[dilution]
-    ontology_accession: OBI:0002483
-    description: Sample dilution factor used (commonly used for SomaScan workflows)
-    requirement: optional
+  - name: comment[targeted vendor]
+    description: Vendor of the spiked-in panel
+    requirement: recommended
     allow_not_applicable: true
     allow_not_available: true
     validators:
       - validator_name: pattern
         params:
-          pattern: ^((0\.005|0\.5|20|40)%|[0-9]+(\.[0-9]+)?%?|1:[0-9]+)$
-          description: Dilution factor; SomaScan commonly uses 0.005%, 0.5%, 20%, 40%
+          pattern: ^.+$
+          description: Name of the company providing the spiked-in panel
           examples:
-            - 0.005%
-            - 0.5%
-            - 20%
-            - 40%
-            - 1:200
+            - ProteomEdge
+            - Polyquant
+            - Absea Biotechnology
+            - CellFree Sciences
+            - MRM Proteomics
+
+  - name: comment[targeted technique]
+    description: Technique used to produce recombinant protein/peptide of the spike-in the panel. Based on the standard design and production process, this will provide the structural integrity of the spiked-in targets.
+    requirement: required
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: pattern
+        params:
+          pattern: ^.+$
+          description: Technique used to spiked-in the panel
+          examples:
+            - SIS-PrEST
+            - AQUA
+            - FLEXIQuant
+            - PSAQ
+            - PeptiQuant
+
+  - name: comment[targeted panel]
+    description: name of the spiked-in panel
+    requirement: required
+    allow_not_applicable: true
+    allow_not_available: trueclea
+    validators:
+      - validator_name: pattern
+        params:
+          pattern: ^.+$
+          description: Lot number
+          examples:
+            - ApoEdge
+            - ComplemEdge
+            - LiverEdge
 
   - name: comment[lot number]
-    description: Reagent lot number for traceability
-    requirement: optional
+    description: Reagent lot number for traceability. Lot number of the spiked-in panel that was used for the experiment for traceability. This could provide the accurate usage of the spiked-in panel.
+    requirement: required 
     allow_not_applicable: true
     allow_not_available: true
     validators:
@@ -195,5 +167,5 @@ columns:
           pattern: ^.+$
           description: Lot number
           examples:
-            - SS-2023-001
+            - 24001
             - lot_12345
