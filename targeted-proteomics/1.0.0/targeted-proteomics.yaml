@@ -32,7 +32,7 @@ columns:
   - name: comment[plate]
     description: Plate identifier for batch effect analysis
     requirement: optional
-    allow_not_applicable: trueea
+    allow_not_applicable: true
     allow_not_available: true
     validators:
       - validator_name: pattern
