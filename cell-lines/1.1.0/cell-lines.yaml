@@ -12,6 +12,10 @@ documentation: |
   - `characteristics[cellosaurus accession]`: Required. Look up accessions at
     https://www.cellosaurus.org/. Format: CVCL_XXXX (e.g., CVCL_0030 for HeLa).
   - `characteristics[cell line]`: Required. Use standard cell line names from CLO/BTO/EFO.
+  - `characteristics[sample type]`: Recommended. Classify the sample's role. Use
+    `study sample` for real cell-line samples; type multiplexed reference roles —
+    `bridge`, `carrier`, `pooled`, `reference`, `empty` — here, with
+    `characteristics[cell line]` = `not applicable` (they are not cell lines).
   - `characteristics[disease]`: Required. The disease of the donor tissue from which the
     cell line was originally derived. Use `normal` for non-disease-derived cell lines.
   - `characteristics[tissue supergroup]`: Optional broader anatomical bucket inherited from
@@ -41,6 +45,16 @@ requires:
   - layer: technology   # ms-proteomics, affinity-proteomics, or ms-metabolomics
   - layer: sample       # human, vertebrates, or invertebrates (based on cell line origin)
 columns:
+  # Surface sample type (inherited from sample-metadata) as recommended: cell-line
+  # experiments frequently include multiplexed reference roles — TMT bridge/carrier/
+  # pooled/reference channels — that must be typed here (e.g. bridge = PRIDE:0000900,
+  # carrier = PRIDE:0000901, pooled = PRIDE:0000902) instead of being placed in
+  # characteristics[cell line], where they are not real cell lines. Use `not applicable`
+  # as the cell line for such rows.
+  - name: characteristics[sample type]
+    ontology_accession: PRIDE:0000895
+    requirement: recommended
+
   - name: characteristics[cell line]
     ontology_accession: CLO:0000031
     description: Name of the cell line
