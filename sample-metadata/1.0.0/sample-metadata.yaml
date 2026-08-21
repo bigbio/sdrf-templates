@@ -157,8 +157,8 @@ columns:
 
   - name: characteristics[sample type]
     ontology_accession: PRIDE:0000895
-    description: Classification of the sample role in the experiment. Distinguishes study samples under investigation from controls, references, and other roles in multiplexed or plate-based experiments.
-    requirement: optional
+    description: Classification of the sample role in the experiment. Distinguishes study samples under investigation from controls, references, and other roles in multiplexed or plate-based experiments. Use `study sample` for the biological samples under investigation; type multiplexed reference roles here rather than in the sample-identity columns (e.g. `bridge` PRIDE:0000900, `carrier` PRIDE:0000901, `pooled` PRIDE:0000902, `reference`, `empty`), setting the sample-identity column (e.g. organism/cell line/tissue) to `not applicable` for such rows.
+    requirement: recommended
     allow_not_applicable: true
     allow_not_available: true
     validators:
