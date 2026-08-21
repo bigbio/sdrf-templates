@@ -29,54 +29,10 @@ validators:
       min_columns: 12
 columns:
 
-  - name: comment[instrument]
-    ontology_accession: MS:1000031
-    description: Mass spectrometer instrument used. Mostly the triple quadrupole instruments but can be any instrument that can be used for absolute quantification of proteins.
-    requirement: required
-    cardinality: multiple
-    allow_not_applicable: false
-    allow_not_available: false
-    validators:
-      - validator_name: ontology
-        params:
-          ontologies:
-            - ms
-            - pride
-          error_level: warning
-          description: The instrument should be a valid MS or PRIDE ontology term
-          examples:
-            - LTQ Orbitrap
-            - Q Exactive
-            - Orbitrap Fusion Lumos
-            - timsTOF Pro
-
-  - name: comment[proteomics data acquisition method]
-    ontology_accession: MS:1000031
-    description: Proteomics data acquisition method used.
-    requirement: required
-    cardinality: single
-    allow_not_applicable: false
-    allow_not_available: false
-    validators:
-      - validator_name: ontology
-        params:
-          ontologies:
-            - ms
-            - pride
-          error_level: warning
-          description: The proteomics data acquisition method should be a valid MS or PRIDE ontology term
-          examples:
-            - Data-dependent acquisition
-            - Data-independent acquisition
-            - Parallel reaction monitoring
-            - Selected reaction monitoring
-            - Data-dependent acquisition
-            - Data-independent acquisition
-
   - name: comment[plate]
     description: Plate identifier for batch effect analysis
     requirement: optional
-    allow_not_applicable: true
+    allow_not_applicable: trueea
     allow_not_available: true
     validators:
       - validator_name: pattern
@@ -145,18 +101,18 @@ columns:
     description: name of the spiked-in panel
     requirement: required
     allow_not_applicable: true
-    allow_not_available: trueclea
+    allow_not_available: true
     validators:
       - validator_name: pattern
         params:
           pattern: ^.+$
-          description: Lot number
+          description: targeted panel name
           examples:
             - ApoEdge
             - ComplemEdge
             - LiverEdge
 
-  - name: comment[lot number]
+  - name: comment[panel lot]
     description: Reagent lot number for traceability. Lot number of the spiked-in panel that was used for the experiment for traceability. This could provide the accurate usage of the spiked-in panel.
     requirement: required 
     allow_not_applicable: true
