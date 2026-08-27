@@ -216,6 +216,10 @@
           "enum": ["multiple"],
           "description": "Set to 'multiple' if more than one column with this name is allowed."
         },
+        "default": {
+          "type": "string",
+          "description": "Value a writer uses when the column is required and the row is not one of the special cases the column exists to mark. It names the ordinary state, which is a known value rather than a missing one, so a column with a default should not also accept a reserved word."
+        },
         "allow_not_applicable": {
           "type": "boolean",
           "description": "Whether the value 'not applicable' is accepted.",

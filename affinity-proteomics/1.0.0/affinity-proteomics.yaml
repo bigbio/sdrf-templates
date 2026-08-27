@@ -46,6 +46,11 @@ columns:
     ontology_accession: PRIDE:0000895
     description: Role of the sample in the assay. Distinguishes study samples from controls and reference materials for assay interpretation and quality control.
     requirement: required
+    # The column exists to mark the rows that are NOT ordinary samples. If a row is not
+    # identified as a control, reference, calibrator or blank, then it is a study sample --
+    # that is a known value, not a missing one, so neither reserved word is accepted here.
+    # Writers use this default rather than recording the role as unknown.
+    default: study sample
     allow_not_applicable: false
     allow_not_available: false
     validators:
