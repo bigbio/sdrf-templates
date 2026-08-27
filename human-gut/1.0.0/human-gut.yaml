@@ -481,13 +481,13 @@ columns:
     validators:
       - validator_name: ontology
         params:
-        ontologies:
-          - ncbitaxon
-        error_level: warning
-        description: Should be a valid NCBI Taxonomy term
-        examples:
-          - Bifidobacterium
-          - Lactobacillus
+          ontologies:
+            - ncbitaxon
+          error_level: warning
+          description: Should be a valid NCBI Taxonomy term
+          examples:
+            - Bifidobacterium
+            - Lactobacillus
 
   - name: characteristics[medical history performed]
     ontology_accession: PRIDE:0000698

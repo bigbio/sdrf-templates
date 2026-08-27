@@ -495,7 +495,7 @@ columns:
     validators:
       - validator_name: values
         params:
-          unit: ["oC"]
+          units: ["oC"]
           description: Mean annual temperature in °C
           examples:
             - 12.5 oC
@@ -523,9 +523,9 @@ columns:
     allow_not_applicable: true
     allow_not_available: true
     validators:
-      - validator_name: numeric
+      - validator_name: number_with_unit
         params:
-          unit: [mm/year]
+          units: [mm/year]
           description: Annual precipitation in mm/year
           examples:
             - 800/year
@@ -574,9 +574,9 @@ columns:
     validators:
       - validator_name: number_with_unit
         params:
-          unit: ["%"]
-          min: "0"
-          max: "100"
+          units: ["%"]
+          min: 0
+          max: 100
           description: Organic matter content (%)
           examples:
             - 5.2 %
@@ -621,7 +621,7 @@ columns:
     validators:
       - validator_name: number_with_unit
         params:
-          unit: ["%"]
+          units: ["%"]
           description: Organic nitrogen (%)
           examples:
             - 0.2 %
@@ -636,7 +636,7 @@ columns:
     validators:
       - validator_name: number_with_unit
         params:
-          unit: ["%"]
+          units: ["%"]
           description: Total nitrogen (%)
           examples:
             - 0.5 %
@@ -696,7 +696,7 @@ columns:
     validators:
       - validator_name: number_with_unit
         params:
-          unit: ["mg/kg"]
+          units: ["mg/kg"]
           description: Microbial biomass concentration
           examples:
             - 250 mg/kg
@@ -761,7 +761,7 @@ columns:
     validators:
       - validator_name: number_with_unit
         params:
-          unit: ["%"]
+          units: ["%"]
           description: Aluminum saturation (%)
           examples:
             - 15 %
@@ -877,6 +877,6 @@ columns:
           pattern: ^.+:.+$
           description: Parameter name and value in key:value format
           examples:
-            - enzyme_activity: high
-            - soil_color: dark brown
+            - "enzyme_activity: high"
+            - "soil_color: dark brown"
 
