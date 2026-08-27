@@ -30,7 +30,7 @@
     "extends": {
       "type": ["string", "null"],
       "description": "Parent template with optional version constraint. Formats: 'name', 'name@1.1.0' (exact), 'name@>=1.1.0' (lower bound), 'name@>=1.1.0,<2.0.0' (range).",
-      "pattern": "^[a-z][a-z0-9-]*(@(\\d+\\.\\d+\\.\\d+|>=\\d+\\.\\d+\\.\\d+(,<\\d+\\.\\d+\\.\\d+)?))?$",
+      "pattern": "^[a-z][a-z0-9-]*(@(\\d+\\.\\d+\\.\\d+(-[0-9A-Za-z.-]+)?|>=\\d+\\.\\d+\\.\\d+(-[0-9A-Za-z.-]+)?(,<\\d+\\.\\d+\\.\\d+(-[0-9A-Za-z.-]+)?)?))?$",
       "examples": ["sample-metadata@>=1.0.0", "ms-proteomics@>=1.1.0", "base@>=1.1.0"]
     },
     "usable_alone": {
@@ -305,6 +305,16 @@
           "items": { "type": "string" },
           "examples": [["ncbitaxon"], ["pride", "ms"], ["uberon", "bto", "cl"]]
         },
+        "parent_accession": {
+          "type": "string",
+          "description": "Require the value's accession to be a descendant of this term (ontology validator).",
+          "examples": ["PRIDE:0000659"]
+        },
+        "recommend_nt_ac": {
+          "type": "boolean",
+          "description": "Warn when a recognised term is not written in the recommended NT=<OLS label>;AC=<accession> form (ontology validator).",
+          "default": false
+        },
         "parent_term": {
           "type": "string",
           "description": "Restrict ontology terms to descendants of this term (ontology validator).",
@@ -325,6 +335,14 @@
           "description": "Allowed measurement units (number_with_unit validator).",
           "items": { "type": "string" },
           "examples": [["mg", "g", "ug"], ["year", "month", "day"]]
+        },
+        "min": {
+          "type": "number",
+          "description": "Minimum accepted value (number_with_unit validator)."
+        },
+        "max": {
+          "type": "number",
+          "description": "Maximum accepted value (number_with_unit validator)."
         },
         "allow_negative": {
           "type": "boolean",

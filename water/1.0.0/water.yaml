@@ -1208,11 +1208,11 @@ columns:
     ontology_accession: PRIDE:0000705
     description: Temperature at which sample was stored (MIXS:0000110).
     requirement: optional
-    allow_negative: true
     validators:
       - validator_name: number_with_unit
         params:
           units: ["°C"]
+          allow_negative: true
           error_level: warning
           description: temperature in Celsius
           examples:
@@ -1324,5 +1324,5 @@ columns:
           pattern: ^.+:.+$
           description: Parameter name and value in key:value format
           examples:
-            - enzyme_activity: high
-            - soil_color: dark brown
+            - "enzyme_activity: high"
+            - "soil_color: dark brown"
