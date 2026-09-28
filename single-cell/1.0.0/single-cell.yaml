@@ -25,6 +25,8 @@ documentation: |
     `comment[facs sorting mode]`, `comment[microfluidics chip type]`,
     `comment[lcm microscope model]`, `comment[nanopots chip version]`.
 contributors:
+  - Justin Sing - EMBL-EBI (template lead)
+  - Nikolai Slavov - Slavov Lab, Northeastern University (template lead)
   - Yasset Perez-Riverol (yperez@ebi.ac.uk) - EMBL-EBI
   - Deepti Jaiswal Kundu (jaiswal@ebi.ac.uk) - EMBL-EBI
   - Nithu Sara John (nithu@ebi.ac.uk) - EMBL-EBI
