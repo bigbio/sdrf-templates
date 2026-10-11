@@ -2,7 +2,7 @@ name: Validate Templates
 
 on:
   pull_request:
-    branches: [master, main]
+    branches: [master, main, dev]
   push:
     branches: [master, main]
 
@@ -74,6 +74,9 @@ jobs:
           else:
               print('All templates valid!')
           "
+
+      - name: Run observed QC 1.2.0 contract tests
+        run: python -m unittest discover -s tests -p 'test_*.py' -v
 
       - name: Test manifest generation
         run: |
