@@ -3,7 +3,7 @@
 # To update: merge PR to master branch
 
 schema_version: '1.0'
-generated_at: '2026-08-27T08:05:25.620323+00:00'
+generated_at: '2026-10-15T08:58:37.178636+00:00'
 templates:
   affinity-proteomics:
     latest: 1.0.0
@@ -147,8 +147,9 @@ templates:
     description: Base SDRF template for mass spectrometry-based metabolomics. This
       is the parent template for LC-MS and GC-MS metabolomics experiments.
   ms-proteomics:
-    latest: 1.1.0
+    latest: 1.2.0
     versions:
+    - 1.2.0
     - 1.1.0
     extends: sample-metadata@>=1.0.0
     usable_alone: true
