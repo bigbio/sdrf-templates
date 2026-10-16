@@ -1,0 +1,127 @@
+name: targeted-proteomics
+description: SDRF template for targeted proteomics experiments. This is the base template for all targeted proteomics experiments which will allow for absolute quantification of proteins.
+documentation: |
+  The targeted-proteomics template is built based on ms-proteomics template. It provides additional information for spiked-in targets in targeted experiments.
+  The currrent version is based on ProtemEdge workflow for absolute quantification of proteins (https://www.protemedge.com/).
+
+  This template is not usable alone, it must be combined with the list of target proteins and their spiked-in levels inorder to calculate absolute quantification.
+
+  Key differences from ms-proteomics:
+  - Additional columns for targeted proteomics experiments are added to the template. These columns are relevant for identification of the spiked-in targets.
+  - `comment[targeted vendor]`: Vendor of the spiked-in panel where the panel was provided by.
+  - `comment[targeted technique]`: Technique used to produce recombinant proteins for the spiked-in panel.
+  - `comment[targeted panel]`: Name of the spiked-in panel. Mostly identifiable by the vendor name and the technique used. This will also provide the target protein/peptide list.
+  - `comment[panel lot]`: Lot number of the spiked-in panel that was used for the experiment.
+
+  Mutually exclusive with ms-proteomics and ms-metabolomics.
+contributors:
+  - Thanadol Sutantiwanichkul (thanadol@kth.se) - KTH Royal Institute of Technology/SciLifeLab
+  - Yasset Perez-Riverol (yperez@ebi.ac.uk) - EMBL-EBI
+version: 1.0.0
+extends: sample-metadata@>=1.0.0
+usable_alone: true
+layer: technology
+mutually_exclusive_with:
+  - ms-proteomics
+validators:
+  - validator_name: min_columns
+    params:
+      min_columns: 12
+columns:
+
+  - name: comment[plate]
+    description: Plate identifier for batch effect analysis
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: pattern
+        params:
+          pattern: ^.+$
+          description: Plate identifier
+          examples:
+            - 1
+            - 2
+
+  - name: characteristics[sample matrix]
+    description: Type of biological matrix used as input (e.g. serum, plasma, CSF, urine)
+    requirement: recommended
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: ontology
+        params:
+          ontologies:
+            - uberon
+            - bto
+          error_level: warning
+          description: Sample matrix should be a valid UBERON or BTO term
+          examples:
+            - serum
+            - plasma
+            - cerebrospinal fluid
+            - urine
+            - saliva
+
+  - name: comment[targeted vendor]
+    description: Vendor of the spiked-in panel
+    requirement: recommended
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: pattern
+        params:
+          pattern: ^.+$
+          description: Name of the company providing the spiked-in panel
+          examples:
+            - ProteomEdge
+            - Polyquant
+            - Absea Biotechnology
+            - CellFree Sciences
+            - MRM Proteomics
+
+  - name: comment[targeted technique]
+    description: Technique used to produce recombinant protein/peptide of the spike-in the panel. Based on the standard design and production process, this will provide the structural integrity of the spiked-in targets.
+    requirement: required
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: pattern
+        params:
+          pattern: ^.+$
+          description: Technique used to spiked-in the panel
+          examples:
+            - SIS-PrEST
+            - AQUA
+            - FLEXIQuant
+            - PSAQ
+            - PeptiQuant
+
+  - name: comment[targeted panel]
+    description: name of the spiked-in panel
+    requirement: required
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: pattern
+        params:
+          pattern: ^.+$
+          description: targeted panel name
+          examples:
+            - ApoEdge
+            - ComplemEdge
+            - LiverEdge
+
+  - name: comment[panel lot]
+    description: Reagent lot number for traceability. Lot number of the spiked-in panel that was used for the experiment for traceability. This could provide the accurate usage of the spiked-in panel.
+    requirement: required 
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: pattern
+        params:
+          pattern: ^.+$
+          description: Lot number
+          examples:
+            - 24001
+            - lot_12345
