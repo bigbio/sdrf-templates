@@ -17,8 +17,10 @@ contributors:
   - Nithu Sara John (nithu@ebi.ac.uk) - EMBL-EBI
   - Nandana Madhusoodanan (nandana@ebi.ac.uk) - EMBL-EBI
   - Asier Larrea (alarre@ebi.ac.uk) - EMBL-EBI
+  - Mary Lipton (mary.lipton@pnnl.gov) - Pacific North West National Laboratories
   - Toan Phung (TPhung001@dundee.ac.uk) - University of Dundee
   - Timo Sachsenberg (timo.sachsenberg@uni-tuebingen.de) - University of Tübingen
+  - Tim Van Den Bossche (Tim.VanDenBossche@ugent.be) - Ghent University
 version: 1.0.0
 extends: metaproteomics@>=1.0.0
 usable_alone: false
