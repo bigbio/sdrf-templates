@@ -35,6 +35,7 @@ contributors:
   - Asier Larrea (alarre@ebi.ac.uk) - EMBL-EBI
   - Toan Phung (TPhung001@dundee.ac.uk) - University of Dundee
   - Timo Sachsenberg (timo.sachsenberg@uni-tuebingen.de) - University of Tübingen
+  - Tim Van Den Bossche (Tim.VanDenBossche@UGent.be) - Ghent University
 version: 1.0.0
 extends: base@>=1.1.0
 usable_alone: false
