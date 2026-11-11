@@ -357,7 +357,7 @@ columns:
             - 1600m/z
 
   - name: comment[ms1 scan range]
-    ontology_accession: PRIDE:0001008
+    ontology_accession: PRIDE:0001029
     description: m/z scan range for MS1 spectra as an interval. Alternative to separate ms min mz / ms max mz columns.
     requirement: optional
     allow_not_applicable: true
@@ -371,7 +371,7 @@ columns:
             - 100m/z-1500m/z
 
   - name: comment[ms2 scan range]
-    ontology_accession: PRIDE:0001009
+    ontology_accession: PRIDE:0001030
     description: m/z scan range for MS2 spectra as an interval. Alternative to separate ms2 min mz / ms2 max mz columns.
     requirement: optional
     allow_not_applicable: true
