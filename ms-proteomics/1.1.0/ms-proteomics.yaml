@@ -21,6 +21,28 @@ documentation: |
     energies: `25 NCE;27 NCE;30 NCE` or `stepped 27+-6%`.
   - `comment[precursor mass tolerance]` / `comment[fragment mass tolerance]`: Use ppm or Da
     (e.g., `10 ppm`, `0.02 Da`).
+  - `comment[number of MS1 spectra]` / `comment[number of MS2 spectra]`:
+    Optional observed counts for the exact raw data file in `comment[data file]`.
+    Include empty scans; do not substitute counts of identified spectra or averaged
+    cohort statistics. Express counts as unadorned nonnegative integers, including
+    `0` only when a zero was actually measured. The implicit count unit is
+    UO:0000189 (count unit).
+  - `comment[chromatography duration]`: Optional observed time span computed as
+    maximum minus minimum *finite spectrum retention times* across all MS levels.
+    Express in seconds as `{value} s` (e.g. `3600.5 s` or `1e-05 s`), with unit
+    UO:0000010 (second). This is not a programmed LC gradient length or a
+    per-level duration. Use `not available` when there is no finite retention
+    time; `0 s` is valid with only one finite retention time.
+  - For these three QC fields, a repeated raw data file in multiple SDRF rows
+    has the same measured value in each row. Do not replace existing conflicting
+    values automatically, and do not interpret an unavailable measurement as 0.
+    Values `not applicable`, negatives, fractional scan counts and unitless
+    durations are not valid. The numeric syntax check does not independently
+    guarantee that an extreme exponent is numerically representable.
+  - PSI-MS accessions define the *measurements*, not permission to create new
+    SDRF column names. These column headers and seconds syntax are proposed and
+    still require acceptance in the SDRF-Proteomics term registry before use
+    in submission-ready production SDRFs.
   - MS range columns (`comment[ms min/max mz/charge/rt/im]`): Optional method parameters
     for documenting acquisition settings.
 
@@ -373,6 +395,66 @@ columns:
           examples:
             - "2022-06-01"
             - "2022-06-01T18:28:37"
+
+  # EXPERIMENTAL observed per-run QC fields; register SDRF headers upstream.
+  - name: comment[number of MS1 spectra]
+    ontology_accession: MS:4000059
+    description: >
+      Number of observed MS1 spectra in this raw data file, including empty scans.
+      This is a per-run measurement, not a search parameter, identified-spectrum count,
+      or cohort estimate. Nonnegative integer; implicit count unit UO:0000189.
+    requirement: optional
+    type: integer
+    allow_not_applicable: false
+    allow_not_available: true
+    validators:
+      - validator_name: pattern
+        params:
+          pattern: '^(0|[1-9][0-9]*)$'
+          case_sensitive: true
+          error_level: error
+          description: Observed MS1 scan count must be a nonnegative integer, including zero.
+          examples: ['0', '1803']
+
+  - name: comment[number of MS2 spectra]
+    ontology_accession: MS:4000060
+    description: >
+      Number of observed MS2 spectra in this raw data file, including empty scans.
+      This is a per-run measurement, not a search parameter, identified-spectrum count,
+      or cohort estimate. Nonnegative integer; implicit count unit UO:0000189.
+    requirement: optional
+    type: integer
+    allow_not_applicable: false
+    allow_not_available: true
+    validators:
+      - validator_name: pattern
+        params:
+          pattern: '^(0|[1-9][0-9]*)$'
+          case_sensitive: true
+          error_level: error
+          description: Observed MS2 scan count must be a nonnegative integer, including zero.
+          examples: ['0', '13776']
+
+  - name: comment[chromatography duration]
+    ontology_accession: MS:4000053
+    description: >
+      Observed run duration in seconds: maximum minus minimum finite spectrum retention
+      time across all MS levels. This is not the chromatography method's programmed
+      gradient duration. Use 'not available' when no finite RT exists. Explicit
+      second unit UO:0000010 is serialized with suffix ' s'.
+    requirement: optional
+    allow_not_applicable: false
+    allow_not_available: true
+    validators:
+      - validator_name: pattern
+        params:
+          # Supports the exact '.15g' numeric serialization produced by prideQC,
+          # including scientific notation at extreme durations.
+          pattern: '^(0|[1-9][0-9]*)(\.[0-9]+)?([eE][+-]?[0-9]+)? s$'
+          case_sensitive: true
+          error_level: error
+          description: Finite nonnegative measured duration followed by the unit 's'.
+          examples: ['0 s', '3600 s', '3600.5 s']
 
   - name: comment[ms min mz]
     ontology_accession: PRIDE:0000476
