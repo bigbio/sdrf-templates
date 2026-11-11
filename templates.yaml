@@ -3,7 +3,7 @@
 # To update: merge PR to master branch
 
 schema_version: '1.0'
-generated_at: '2026-11-10T11:42:42.339438+00:00'
+generated_at: '2026-11-11T19:59:55.309534+00:00'
 templates:
   affinity-proteomics:
     latest: 1.0.0
@@ -12,8 +12,8 @@ templates:
     extends: sample-metadata@>=1.0.0
     usable_alone: true
     layer: technology
-    description: SDRF template for affinity-based proteomics experiments (Olink, SomaScan).
-      This is the base template for all affinity proteomics experiments.
+    description: SDRF template for affinity-based proteomics experiments (Olink, SomaScan,
+      NULISA). This is the base template for all affinity proteomics experiments.
   base:
     latest: 1.1.0
     versions:
