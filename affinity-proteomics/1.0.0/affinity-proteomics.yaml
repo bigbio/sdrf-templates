@@ -1,8 +1,8 @@
 name: affinity-proteomics
-description: SDRF template for affinity-based proteomics experiments (Olink, SomaScan). This is the base template for all affinity proteomics experiments.
+description: SDRF template for affinity-based proteomics experiments (Olink, SomaScan, NULISA). This is the base template for all affinity proteomics experiments.
 documentation: |
   The affinity-proteomics template is one of three usable-alone technology templates. It
-  covers antibody-based (Olink PEA) and aptamer-based (SomaScan) proteomics platforms.
+  covers antibody-based (Olink PEA, NULISA) and aptamer-based (SomaScan) proteomics platforms.
 
   Use this template directly for affinity experiments and combine with an organism template.
 
@@ -15,7 +15,7 @@ documentation: |
   - `comment[panel name]` is RECOMMENDED, but it MUST be provided when `comment[platform]`
     refers to a platform family with multiple panels/menus and the panel/menu cannot be
     uniquely inferred (e.g., `Olink Target 96`, `SomaScan Assay v5.0`).
-  - `comment[quantification unit]`: NPX for Olink, RFU for SomaScan.
+  - `comment[quantification unit]`: NPX for Olink, RFU for SomaScan, NPQ for NULISA.
   - `characteristics[sample matrix]`: The biological fluid analyzed (serum, plasma, CSF, etc.).
   - `comment[dilution]`: Optional; commonly used for SomaScan workflows.
   - `comment[lot number]`: Optional reagent lot for traceability.
@@ -74,7 +74,7 @@ columns:
             - bridge
 
   - name: comment[platform]
-    description: Affinity proteomics platform used (e.g. Olink Explore HT, SomaScan Assay 7K)
+    description: Affinity proteomics platform used (e.g. Olink Explore HT, SomaScan Assay 7K, NULISAseq)
     requirement: required
     allow_not_applicable: false
     allow_not_available: false
@@ -91,6 +91,7 @@ columns:
             - Olink Explore HT
             - Olink Target 96
             - SomaScan Assay 11K
+            - NULISAseq
 
   - name: comment[instrument]
     ontology_accession: MS:1000031
@@ -110,6 +111,7 @@ columns:
             - Illumina NovaSeq X
             - Illumina NextSeq 2000
             - Agilent SureScan Microarray Scanner
+            - Alamar ARGO HT System
 
   - name: comment[panel name]
     description: Commercial panel/menu identifier within the platform. RECOMMENDED, but MUST be provided when not uniquely inferable from comment[platform].
@@ -127,6 +129,7 @@ columns:
             - Explore 1536
             - SomaScan 7K
             - SomaScan 11K
+            - NULISAseq Inflammation Panel 250
 
   - name: comment[quantification unit]
     ontology_accession: PRIDE:0000392
@@ -140,6 +143,7 @@ columns:
           values:
             - NPX
             - RFU
+            - NPQ
           error_level: warning
           description: Quantification unit
 
