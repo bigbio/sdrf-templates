@@ -1,0 +1,659 @@
+name: ms-imaging
+description: SDRF template for mass spectrometry imaging (MSI) experiments including MALDI, DESI, and SIMS imaging. Extends sample-metadata with MSI-specific spatial acquisition parameters derived from the IMS ontology.
+documentation: |
+  The ms-imaging template extends sample-metadata with MSI-specific columns for spatial
+  acquisition parameters, ionization method, and tissue preparation. It covers MALDI,
+  DESI, SIMS, and related imaging mass spectrometry modalities.
+
+  Key annotation guidance:
+  - `technology type`: use 'imaging mass spectrometry' for generic MSI; use specific
+    modality (MALDI/DESI/SIMS) when known. NTR needed for EFO/MS ontology support.
+  - `comment[pixel size x/y]`: raster step size in µm (e.g. '50 µm'). Required.
+  - `comment[mz range start/end]`: numeric only, no units (e.g. '800.0'). Use
+    'not available' for continuous imzML where the m/z axis is in the binary ibd file.
+  - `comment[scan pattern]`: IMS:1000041 hierarchy (meandering, one way, flyback,
+    random access). Use 'not applicable' for non-raster instruments (FT-ICR, SIMS).
+  - `characteristics[matrix]`: MALDI matrix compound. Use 'not applicable' for DESI/SIMS.
+  - `comment[imaging ion source]`: PSI-MS ionization type term (MS:1000008 hierarchy),
+    validated against OLS. See column description for common terms.
+  - `comment[analyzer]`: PSI-MS mass analyzer term (MS:1000443 hierarchy), validated
+    against OLS.
+
+  IMS ontology note: the IMS ontology (imagingMS.obo) is not available in OLS.
+  IMS-specific columns use `values` or `pattern` validators with IMS accessions cited
+  in descriptions for reference. PSI-MS terms (ionization, analyzer) use `ontology: ms`.
+
+  'not applicable' usage:
+  - `characteristics[matrix]` and `comment[matrix application method]`: DESI/SIMS
+  - `comment[section thickness]`: non-tissue substrates (PVDF membrane, cell culture)
+  - `comment[scan pattern]`, `comment[scan type]`, `comment[linescan sequence]`,
+    `comment[line scan direction]`: non-raster or non-imzML instruments (FT-ICR)
+  - `comment[laser shots per spectrum]`: DESI/SIMS experiments
+contributors:
+  - Lisa Boatner (lboatner@chanzuckerberg.com) - Chan Zuckerberg Initiative
+version: 1.0.0-dev
+extends: sample-metadata
+usable_alone: true
+layer: technology
+mutually_exclusive_with:
+  - ms-proteomics
+  - affinity-proteomics
+validators:
+  - validator_name: min_columns
+    params:
+      min_columns: 15
+  - validator_name: combination_of_columns_no_duplicate_validator
+    params:
+      column_name:
+        - source name
+        - assay name
+      column_name_warning:
+        - source name
+        - assay name
+columns:
+  - name: technology type
+    ontology_accession: EFO:0010003
+    description: Type of MSI technology. Overrides base proteomics vocabulary with imaging mass spectrometry terms.
+    requirement: required
+    allow_not_applicable: false
+    allow_not_available: false
+    validators:
+      - validator_name: single_cardinality_validator
+        params: {}
+      - validator_name: values
+        params:
+          values:
+            - imaging mass spectrometry
+            - MALDI imaging mass spectrometry
+            - DESI imaging mass spectrometry
+            - SIMS imaging mass spectrometry
+          error_level: error
+          description: MSI technology type. Use 'imaging mass spectrometry' when the specific modality is not known or not listed. NTR needed for EFO/MS ontology support.
+
+  - name: characteristics[sample stabilization]
+    ontology_accession: IMS:1001500
+    description: >-
+      Method used to stabilize the tissue sample prior to sectioning.
+      Corresponds to METASPACE Sample_Stabilisation field and IMS:1001500
+      sample type hierarchy.
+    requirement: required
+    allow_not_applicable: true
+    allow_not_available: false
+    validators:
+      - validator_name: values
+        params:
+          values:
+            - fresh frozen
+            - snap frozen
+            - FFPE
+            - fresh
+            - ethanol-fixed
+            - RNAlater
+            - not applicable
+          error_level: warning
+          description: Tissue sample stabilization method
+
+  - name: characteristics[matrix]
+    ontology_accession: IMS:1000090
+    description: >-
+      MALDI matrix compound applied to the tissue section prior to acquisition.
+      Use 'not applicable' for DESI or SIMS experiments.
+      Corresponds to METASPACE MALDI_Matrix field.
+    requirement: required
+    allow_not_applicable: true
+    allow_not_available: false
+    validators:
+      - validator_name: values
+        params:
+          values:
+            - 2,5-dihydroxybenzoic acid
+            - DHB
+            - alpha-cyano-4-hydroxycinnamic acid
+            - CHCA
+            - HCCA
+            - norharmane
+            - 9-aminoacridine
+            - 9-AA
+            - sinapinic acid
+            - SA
+            - dithranol
+            - 2,5-dihydroxyacetophenone
+            - DHAP
+            - 2,4,6-trihydroxyacetophenone
+            - THAP
+            - DAN
+            - 1,5-diaminonaphthalene
+            - none
+            - not applicable
+          error_level: warning
+          description: MALDI matrix compound or 'not applicable' for non-MALDI methods
+
+  - name: comment[imaging ion source]
+    ontology_accession: IMS:1000012
+    description: >-
+      Ionization method used for MSI acquisition. Use PSI-MS ionization type
+      terms (MS:1000008 hierarchy) validated against the ms ontology. Common
+      values: 'matrix-assisted laser desorption ionization' (MS:1000075),
+      'desorption electrospray ionization' (MS:1002011), 'secondary ionization'
+      (MS:1000402), 'atmospheric pressure matrix-assisted laser desorption
+      ionization' (MS:1000239), 'laser desorption ionization' (MS:1000393).
+      IMS:1000012 (imaging ion source) is the IMS parent concept; the specific
+      ionization type terms are owned by PSI-MS.
+    requirement: required
+    allow_not_applicable: false
+    allow_not_available: false
+    validators:
+      - validator_name: ontology
+        params:
+          ontologies:
+            - ms
+          parent_term: MS:1000008
+          error_level: error
+          description: Must be a valid PSI-MS ionization type term (MS:1000008 hierarchy). 
+          examples:
+            - matrix-assisted laser desorption ionization
+            - desorption electrospray ionization
+            - secondary ionization
+            - atmospheric pressure matrix-assisted laser desorption ionization
+            - laser desorption ionization
+
+  - name: comment[instrument]
+    ontology_accession: MS:1000031
+    description: Mass spectrometer instrument used for MSI acquisition. Use PSI-MS instrument model terms validated against the ms ontology.
+    requirement: required
+    cardinality: multiple
+    allow_not_applicable: false
+    allow_not_available: false
+    validators:
+      - validator_name: ontology
+        params:
+          ontologies:
+            - ms
+            - pride
+          error_level: warning
+          description: The instrument should be a valid MS or PRIDE ontology term
+          examples:
+            - timsTOF
+            - rapifleX
+            - solariX
+            - Q Exactive
+            - SYNAPT G2-Si
+
+  - name: comment[polarity]
+    ontology_accession: MS:1000465
+    description: Ion polarity mode used for data acquisition. MS:1000130 (positive scan) or MS:1000129 (negative scan).
+    requirement: required
+    allow_not_applicable: false
+    allow_not_available: false
+    validators:
+      - validator_name: values
+        params:
+          values:
+            - positive scan
+            - negative scan
+          error_level: error
+          description: Ion polarity mode (MS:1000130 positive, MS:1000129 negative)
+
+  - name: comment[pixel size x]
+    ontology_accession: IMS:1000046
+    description: Spatial resolution (raster step size) in the X direction. IMS:1000046. Format '{integer or decimal} µm'.
+    requirement: required
+    allow_not_applicable: false
+    allow_not_available: false
+    validators:
+      - validator_name: number_with_unit
+        params:
+          units: [µm, um]
+          error_level: error
+          description: Pixel size x with unit (µm)
+          examples:
+            - 140 µm
+            - 10 µm
+            - 50 µm
+            - 25 µm
+            - 5.0 µm
+
+  - name: comment[pixel size y]
+    ontology_accession: IMS:1000047
+    description: Spatial resolution (raster step size) in the Y direction. IMS:1000047. Format '{integer or decimal} µm'.
+    requirement: required
+    allow_not_applicable: false
+    allow_not_available: false
+    validators:
+      - validator_name: number_with_unit
+        params:
+          units: [µm, um]
+          error_level: error
+          description: Pixel size y with unit (µm)
+          examples:
+            - 140 µm
+            - 10 µm
+            - 50 µm
+            - 25 µm
+            - 5.0 µm
+
+  - name: comment[mz range start]
+    ontology_accession: MS:1000528
+    description: >-
+      Lower bound of the acquired m/z range. MS:1000528 (lowest observed m/z).
+      Format: numeric (integer or decimal). Use 'not available' only when the
+      range cannot be extracted from the data file (e.g. continuous imzML where
+      the m/z axis is stored in the binary ibd file only).
+    requirement: required
+    allow_not_applicable: false
+    allow_not_available: true
+    validators:
+      - validator_name: pattern
+        params:
+          pattern: '^\d+(\.\d+)?$|^not available$'
+          description: m/z lower bound (numeric only, no units) or 'not available'
+          examples:
+            - 800.0
+            - 200
+            - 50.5
+            - 100
+            - not available
+
+  - name: comment[mz range end]
+    ontology_accession: MS:1000527
+    description: >-
+      Upper bound of the acquired m/z range. MS:1000527 (highest observed m/z).
+      Format: numeric (integer or decimal). Use 'not available' only when the
+      range cannot be extracted from the data file (e.g. continuous imzML where
+      the m/z axis is stored in the binary ibd file only).
+    requirement: required
+    allow_not_applicable: false
+    allow_not_available: true
+    validators:
+      - validator_name: pattern
+        params:
+          pattern: '^\d+(\.\d+)?$|^not available$'
+          description: m/z upper bound (numeric only, no units) or 'not available'
+          examples:
+            - 1849.5
+            - 2000
+            - 800
+            - 3000.0
+            - not available
+
+  - name: comment[scan pattern]
+    ontology_accession: IMS:1000041
+    description: >-
+      Spatial scan pattern used during MSI acquisition. IMS:1000041 hierarchy
+      (IMS:1000410 meandering, IMS:1000411 one way, IMS:1000412 random access,
+      IMS:1000413 flyback). Use 'not applicable' for instruments that do not use
+      a raster scan pattern (e.g. SIMS point acquisition).
+    requirement: required
+    allow_not_applicable: true
+    allow_not_available: false
+    validators:
+      - validator_name: values
+        params:
+          values:
+            - meandering
+            - one way
+            - random access
+            - flyback
+          error_level: error
+          description: MSI scan pattern (IMS:1000041 hierarchy)
+
+  - name: comment[scan type]
+    ontology_accession: IMS:1000048
+    description: >-
+      imzML scan type; IMS:1000048. 'continuous' (IMS:1000030) stores full
+      spectra per pixel; 'processed' (IMS:1000031) stores only detected peaks.
+      Use 'not applicable' if the data is not in imzML format.
+    requirement: required
+    allow_not_applicable: true
+    allow_not_available: false
+    validators:
+      - validator_name: values
+        params:
+          values:
+            - continuous
+            - processed
+          error_level: error
+          description: imzML scan type (IMS:1000030 continuous or IMS:1000031 processed)
+
+  - name: comment[analyzer]
+    ontology_accession: MS:1000443
+    description: >-
+      Mass analyzer type used in the instrument. Use PSI-MS mass analyzer
+      terms (MS:1000443 hierarchy) validated against the ms ontology. Common
+      values: 'time-of-flight' (MS:1000084), 'orbitrap' (MS:1000484),
+      'fourier transform ion cyclotron resonance' (MS:1000079), 'ion trap'
+      (MS:1000264), 'quadrupole' (MS:1000081). Corresponds to METASPACE
+      Analyzer field.
+    requirement: required
+    allow_not_applicable: false
+    allow_not_available: false
+    validators:
+      - validator_name: ontology
+        params:
+          ontologies:
+            - ms
+          parent_term: MS:1000443
+          error_level: warning
+          description: Must be a valid PSI-MS mass analyzer term (MS:1000443 hierarchy). 
+          examples:
+            - time-of-flight
+            - orbitrap
+            - fourier transform ion cyclotron resonance
+            - ion trap
+            - quadrupole
+            - quadrupole time-of-flight
+
+  - name: characteristics[condition]
+    ontology_accession: EFO:0000001
+    description: Experimental condition or treatment group (e.g. wildtype, diseased, treated). Free text; use 'not applicable' for non-applicable contexts.
+    requirement: recommended
+    allow_not_applicable: true
+    allow_not_available: false
+
+  - name: characteristics[tissue modification]
+    ontology_accession: IMS:1000232
+    description: Chemical or enzymatic modification applied to the tissue section prior to MSI acquisition. Corresponds to METASPACE Tissue_Modification field.
+    requirement: recommended
+    allow_not_applicable: true
+    allow_not_available: false
+    validators:
+      - validator_name: values
+        params:
+          values:
+            - on-tissue digestion
+            - chemical derivatization
+            - washing
+            - none
+            - not applicable
+          error_level: warning
+          description: Tissue modification method applied prior to imaging
+
+  - name: comment[linescan sequence]
+    ontology_accession: IMS:1000040
+    description: >-
+      Direction of line scan during acquisition. IMS:1000040 (linescan sequence)
+      hierarchy: IMS:1000401 top down, IMS:1000402 bottom up, IMS:1000403 left
+      right, IMS:1000404 right left. Determines pixel ordering when reconstructing
+      the image from raw spectra. Evidenced in imzML scanSettings. Use 'not
+      applicable' for non-raster instruments (e.g. FT-ICR, Orbitrap).
+    requirement: recommended
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: values
+        params:
+          values:
+            - top down
+            - bottom up
+            - left right
+            - right left
+            - not available
+          error_level: warning
+          description: >-
+            Linescan sequence direction (IMS:1000040 hierarchy). 'top down'
+            (IMS:1000401) and 'bottom up' (IMS:1000402) for horizontal scans;
+            'left right' (IMS:1000403) and 'right left' (IMS:1000404) for
+            vertical scans.
+
+  - name: comment[line scan direction]
+    ontology_accession: IMS:1000049
+    description: >-
+      Orientation of line scans during acquisition. IMS:1000049 hierarchy:
+      IMS:1000480 horizontal line scan or IMS:1000481 vertical line scan.
+      Use 'not applicable' for non-raster instruments (e.g. FT-ICR, Orbitrap).
+    requirement: recommended
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: values
+        params:
+          values:
+            - horizontal line scan
+            - vertical line scan
+            - not available
+          error_level: warning
+          description: Line scan direction (IMS:1000480 horizontal or IMS:1000481 vertical)
+
+  - name: comment[matrix application method]
+    ontology_accession: IMS:1000232
+    description: Method used to apply the MALDI matrix to the tissue section. Use 'not applicable' for DESI and SIMS experiments. Use 'not available' if the method was not recorded.
+    requirement: recommended
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: values
+        params:
+          values:
+            - sublimation
+            - spray
+            - TM-sprayer
+            - pneumatic spray
+            - acoustic droplet ejection
+            - ImagePrep
+            - wet transfer
+            - inkjet printing
+            - not applicable
+            - not available
+          error_level: warning
+          description: Matrix application method
+
+  - name: comment[target material]
+    ontology_accession: IMS:1002400
+    description: Substrate on which the tissue section is mounted for MSI acquisition. IMS:1002400 hierarchy. Use 'not available' if unrecorded.
+    requirement: recommended
+    allow_not_applicable: false
+    allow_not_available: true
+    validators:
+      - validator_name: values
+        params:
+          values:
+            - ITO glass
+            - indium tin oxide glass
+            - PVDF membrane
+            - stainless steel
+            - gold-coated steel
+            - conductive glass slide
+            - not available
+          error_level: warning
+          description: Target substrate material (IMS:1002400 hierarchy)
+
+  - name: comment[section thickness]
+    ontology_accession: IMS:1000018
+    description: >-
+      Thickness of the tissue section in micrometers. Format '{integer or decimal} µm'.
+      Use 'not applicable' for non-tissue substrates (e.g. PVDF membrane, cell culture).
+      Use 'not available' if unrecorded.
+    requirement: recommended
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: number_with_unit
+        params:
+          units: [µm, um]
+          error_level: warning
+          description: Section thickness with unit (µm)
+          examples:
+            - 10 µm
+            - 12 µm
+            - 20 µm
+            - 5 µm
+
+  - name: comment[laser shots per spectrum]
+    ontology_accession: IMS:1006001
+    description: >-
+      Number of laser shots accumulated per pixel spectrum. IMS:1006001. Primary
+      reproducibility parameter for MALDI; changing it affects ion yield and SNR.
+      Use 'not applicable' for DESI or SIMS experiments. Use 'not available' if
+      unrecorded.
+    requirement: recommended
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: pattern
+        params:
+          pattern: '^\d+$|^not applicable$|^not available$'
+          description: Integer number of laser shots per spectrum, 'not applicable', or 'not available'
+          examples:
+            - 200
+            - 500
+            - 1000
+            - not applicable
+            - not available
+
+  - name: comment[tissue section]
+    ontology_accession: IMS:1000201
+    description: Tissue section identifier (slide ID, section number, or file path reference). Allows linking an assay row to a specific physical section.
+    requirement: recommended
+    allow_not_applicable: false
+    allow_not_available: true
+    validators:
+      - validator_name: pattern
+        params:
+          pattern: '^.+$'
+          description: Tissue section identifier (free text)
+          examples:
+            - section_001
+            - slide_A_section_3
+            - HB1234_S01
+            - not available
+
+  - name: comment[modification parameters]
+    ontology_accession: MS:1001055
+    description: Post-translational modifications; generally not applicable for MSI experiments
+    requirement: optional
+    cardinality: multiple
+    allow_not_applicable: true
+    allow_not_available: true
+
+  - name: characteristics[sample growth conditions]
+    ontology_accession: EFO:0000001
+    description: Growth or treatment conditions for cell cultures or model organisms. Free text. Corresponds to METASPACE Sample_Growth_Conditions field.
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+
+  - name: comment[plate geometry]
+    ontology_accession: IMS:1000202
+    description: Sample plate or substrate geometry (e.g. 'MTP Slide Adapter II'). Sourced from timsControl base geometry field. Use 'not available' if unrecorded.
+    requirement: optional
+    allow_not_applicable: false
+    allow_not_available: true
+
+  - name: comment[acquisition date]
+    ontology_accession: PRIDE:0000039
+    description: Date of MSI data acquisition in ISO 8601 format (YYYY-MM-DD or YYYY-MM-DDTHH:MM:SS). Use 'not available' if unknown.
+    requirement: optional
+    allow_not_applicable: false
+    allow_not_available: true
+    validators:
+      - validator_name: pattern
+        params:
+          pattern: '^\d{4}-\d{2}-\d{2}(T\d{2}:\d{2}(:\d{2})?)?$|^not available$'
+          description: Acquisition date (ISO 8601) or 'not available'
+          examples:
+            - 2025-07-01
+            - 2025-07-01T09:30:00
+            - 2025-07-01T09:30
+            - not available
+
+  - name: comment[mounting method]
+    ontology_accession: IMS:1002200
+    description: Method used to mount the tissue section on the target substrate. IMS:1002200 hierarchy (thaw mounting, tape mounting). Use 'not applicable' if not relevant.
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: values
+        params:
+          values:
+            - thaw mounting
+            - tape mounting
+            - not applicable
+            - not available
+          error_level: warning
+          description: Tissue section mounting method (IMS:1002200 hierarchy)
+
+  - name: comment[washing method]
+    ontology_accession: IMS:1002402
+    description: >-
+      Wash protocol applied to the tissue section prior to MSI acquisition.
+      IMS:1002400 hierarchy (e.g. Carnoy's wash, chloroform wash, ethanol wash).
+      Affects which lipid/metabolite classes are detected. Use 'not applicable'
+      if no washing was performed.
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: values
+        params:
+          values:
+            - Carnoy's wash
+            - chloroform wash
+            - ethanol wash
+            - graded ethanol series
+            - ammonium formiate wash
+            - none
+            - not applicable
+            - not available
+          error_level: warning
+          description: Tissue wash protocol (IMS:1002400 hierarchy)
+
+  - name: comment[solvent]
+    ontology_accession: IMS:1001211
+    description: Solvent system used for DESI spray or matrix preparation. IMS:1001211. Use 'not applicable' for MALDI/SIMS experiments. Corresponds to METASPACE Solvent field.
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+
+  - name: comment[resolving power]
+    ontology_accession: MS:1000011
+    description: Detector resolving power at a reference m/z. Format '{value} at {mz} m/z'. Use 'not available' if unrecorded. Corresponds to METASPACE Detector_Resolving_Power field.
+    requirement: optional
+    allow_not_applicable: false
+    allow_not_available: true
+    validators:
+      - validator_name: pattern
+        params:
+          pattern: '^\d+(\.\d+)? at \d+(\.\d+)? m/z$|^not available$'
+          description: Resolving power at reference m/z or 'not available'
+          examples:
+            - 140000 at 200 m/z
+            - 50000 at 400 m/z
+            - 30000 at 1000 m/z
+            - not available
+
+  - name: comment[normalization method]
+    ontology_accession: IMS:1002600
+    description: Spectral intensity normalization method applied during data processing. Use 'not applicable' if no normalization was applied.
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: values
+        params:
+          values:
+            - TIC
+            - RMS
+            - median
+            - none
+            - not applicable
+            - not available
+          error_level: warning
+          description: Spectral normalization method
+
+  - name: comment[mass resolution]
+    ontology_accession: MS:1000011
+    description: Mass resolution of the instrument at the reported m/z. MS:1000011. Format '{value} ppm', '{value} Da', or '{value} mDa'. Use 'not available' if unrecorded.
+    requirement: optional
+    allow_not_applicable: false
+    allow_not_available: true
+    validators:
+      - validator_name: number_with_unit
+        params:
+          units: [ppm, Da, mDa]
+          error_level: warning
+          description: Mass resolution with unit
+          examples:
+            - 5 ppm
+            - 0.5 Da
+            - 50 mDa
