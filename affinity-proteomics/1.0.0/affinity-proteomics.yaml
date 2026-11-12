@@ -17,9 +17,9 @@ documentation: |
     uniquely inferred (e.g., `Olink Target 96`, `SomaScan Assay v5.0`).
   - `comment[quantification unit]`: NPX for Olink, RFU for SomaScan, NPQ for NULISA.
   - `characteristics[sample matrix]`: The biological fluid analyzed (serum, plasma, CSF, etc.).
-  - `comment[dilution]`: Optional; commonly used for SomaScan workflows.
+  - `comment[dilution]`: Recommended; record the sample dilution (bin) each measurement comes from, especially for SomaScan.
   - `comment[lot number]`: Optional reagent lot for traceability.
-  - `comment[normalization method]`: How data was normalized (plate control, bridge, etc.).
+  - `comment[normalization method]`: Recommended; how data was normalized (plate control, bridge, ANML, etc.), with the version where applicable.
 
   Mutually exclusive with ms-proteomics and ms-metabolomics.
 contributors:
@@ -183,7 +183,7 @@ columns:
 
   - name: comment[normalization method]
     description: Normalization method applied to quantification values
-    requirement: optional
+    requirement: recommended
     allow_not_applicable: true
     allow_not_available: true
     validators:
@@ -200,7 +200,7 @@ columns:
   - name: comment[dilution]
     ontology_accession: OBI:0002483
     description: Sample dilution factor used (commonly used for SomaScan workflows)
-    requirement: optional
+    requirement: recommended
     allow_not_applicable: true
     allow_not_available: true
     validators:
