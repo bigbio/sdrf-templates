@@ -7,7 +7,7 @@ documentation: |
   Key guidance:
   - `comment[cross-linker]`: Required. Use structured format with ontology accession:
     `NT=DSS;AC=XLMOD:02001` for simple notation, or extended format with cleavability,
-    target residues, and mass: `NT=DSSO;AC=XLMOD:02010;CL=yes;TA=K,S,T,Y,nterm;MH=54.01;ML=85.98`.
+    target residues, and mass: `NT=DSSO;AC=XLMOD:02126;CL=yes;TA=K,S,T,Y,nterm;MH=54.01;ML=85.98`.
   - `characteristics[enrichment process]`: Recommended. Should be `enrichment of cross-linked peptides`.
   - `comment[dissociation method]`: Required (overridden from ms-proteomics recommended).
     Dissociation method critically affects cleavable linker stub ion generation.
@@ -18,8 +18,8 @@ documentation: |
     Angstroms (30 Å for DSS/BS3, 26.4 Å for DSSO, 11.4 Å for EDC zero-length).
   - `comment[crosslinker to protein ratio]`: Molar ratio (50:1, 100:1).
 
-  Common cross-linkers: DSS (XLMOD:02001), BS3 (XLMOD:02000), DSSO (XLMOD:02010, cleavable),
-  EDC (XLMOD:02009, zero-length).
+  Common cross-linkers: DSS (XLMOD:02001), BS3 (XLMOD:02000), DSSO (XLMOD:02126, cleavable),
+  EDC (XLMOD:02010, zero-length).
 contributors:
   - Yasset Perez-Riverol (yperez@ebi.ac.uk) - EMBL-EBI
   - Deepti Jaiswal Kundu (jaiswal@ebi.ac.uk) - EMBL-EBI
@@ -80,8 +80,8 @@ columns:
           examples:
             - "NT=DSS;AC=XLMOD:02001"
             - "NT=BS3;AC=XLMOD:02000"
-            - "NT=DSSO;AC=XLMOD:02010;CL=yes;TA=K,S,T,Y,nterm;MH=54.01;ML=85.98"
-            - "NT=EDC;AC=XLMOD:02009;CL=no;TA=K,D,E"
+            - "NT=DSSO;AC=XLMOD:02126;CL=yes;TA=K,S,T,Y,nterm;MH=54.01;ML=85.98"
+            - "NT=EDC;AC=XLMOD:02010;CL=no;TA=K,D,E"
 
   - name: comment[dissociation method]
     ontology_accession: MS:1000044
