@@ -1,5 +1,5 @@
 name: top-down
-description: SDRF template for top-down and middle-down proteomics experiments, where intact proteins (proteoforms) or large protein fragments are analyzed without full tryptic digestion. Extends ms-proteomics with the approach, deconvolution, resolution and proteoform search columns.
+description: SDRF template for top-down and middle-down proteomics experiments, where intact proteins (proteoforms) or large protein fragments are analyzed without full tryptic digestion. Extends ms-proteomics with the approach and resolution columns and top-down guidance for cleavage agent, dissociation method and modifications.
 documentation: |
   The top-down template captures the metadata that differs from a bottom-up (peptide-centric)
   experiment. Combine it with ms-proteomics (technology layer) and an organism template.
@@ -16,16 +16,15 @@ documentation: |
     one project often mixes them - one value per raw file, `not available` only when it cannot
     be recovered from the files or the publication.
   - `comment[label]`: Mostly `label free sample`; SILAC channels are also used.
-  - `comment[deconvolution software]` and `comment[deconvolution max charge]`: Record the
-    charge-deconvolution / deisotoping tool with its version (`NT=TopFD;AC=MS:1002902;VV=1.6.2`)
-    and the maximum charge state it was allowed to resolve.
   - `comment[ms1 resolution]` / `comment[ms2 resolution]`: Resolving power of the MS1 and MS2
     scans (e.g. `120000 at 200m/z`). Top-down data sets are often split into high/high and
     medium/high (isotopically unresolved MS1) data, which change how they must be searched.
-  - `comment[ptm search mode]`: How modifications were handled by the search. Top-down searches
-    usually take proteoform candidates from database-annotated modifications (UniProt XML),
-    sometimes combined with targeted modifications as in bottom-up (Oxidation of M, phospho).
-    Targeted modifications keep using `comment[modification parameters]`.
+  - `comment[modification parameters]`: List the modifications known or expected to be present
+    in the sample, at least the common ones (for example N-terminal acetylation, lysine
+    acetylation, methylation, phosphorylation), one column per modification, as in bottom-up.
+    Intact proteins carry their modifications, so do not use `not applicable` just because no
+    fixed search modification was set. Do not list processing steps such as carbamidomethylation
+    unless the sample was actually alkylated.
   - `comment[precursor mass tolerance]` / `comment[fragment mass tolerance]`: Same format as
     bottom-up. Absolute-mass searches commonly use Da tolerances (for example `2.2 Da`) for the
     precursor and ppm for fragments.
@@ -116,46 +115,6 @@ columns:
             - Size-exclusion chromatography (SEC)
             - GELFrEE
 
-  - name: comment[deconvolution software]
-    ontology_accession: MS:1003398
-    description: Charge-deconvolution / deisotoping software that converted the spectra to monoisotopic masses, with its version
-    requirement: recommended
-    allow_not_applicable: true
-    allow_not_available: true
-    validators:
-      - validator_name: structured_kv
-        params:
-          separator: ";"
-          fields:
-            - key: NT
-              value: ".+"
-            - key: VV
-              value: "v?\\d+(\\.\\d+)*([-+.][0-9A-Za-z.]+)?"
-          allow_not_available: true
-          allow_not_applicable: true
-          error_level: warning
-          description: "Deconvolution software as NT=name;VV=version, adding AC=ontology:accession when the tool has a PSI-MS term"
-          examples:
-            - NT=TopFD;AC=MS:1002902;VV=1.6.2
-            - NT=FLASHDeconv;AC=MS:1002714;VV=3.0
-            - NT=Xtract;VV=3.0
-
-  - name: comment[deconvolution max charge]
-    description: Maximum charge state the deconvolution algorithm was allowed to resolve
-    requirement: recommended
-    type: integer
-    allow_not_applicable: true
-    allow_not_available: true
-    validators:
-      - validator_name: pattern
-        params:
-          pattern: ^[1-9][0-9]*$
-          error_level: warning
-          description: Maximum charge state as an integer
-          examples:
-            - "30"
-            - "60"
-
   - name: comment[ms1 resolution]
     ontology_accession: MS:1000011
     description: Mass resolving power of the MS1 scans, optionally with the m/z it is specified at
@@ -190,17 +149,9 @@ columns:
             - 60000 at 200m/z
             - 30000 at 400m/z
 
-  - name: comment[ptm search mode]
-    description: How post-translational modifications were handled by the proteoform search
+  - name: comment[modification parameters]
+    description: Modifications known or expected to be present in the sample (at least the common ones), one column per modification. Intact proteins carry their modifications, so this is not limited to search settings.
     requirement: recommended
+    cardinality: multiple
     allow_not_applicable: true
     allow_not_available: true
-    validators:
-      - validator_name: values
-        params:
-          values:
-            - database-annotated
-            - targeted
-            - database-annotated and targeted
-          error_level: warning
-          description: "database-annotated = proteoform candidates built from the annotations in the sequence database (UniProt XML); targeted = a fixed list of modifications as in bottom-up (listed in comment[modification parameters])"
