@@ -1,0 +1,157 @@
+name: top-down
+description: SDRF template for top-down and middle-down proteomics experiments, where intact proteins (proteoforms) or large protein fragments are analyzed without full tryptic digestion. Extends ms-proteomics with the approach and resolution columns and top-down guidance for cleavage agent, dissociation method and modifications.
+documentation: |
+  The top-down template captures the metadata that differs from a bottom-up (peptide-centric)
+  experiment. Combine it with ms-proteomics (technology layer) and an organism template.
+
+  Key guidance:
+  - `comment[top-down approach]`: Required. Distinguishes top-down (`MS:1003351`), native
+    top-down (`MS:1003352`), non-native top-down (`MS:1003353`) and middle-down (`MS:1003354`)
+    experiments. PSI-MS has no term yet for targeted top-down; until it is added use the free
+    text `targeted top-down proteomics`.
+  - `comment[cleavage agent details]`: Intact proteins are not digested, so use
+    `not applicable`. Middle-down experiments use a restricted enzyme (Glu-C, Asp-N, Lys-C,
+    Arg-C) - record it as `NT=Glu-C;AC=MS:1001917` style CV terms.
+  - `comment[dissociation method]`: Required. ETD/ECD, EThcD, HCD, CID and UVPD are all used and
+    one project often mixes them - one value per raw file, `not available` only when it cannot
+    be recovered from the files or the publication.
+  - `comment[label]`: Mostly `label free sample`; SILAC channels are also used.
+  - `comment[ms1 resolution]` / `comment[ms2 resolution]`: Resolving power of the MS1 and MS2
+    scans (e.g. `120000 at 200m/z`). Top-down data sets are often split into high/high and
+    medium/high (isotopically unresolved MS1) data, which change how they must be searched.
+  - `comment[modification parameters]`: List the modifications known or expected to be present
+    in the sample, at least the common ones (for example N-terminal acetylation, lysine
+    acetylation, methylation, phosphorylation), one column per modification, as in bottom-up.
+    Intact proteins carry their modifications, so do not use `not applicable` just because no
+    fixed search modification was set. Do not list processing steps such as carbamidomethylation
+    unless the sample was actually alkylated.
+  - `comment[precursor mass tolerance]` / `comment[fragment mass tolerance]`: Same format as
+    bottom-up. Absolute-mass searches commonly use Da tolerances (for example `2.2 Da`) for the
+    precursor and ppm for fragments.
+  - `comment[fractionation method]`: Fractionation is of intact proteins (GELFrEE, ion exchange,
+    RPLC, SEC, CZE) rather than peptides.
+contributors:
+  - Yasset Perez-Riverol (yperez@ebi.ac.uk) - EMBL-EBI
+version: 1.0.0-dev
+extends: ms-proteomics@>=1.1.0
+usable_alone: false
+layer: experiment
+columns:
+  - name: comment[top-down approach]
+    ontology_accession: MS:1003350
+    description: Top-down family of the experiment (top-down, native or non-native top-down, middle-down, targeted top-down)
+    requirement: required
+    allow_not_applicable: false
+    allow_not_available: false
+    validators:
+      - validator_name: ontology
+        params:
+          ontologies:
+            - ms
+          error_level: warning
+          description: Approach should be a PSI-MS term for top-down or middle-down proteomics (children of MS:1003350). Targeted top-down has no PSI-MS term yet and is accepted as free text.
+          examples:
+            - top-down proteomics
+            - native top-down proteomics
+            - non-native top-down proteomics
+            - middle-down proteomics
+            - targeted top-down proteomics
+
+  - name: comment[cleavage agent details]
+    description: Enzyme or chemical used for protein cleavage. Use `not applicable` for intact-protein (top-down) experiments; middle-down experiments use a restricted enzyme such as Glu-C, Asp-N, Lys-C or Arg-C.
+    requirement: required
+    allow_not_applicable: true
+    allow_not_available: false
+    validators:
+      - validator_name: ontology
+        params:
+          ontologies:
+            - ms
+          error_level: error
+          description: Cleavage agent should be `not applicable` (top-down) or a valid MS ontology term (middle-down)
+          examples:
+            - not applicable
+            - NT=Glu-C;AC=MS:1001917
+            - NT=Asp-N;AC=MS:1001304
+
+  - name: comment[dissociation method]
+    ontology_accession: MS:1000044
+    description: Fragmentation method used in MS2. Use one value per raw file when a project mixes methods (ETD, EThcD, HCD, CID, UVPD).
+    requirement: required
+    allow_not_applicable: false
+    allow_not_available: true
+    validators:
+      - validator_name: ontology
+        params:
+          ontologies:
+            - ms
+            - pride
+          parent_term: MS:1000044
+          error_level: warning
+          description: Dissociation method should be a child term of MS:1000044
+          examples:
+            - NT=electron transfer dissociation;AC=MS:1000598
+            - NT=beam-type collision-induced dissociation;AC=MS:1000422
+            - NT=collision-induced dissociation;AC=MS:1000133
+            - NT=ultraviolet photodissociation;AC=MS:1003246
+            - NT=electron-transfer/higher-energy collision dissociation;AC=MS:1002631
+
+  - name: comment[fractionation method]
+    ontology_accession: PRIDE:0000550
+    description: Fractionation of intact proteins before MS analysis (GELFrEE, ion exchange, RPLC, SEC, CZE)
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: ontology
+        params:
+          ontologies:
+            - pride
+            - ms
+          error_level: warning
+          description: Protein fractionation method should be a PRIDE or MS ontology term
+          examples:
+            - Ion-exchange chromatography
+            - Size-exclusion chromatography (SEC)
+            - GELFrEE
+
+  - name: comment[ms1 resolution]
+    ontology_accession: MS:1000011
+    description: Mass resolving power of the MS1 scans, optionally with the m/z it is specified at
+    requirement: recommended
+    allow_not_applicable: false
+    allow_not_available: true
+    validators:
+      - validator_name: pattern
+        params:
+          pattern: ^[1-9][0-9]*( at [0-9]+(\.[0-9]+)?m/z)?$
+          error_level: warning
+          description: "Resolving power, optionally followed by ' at <m/z>m/z'"
+          examples:
+            - "120000"
+            - 120000 at 200m/z
+            - 60000 at 400m/z
+
+  - name: comment[ms2 resolution]
+    ontology_accession: MS:1000011
+    description: Mass resolving power of the MS2 (fragment) scans, optionally with the m/z it is specified at
+    requirement: recommended
+    allow_not_applicable: false
+    allow_not_available: true
+    validators:
+      - validator_name: pattern
+        params:
+          pattern: ^[1-9][0-9]*( at [0-9]+(\.[0-9]+)?m/z)?$
+          error_level: warning
+          description: "Resolving power, optionally followed by ' at <m/z>m/z'"
+          examples:
+            - "60000"
+            - 60000 at 200m/z
+            - 30000 at 400m/z
+
+  - name: comment[modification parameters]
+    description: Modifications known or expected to be present in the sample (at least the common ones), one column per modification. Intact proteins carry their modifications, so this is not limited to search settings.
+    requirement: recommended
+    cardinality: multiple
+    allow_not_applicable: true
+    allow_not_available: true

@@ -3,7 +3,7 @@
 # To update: merge PR to master branch
 
 schema_version: '1.0'
-generated_at: '2026-11-16T11:56:07.045135+00:00'
+generated_at: '2026-11-18T09:02:08.804445+00:00'
 templates:
   affinity-proteomics:
     latest: 1.0.0
@@ -206,6 +206,17 @@ templates:
     layer: sample
     description: |
       SDRF template for soil metaproteomics. Extends metaproteomics with soil-specific columns aligned with the GSC MIxS soil extension (0016012). Combine with ms-proteomics for MS acquisition columns.
+  top-down:
+    latest: 1.0.0-dev
+    versions:
+    - 1.0.0-dev
+    extends: ms-proteomics@>=1.1.0
+    usable_alone: false
+    layer: experiment
+    description: SDRF template for top-down and middle-down proteomics experiments,
+      where intact proteins (proteoforms) or large protein fragments are analyzed
+      without full tryptic digestion. Extends ms-proteomics with the approach, deconvolution,
+      resolution and proteoform search columns.
   vertebrates:
     latest: 1.1.0
     versions:
