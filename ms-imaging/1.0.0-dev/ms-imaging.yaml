@@ -32,7 +32,7 @@ documentation: |
 contributors:
   - Lisa Boatner (lboatner@chanzuckerberg.com) - Chan Zuckerberg Initiative
 version: 1.0.0-dev
-extends: sample-metadata
+extends: sample-metadata@>=1.0.0
 usable_alone: true
 layer: technology
 mutually_exclusive_with:
@@ -42,17 +42,9 @@ validators:
   - validator_name: min_columns
     params:
       min_columns: 15
-  - validator_name: combination_of_columns_no_duplicate_validator
-    params:
-      column_name:
-        - source name
-        - assay name
-      column_name_warning:
-        - source name
-        - assay name
 columns:
   - name: technology type
-    ontology_accession: EFO:0010003
+    ontology_accession: PRIDE:0000663
     description: Type of MSI technology. Overrides base proteomics vocabulary with imaging mass spectrometry terms.
     requirement: required
     allow_not_applicable: false
@@ -351,8 +343,8 @@ columns:
     allow_not_available: false
 
   - name: characteristics[tissue modification]
-    ontology_accession: IMS:1000232
-    description: Chemical or enzymatic modification applied to the tissue section prior to MSI acquisition. Corresponds to METASPACE Tissue_Modification field.
+    ontology_accession: IMS:1002500
+    description: Chemical or enzymatic modification applied to the tissue section prior to MSI acquisition (IMS:1002500 on-sample chemistry, e.g. enzymatic digestion or derivatisation). Use 'none' if no on-sample chemistry was performed (IMS:1002501). Corresponds to METASPACE Tissue_Modification field.
     requirement: recommended
     allow_not_applicable: true
     allow_not_available: false
@@ -415,8 +407,8 @@ columns:
           description: Line scan direction (IMS:1000480 horizontal or IMS:1000481 vertical)
 
   - name: comment[matrix application method]
-    ontology_accession: IMS:1000232
-    description: Method used to apply the MALDI matrix to the tissue section. Use 'not applicable' for DESI and SIMS experiments. Use 'not available' if the method was not recorded.
+    ontology_accession: MS:1000833
+    description: Method used to apply the MALDI matrix to the tissue section. PSI-MS matrix application type (MS:1000833) hierarchy. Use 'not applicable' for DESI and SIMS experiments. Use 'not available' if the method was not recorded.
     requirement: recommended
     allow_not_applicable: true
     allow_not_available: true
@@ -577,9 +569,10 @@ columns:
     ontology_accession: IMS:1002402
     description: >-
       Wash protocol applied to the tissue section prior to MSI acquisition.
-      IMS:1002400 hierarchy (e.g. Carnoy's wash, chloroform wash, ethanol wash).
-      Affects which lipid/metabolite classes are detected. Use 'not applicable'
-      if no washing was performed.
+      IMS:1002402 sample washing method (e.g. Carnoy's wash, chloroform wash,
+      ethanol wash). Affects which lipid/metabolite classes are detected. Use
+      'none' if no washing was performed (IMS:1002401); use 'not applicable'
+      for non-tissue substrates where washing is not a meaningful step.
     requirement: optional
     allow_not_applicable: true
     allow_not_available: true
@@ -591,12 +584,12 @@ columns:
             - chloroform wash
             - ethanol wash
             - graded ethanol series
-            - ammonium formiate wash
+            - ammonium formate wash
             - none
             - not applicable
             - not available
           error_level: warning
-          description: Tissue wash protocol (IMS:1002400 hierarchy)
+          description: Tissue wash protocol (IMS:1002402 sample washing method)
 
   - name: comment[solvent]
     ontology_accession: IMS:1001211
@@ -606,8 +599,8 @@ columns:
     allow_not_available: true
 
   - name: comment[resolving power]
-    ontology_accession: MS:1000011
-    description: Detector resolving power at a reference m/z. Format '{value} at {mz} m/z'. Use 'not available' if unrecorded. Corresponds to METASPACE Detector_Resolving_Power field.
+    ontology_accession: MS:1000800
+    description: Mass resolving power (MS:1000800) at a reference m/z. Format '{value} at {mz} m/z'. Use 'not available' if unrecorded. Corresponds to METASPACE Detector_Resolving_Power field.
     requirement: optional
     allow_not_applicable: false
     allow_not_available: true
