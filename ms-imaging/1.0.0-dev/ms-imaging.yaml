@@ -9,6 +9,8 @@ documentation: |
   - `technology type`: use 'mass spectrometry imaging' (PRIDE:0000631) for generic MSI;
     use the specific modality value (MALDI/DESI/SIMS) when known. Modality child terms
     are pending in the PRIDE ontology.
+  - `characteristics[analyte class]`: what the imaging targeted (proteins, peptides,
+    lipids, metabolites, glycans, drugs and xenobiotics) or 'untargeted'.
   - `comment[pixel size x/y]`: raster step size in µm (e.g. '50 µm'). Required.
   - `comment[ms min mz]` / `comment[ms max mz]`: acquired m/z range in the shared
     ms-proteomics format (e.g. '800m/z'). Use 'not available' for continuous imzML
@@ -400,6 +402,29 @@ columns:
     requirement: recommended
     allow_not_applicable: true
     allow_not_available: false
+
+  - name: characteristics[analyte class]
+    description: >-
+      Class of analytes the imaging experiment targeted through its matrix, sample
+      preparation and acquisition method. Use 'untargeted' for discovery
+      acquisitions not aimed at a specific class. Same column name as
+      ms-metabolomics, with MSI-appropriate values.
+    requirement: recommended
+    allow_not_applicable: false
+    allow_not_available: true
+    validators:
+      - validator_name: values
+        params:
+          values:
+            - proteins
+            - peptides
+            - lipids
+            - metabolites
+            - glycans
+            - drugs and xenobiotics
+            - untargeted
+          error_level: warning
+          description: Analyte class targeted by the MSI experiment
 
   - name: characteristics[tissue modification]
     ontology_accession: IMS:1002500
