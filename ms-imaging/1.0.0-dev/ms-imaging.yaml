@@ -12,8 +12,8 @@ documentation: |
   - `comment[ms min mz]` / `comment[ms max mz]`: acquired m/z range in the shared
     ms-proteomics format (e.g. '800m/z'). Use 'not available' for continuous imzML
     where the m/z axis is in the binary ibd file.
-  - `comment[scan pattern]`: IMS:1000041 hierarchy (meandering, one way, flyback,
-    random access). Use 'not applicable' for non-raster instruments (FT-ICR, SIMS).
+  - `comment[scan pattern]`: IMS:1000041 hierarchy (meandering, flyback, random
+    access). Use 'not applicable' for non-raster instruments (FT-ICR, SIMS).
   - `comment[matrix]`: MALDI matrix compound (a sample-preparation parameter, hence a
     comment rather than a characteristic). Use 'not applicable' for DESI/SIMS.
   - `comment[imaging ion source]`: PSI-MS ionization type term (MS:1000008 hierarchy),
@@ -65,11 +65,13 @@ columns:
           description: MSI technology type. Use 'imaging mass spectrometry' when the specific modality is not known or not listed. NTR needed for EFO/MS ontology support.
 
   - name: characteristics[sample stabilization]
-    ontology_accession: IMS:1001500
+    ontology_accession: IMS:1002010
     description: >-
       Method used to stabilize the tissue sample prior to sectioning.
-      Corresponds to METASPACE Sample_Stabilisation field and IMS:1001500
-      sample type hierarchy.
+      IMS:1002010 sample storage condition hierarchy (IMS:1002011 fixed,
+      IMS:1002012 fresh frozen, IMS:1002013 embedded); heat-based methods
+      fall under IMS:1002050 stabilisation. Corresponds to METASPACE
+      Sample_Stabilisation field.
     requirement: required
     allow_not_applicable: true
     allow_not_available: false
@@ -87,10 +89,13 @@ columns:
           description: Tissue sample stabilization method
 
   - name: comment[matrix]
-    ontology_accession: IMS:1000090
+    ontology_accession: MS:1000834
     description: >-
-      MALDI matrix compound applied to the tissue section prior to acquisition.
-      Use 'not applicable' for DESI or SIMS experiments.
+      MALDI matrix compound applied to the tissue section prior to acquisition
+      (PSI-MS MS:1000834 matrix solution). Full compound names and common
+      abbreviations (e.g. '2,5-dihydroxybenzoic acid' / 'DHB') are accepted as
+      synonyms. Use 'none' for matrix-free laser desorption experiments and
+      'not applicable' for DESI or SIMS experiments.
       Corresponds to METASPACE MALDI_Matrix field.
     requirement: required
     allow_not_applicable: true
@@ -271,8 +276,9 @@ columns:
     ontology_accession: IMS:1000041
     description: >-
       Spatial scan pattern used during MSI acquisition. IMS:1000041 hierarchy
-      (IMS:1000410 meandering, IMS:1000411 one way, IMS:1000412 random access,
-      IMS:1000413 flyback). Use 'not applicable' for instruments that do not use
+      (IMS:1000410 meandering, IMS:1000412 random access, IMS:1000413 flyback;
+      'one way' IMS:1000411 is obsolete, use 'flyback'). Use 'not applicable'
+      for instruments that do not use
       a raster scan pattern (e.g. SIMS point acquisition).
     requirement: required
     allow_not_applicable: true
@@ -282,18 +288,18 @@ columns:
         params:
           values:
             - meandering
-            - one way
             - random access
             - flyback
           error_level: error
           description: MSI scan pattern (IMS:1000041 hierarchy)
 
   - name: comment[scan type]
-    ontology_accession: IMS:1000048
+    ontology_accession: IMS:1000003
     description: >-
-      imzML scan type; IMS:1000048. 'continuous' (IMS:1000030) stores full
-      spectra per pixel; 'processed' (IMS:1000031) stores only detected peaks.
-      Use 'not applicable' if the data is not in imzML format.
+      imzML binary data layout; IMS:1000003 ibd binary type. 'continuous'
+      (IMS:1000030) stores full spectra per pixel; 'processed' (IMS:1000031)
+      stores only detected peaks. Use 'not applicable' if the data is not in
+      imzML format.
     requirement: required
     allow_not_applicable: true
     allow_not_available: false
@@ -335,8 +341,8 @@ columns:
             - quadrupole time-of-flight
 
   - name: characteristics[condition]
-    ontology_accession: EFO:0000001
-    description: Experimental condition or treatment group (e.g. wildtype, diseased, treated). Free text; use 'not applicable' for non-applicable contexts.
+    ontology_accession: IMS:1006007
+    description: Experimental condition or treatment group (e.g. wildtype, diseased, treated); IMS:1006007 sample condition. Free text; use 'not applicable' for non-applicable contexts.
     requirement: recommended
     allow_not_applicable: true
     allow_not_available: false
@@ -353,17 +359,16 @@ columns:
           values:
             - on-tissue digestion
             - chemical derivatization
-            - washing
             - none
           error_level: warning
-          description: Tissue modification method applied prior to imaging
+          description: On-sample chemistry applied prior to imaging (IMS:1002500); record washing in comment[washing method]
 
   - name: comment[linescan sequence]
     ontology_accession: IMS:1000040
     description: >-
       Direction of line scan during acquisition. IMS:1000040 (linescan sequence)
-      hierarchy: IMS:1000401 top down, IMS:1000402 bottom up, IMS:1000403 left
-      right, IMS:1000404 right left. Determines pixel ordering when reconstructing
+      hierarchy: IMS:1000401 top down, IMS:1000400 bottom up, IMS:1000402 left
+      right, IMS:1000403 right left. Determines pixel ordering when reconstructing
       the image from raw spectra. Evidenced in imzML scanSettings. Use 'not
       applicable' for non-raster instruments (e.g. FT-ICR, Orbitrap).
     requirement: recommended
@@ -380,15 +385,16 @@ columns:
           error_level: warning
           description: >-
             Linescan sequence direction (IMS:1000040 hierarchy). 'top down'
-            (IMS:1000401) and 'bottom up' (IMS:1000402) for horizontal scans;
-            'left right' (IMS:1000403) and 'right left' (IMS:1000404) for
+            (IMS:1000401) and 'bottom up' (IMS:1000400) for horizontal scans;
+            'left right' (IMS:1000402) and 'right left' (IMS:1000403) for
             vertical scans.
 
   - name: comment[line scan direction]
-    ontology_accession: IMS:1000049
+    ontology_accession: IMS:1000048
     description: >-
-      Orientation of line scans during acquisition. IMS:1000049 hierarchy:
-      IMS:1000480 horizontal line scan or IMS:1000481 vertical line scan.
+      Orientation of line scans during acquisition. IMS:1000048 scan type
+      hierarchy: IMS:1000480 horizontal line scan or IMS:1000481 vertical
+      line scan.
       Use 'not applicable' for non-raster instruments (e.g. FT-ICR, Orbitrap).
     requirement: recommended
     allow_not_applicable: true
@@ -424,8 +430,8 @@ columns:
           description: Matrix application method
 
   - name: comment[target material]
-    ontology_accession: IMS:1002400
-    description: Substrate on which the tissue section is mounted for MSI acquisition. IMS:1002400 hierarchy. Use 'not available' if unrecorded.
+    ontology_accession: IMS:1000202
+    description: Substrate on which the tissue section is mounted for MSI acquisition (IMS:1000202 target material). Use 'not available' if unrecorded.
     requirement: recommended
     allow_not_applicable: false
     allow_not_available: true
@@ -440,12 +446,12 @@ columns:
             - gold-coated steel
             - conductive glass slide
           error_level: warning
-          description: Target substrate material (IMS:1002400 hierarchy)
+          description: Target substrate material (IMS:1000202)
 
   - name: comment[section thickness]
-    ontology_accession: IMS:1000018
+    ontology_accession: IMS:1002107
     description: >-
-      Thickness of the tissue section in micrometers. Format '{integer or decimal} µm'.
+      Thickness of the tissue section in micrometers (IMS:1002107). Format '{integer or decimal} µm'.
       Use 'not applicable' for non-tissue substrates (e.g. PVDF membrane, cell culture).
       Use 'not available' if unrecorded.
     requirement: recommended
@@ -484,7 +490,6 @@ columns:
             - 1000
 
   - name: comment[tissue section]
-    ontology_accession: IMS:1000201
     description: Tissue section identifier (slide ID, section number, or file path reference). Allows linking an assay row to a specific physical section.
     requirement: recommended
     allow_not_applicable: false
@@ -515,7 +520,6 @@ columns:
     allow_not_available: true
 
   - name: comment[plate geometry]
-    ontology_accession: IMS:1000202
     description: Sample plate or substrate geometry (e.g. 'MTP Slide Adapter II'). Sourced from timsControl base geometry field. Use 'not available' if unrecorded.
     requirement: optional
     allow_not_applicable: false
@@ -598,8 +602,8 @@ columns:
             - 30000 at 1000 m/z
 
   - name: comment[normalization method]
-    ontology_accession: IMS:1002600
-    description: Spectral intensity normalization method applied during data processing. Use 'not applicable' if no normalization was applied.
+    ontology_accession: MS:1001484
+    description: Spectral intensity normalization method applied during data processing (PSI-MS MS:1001484 intensity normalization). Use 'none' if no normalization was applied.
     requirement: optional
     allow_not_applicable: true
     allow_not_available: true
