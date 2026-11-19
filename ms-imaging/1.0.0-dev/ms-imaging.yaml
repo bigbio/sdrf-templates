@@ -9,8 +9,9 @@ documentation: |
   - `technology type`: use 'imaging mass spectrometry' for generic MSI; use specific
     modality (MALDI/DESI/SIMS) when known. NTR needed for EFO/MS ontology support.
   - `comment[pixel size x/y]`: raster step size in µm (e.g. '50 µm'). Required.
-  - `comment[mz range start/end]`: numeric only, no units (e.g. '800.0'). Use
-    'not available' for continuous imzML where the m/z axis is in the binary ibd file.
+  - `comment[ms min mz]` / `comment[ms max mz]`: acquired m/z range in the shared
+    ms-proteomics format (e.g. '800m/z'). Use 'not available' for continuous imzML
+    where the m/z axis is in the binary ibd file.
   - `comment[scan pattern]`: IMS:1000041 hierarchy (meandering, one way, flyback,
     random access). Use 'not applicable' for non-raster instruments (FT-ICR, SIMS).
   - `comment[matrix]`: MALDI matrix compound (a sample-preparation parameter, hence a
@@ -82,7 +83,6 @@ columns:
             - fresh
             - ethanol-fixed
             - RNAlater
-            - not applicable
           error_level: warning
           description: Tissue sample stabilization method
 
@@ -117,7 +117,6 @@ columns:
             - DAN
             - 1,5-diaminonaphthalene
             - none
-            - not applicable
           error_level: warning
           description: MALDI matrix compound or 'not applicable' for non-MALDI methods
 
@@ -172,20 +171,23 @@ columns:
             - Q Exactive
             - SYNAPT G2-Si
 
-  - name: comment[polarity]
+  - name: comment[scan polarity]
     ontology_accession: MS:1000465
-    description: Ion polarity mode used for data acquisition. MS:1000130 (positive scan) or MS:1000129 (negative scan).
+    description: Scan polarity (positive scan MS:1000130, negative scan MS:1000129, or polarity switching). Same column as ms-metabolomics. Polarity switching is reserved for true in-method switching producing a single file; otherwise use two rows per sample (one per polarity).
     requirement: required
     allow_not_applicable: false
     allow_not_available: false
     validators:
+      - validator_name: single_cardinality_validator
+        params: {}
       - validator_name: values
         params:
           values:
             - positive scan
             - negative scan
+            - polarity switching
           error_level: error
-          description: Ion polarity mode (MS:1000130 positive, MS:1000129 negative)
+          description: Scan polarity must be one of positive scan, negative scan, polarity switching
 
   - name: comment[pixel size x]
     ontology_accession: IMS:1000046
@@ -225,49 +227,45 @@ columns:
             - 25 µm
             - 5.0 µm
 
-  - name: comment[mz range start]
-    ontology_accession: MS:1000528
+  - name: comment[ms min mz]
+    ontology_accession: PRIDE:0000476
     description: >-
-      Lower bound of the acquired m/z range. MS:1000528 (lowest observed m/z).
-      Format: numeric (integer or decimal). Use 'not available' only when the
-      range cannot be extracted from the data file (e.g. continuous imzML where
-      the m/z axis is stored in the binary ibd file only).
+      MS method-defined minimum m/z of the acquired range (PRIDE:0000476).
+      Same column and format as ms-proteomics and ms-metabolomics. Use
+      'not available' only when the range cannot be extracted from the data
+      file (e.g. continuous imzML where the m/z axis is stored in the binary
+      ibd file only).
     requirement: required
     allow_not_applicable: false
     allow_not_available: true
     validators:
-      - validator_name: pattern
+      - validator_name: mz_value
         params:
-          pattern: '^\d+(\.\d+)?$|^not available$'
-          description: m/z lower bound (numeric only, no units) or 'not available'
+          description: m/z value with unit
           examples:
-            - 800.0
-            - 200
-            - 50.5
-            - 100
-            - not available
+            - 100m/z
+            - 200m/z
+            - 800.0m/z
 
-  - name: comment[mz range end]
-    ontology_accession: MS:1000527
+  - name: comment[ms max mz]
+    ontology_accession: PRIDE:0000477
     description: >-
-      Upper bound of the acquired m/z range. MS:1000527 (highest observed m/z).
-      Format: numeric (integer or decimal). Use 'not available' only when the
-      range cannot be extracted from the data file (e.g. continuous imzML where
-      the m/z axis is stored in the binary ibd file only).
+      MS method-defined maximum m/z of the acquired range (PRIDE:0000477).
+      Same column and format as ms-proteomics and ms-metabolomics. Use
+      'not available' only when the range cannot be extracted from the data
+      file (e.g. continuous imzML where the m/z axis is stored in the binary
+      ibd file only).
     requirement: required
     allow_not_applicable: false
     allow_not_available: true
     validators:
-      - validator_name: pattern
+      - validator_name: mz_value
         params:
-          pattern: '^\d+(\.\d+)?$|^not available$'
-          description: m/z upper bound (numeric only, no units) or 'not available'
+          description: m/z value with unit
           examples:
-            - 1849.5
-            - 2000
-            - 800
-            - 3000.0
-            - not available
+            - 1849.5m/z
+            - 2000m/z
+            - 3000m/z
 
   - name: comment[scan pattern]
     ontology_accession: IMS:1000041
@@ -357,7 +355,6 @@ columns:
             - chemical derivatization
             - washing
             - none
-            - not applicable
           error_level: warning
           description: Tissue modification method applied prior to imaging
 
@@ -380,7 +377,6 @@ columns:
             - bottom up
             - left right
             - right left
-            - not available
           error_level: warning
           description: >-
             Linescan sequence direction (IMS:1000040 hierarchy). 'top down'
@@ -403,7 +399,6 @@ columns:
           values:
             - horizontal line scan
             - vertical line scan
-            - not available
           error_level: warning
           description: Line scan direction (IMS:1000480 horizontal or IMS:1000481 vertical)
 
@@ -425,8 +420,6 @@ columns:
             - ImagePrep
             - wet transfer
             - inkjet printing
-            - not applicable
-            - not available
           error_level: warning
           description: Matrix application method
 
@@ -446,7 +439,6 @@ columns:
             - stainless steel
             - gold-coated steel
             - conductive glass slide
-            - not available
           error_level: warning
           description: Target substrate material (IMS:1002400 hierarchy)
 
@@ -484,14 +476,12 @@ columns:
     validators:
       - validator_name: pattern
         params:
-          pattern: '^\d+$|^not applicable$|^not available$'
-          description: Integer number of laser shots per spectrum, 'not applicable', or 'not available'
+          pattern: '^\d+$'
+          description: Integer number of laser shots per spectrum
           examples:
             - 200
             - 500
             - 1000
-            - not applicable
-            - not available
 
   - name: comment[tissue section]
     ontology_accession: IMS:1000201
@@ -508,7 +498,6 @@ columns:
             - section_001
             - slide_A_section_3
             - HB1234_S01
-            - not available
 
   - name: comment[modification parameters]
     ontology_accession: MS:1001055
@@ -533,21 +522,18 @@ columns:
     allow_not_available: true
 
   - name: comment[acquisition date]
-    ontology_accession: PRIDE:0000039
-    description: Date of MSI data acquisition in ISO 8601 format (YYYY-MM-DD or YYYY-MM-DDTHH:MM:SS). Use 'not available' if unknown.
+    description: Date of MS data acquisition (ISO 8601 format recommended). Useful for tracking instrument drift and batch effects. Same column as ms-proteomics and ms-metabolomics.
     requirement: optional
-    allow_not_applicable: false
+    allow_not_applicable: true
     allow_not_available: true
     validators:
       - validator_name: pattern
         params:
-          pattern: '^\d{4}-\d{2}-\d{2}(T\d{2}:\d{2}(:\d{2})?)?$|^not available$'
-          description: Acquisition date (ISO 8601) or 'not available'
+          pattern: ^.+$
+          description: Acquisition date/time
           examples:
-            - 2025-07-01
-            - 2025-07-01T09:30:00
-            - 2025-07-01T09:30
-            - not available
+            - "2025-07-01"
+            - "2025-07-01T09:30:00"
 
   - name: comment[mounting method]
     ontology_accession: IMS:1002200
@@ -561,8 +547,6 @@ columns:
           values:
             - thaw mounting
             - tape mounting
-            - not applicable
-            - not available
           error_level: warning
           description: Tissue section mounting method (IMS:1002200 hierarchy)
 
@@ -587,8 +571,6 @@ columns:
             - graded ethanol series
             - ammonium formate wash
             - none
-            - not applicable
-            - not available
           error_level: warning
           description: Tissue wash protocol (IMS:1002402 sample washing method)
 
@@ -608,13 +590,12 @@ columns:
     validators:
       - validator_name: pattern
         params:
-          pattern: '^\d+(\.\d+)? at \d+(\.\d+)? m/z$|^not available$'
-          description: Resolving power at reference m/z or 'not available'
+          pattern: '^\d+(\.\d+)? at \d+(\.\d+)? m/z$'
+          description: Resolving power at reference m/z
           examples:
             - 140000 at 200 m/z
             - 50000 at 400 m/z
             - 30000 at 1000 m/z
-            - not available
 
   - name: comment[normalization method]
     ontology_accession: IMS:1002600
@@ -630,8 +611,6 @@ columns:
             - RMS
             - median
             - none
-            - not applicable
-            - not available
           error_level: warning
           description: Spectral normalization method
 

@@ -102,6 +102,7 @@ Templates use an `extends` field to inherit columns from parent templates:
 - `sample-metadata` extends `base` - Sample-level columns shared by all templates (organism, organism part, cell type, biological replicate, pooled sample, disease, biosample accession)
 - `ms-proteomics` extends `sample-metadata` - Mass spectrometry columns
 - `ms-metabolomics` extends `sample-metadata` - Mass spectrometry-based metabolomics columns
+- `ms-imaging` extends `sample-metadata` - Mass spectrometry imaging (MALDI, DESI, SIMS) columns
 - `affinity-proteomics` extends `sample-metadata` - Affinity assay columns
 - `human` extends `sample-metadata` - Human sample columns
 - `vertebrates` extends `sample-metadata` - Non-human vertebrate columns
