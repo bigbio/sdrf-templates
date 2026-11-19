@@ -9,8 +9,8 @@ documentation: |
   - `technology type`: use 'mass spectrometry imaging' (PRIDE:0000631) for generic MSI;
     use the specific modality value (MALDI/DESI/SIMS) when known. Modality child terms
     are pending in the PRIDE ontology.
-  - `characteristics[analyte class]`: what the imaging targeted (proteins, peptides,
-    lipids, metabolites, glycans, drugs and xenobiotics) or 'untargeted'.
+  - `characteristics[analyte class]`: what the imaging targeted, as a ChEBI class label
+    (protein, peptide, lipid, metabolite, glycan, drug, xenobiotic) or 'untargeted'.
   - `comment[pixel size x/y]`: raster step size in µm (e.g. '50 µm'). Required.
   - `comment[ms min mz]` / `comment[ms max mz]`: acquired m/z range in the shared
     ms-proteomics format (e.g. '800m/z'). Use 'not available' for continuous imzML
@@ -406,9 +406,12 @@ columns:
   - name: characteristics[analyte class]
     description: >-
       Class of analytes the imaging experiment targeted through its matrix, sample
-      preparation and acquisition method. Use 'untargeted' for discovery
-      acquisitions not aimed at a specific class. Same column name as
-      ms-metabolomics, with MSI-appropriate values.
+      preparation and acquisition method. Values are ChEBI class labels: protein
+      (CHEBI:36080), peptide (CHEBI:16670), lipid (CHEBI:18059), metabolite
+      (CHEBI:25212), glycan (CHEBI:167559), drug (CHEBI:23888), xenobiotic
+      (CHEBI:35703). Use 'untargeted' for discovery acquisitions not aimed at a
+      specific class. Same column name as ms-metabolomics, with MSI-appropriate
+      values.
     requirement: recommended
     allow_not_applicable: false
     allow_not_available: true
@@ -416,15 +419,16 @@ columns:
       - validator_name: values
         params:
           values:
-            - proteins
-            - peptides
-            - lipids
-            - metabolites
-            - glycans
-            - drugs and xenobiotics
+            - protein
+            - peptide
+            - lipid
+            - metabolite
+            - glycan
+            - drug
+            - xenobiotic
             - untargeted
           error_level: warning
-          description: Analyte class targeted by the MSI experiment
+          description: Analyte class targeted by the MSI experiment (ChEBI class labels, or 'untargeted')
 
   - name: characteristics[tissue modification]
     ontology_accession: IMS:1002500
@@ -512,24 +516,32 @@ columns:
 
   - name: comment[matrix application method]
     ontology_accession: MS:1000833
-    description: Method used to apply the MALDI matrix to the tissue section. PSI-MS matrix application type (MS:1000833) hierarchy. Use 'not applicable' for DESI and SIMS experiments. Use 'not available' if the method was not recorded.
+    description: >-
+      Method used to apply the MALDI matrix to the tissue section, as a PSI-MS
+      term from the matrix application type hierarchy (MS:1000833). Automated
+      and manual sprayers (pneumatic, robotic, airbrush) are 'sprayed MALDI
+      matrix preparation' (MS:1000838); inkjet and acoustic droplet deposition
+      are 'printed MALDI matrix preparation' (MS:1000837). Sublimation has no
+      PSI-MS term yet; a request is pending, and the value passes with a warning
+      meanwhile. Name the device, if relevant, in comment[plate geometry] or a
+      free-text comment. Use 'not applicable' for DESI and SIMS experiments and
+      'not available' if the method was not recorded.
     requirement: recommended
     allow_not_applicable: true
     allow_not_available: true
     validators:
-      - validator_name: values
+      - validator_name: ontology
         params:
-          values:
-            - sublimation
-            - spray
-            - TM-sprayer
-            - pneumatic spray
-            - acoustic droplet ejection
-            - ImagePrep
-            - wet transfer
-            - inkjet printing
+          ontologies:
+            - ms
+          parent_term: MS:1000833
           error_level: warning
-          description: Matrix application method
+          description: Must be a PSI-MS matrix application type term (MS:1000833 hierarchy)
+          examples:
+            - sprayed MALDI matrix preparation
+            - printed MALDI matrix preparation
+            - dried droplet MALDI matrix preparation
+            - sublimation
 
   - name: comment[target material]
     ontology_accession: IMS:1000202
