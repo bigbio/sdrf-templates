@@ -3,11 +3,12 @@ description: SDRF template for mass spectrometry imaging (MSI) experiments inclu
 documentation: |
   The ms-imaging template extends sample-metadata with MSI-specific columns for spatial
   acquisition parameters, ionization method, and tissue preparation. It covers MALDI,
-  DESI, SIMS, and related imaging mass spectrometry modalities.
+  DESI, SIMS, and related mass spectrometry imaging modalities.
 
   Key annotation guidance:
-  - `technology type`: use 'imaging mass spectrometry' for generic MSI; use specific
-    modality (MALDI/DESI/SIMS) when known. NTR needed for EFO/MS ontology support.
+  - `technology type`: use 'mass spectrometry imaging' (PRIDE:0000631) for generic MSI;
+    use the specific modality value (MALDI/DESI/SIMS) when known. Modality child terms
+    are pending in the PRIDE ontology.
   - `comment[pixel size x/y]`: raster step size in µm (e.g. '50 µm'). Required.
   - `comment[ms min mz]` / `comment[ms max mz]`: acquired m/z range in the shared
     ms-proteomics format (e.g. '800m/z'). Use 'not available' for continuous imzML
@@ -19,6 +20,11 @@ documentation: |
     onto the four scanSettings terms imzML exporters write (e.g. meandering, top down,
     horizontal line scan, linescan right left). `comment[ibd binary type]` comes from
     the imzML fileContent.
+  - Optional acquisition parameters (`comment[ms min im]` / `comment[ms max im]`,
+    `comment[spectrum representation]`, `comment[laser repetition rate]`,
+    `comment[laser focus diameter]`, `comment[optical image file]`) are meant to be
+    filled from the imzML header, the vendor export or the registration file when
+    available rather than recalled by the annotator.
   - `comment[matrix]`: MALDI matrix compound (a sample-preparation parameter, hence a
     comment rather than a characteristic). Use 'not applicable' for DESI/SIMS.
   - `comment[imaging ion source]`: PSI-MS ionization type term (MS:1000008 hierarchy),
@@ -53,7 +59,12 @@ validators:
 columns:
   - name: technology type
     ontology_accession: PRIDE:0000663
-    description: Type of MSI technology. Overrides base proteomics vocabulary with imaging mass spectrometry terms.
+    description: >-
+      Type of MSI technology. Overrides the base proteomics vocabulary with mass
+      spectrometry imaging terms. The 'mass spectrometry imaging' (MSI) wording
+      follows PRIDE:0000631 and avoids the IMS abbreviation, which also denotes
+      ion mobility spectrometry. Modality-specific child terms are pending in
+      the PRIDE ontology.
     requirement: required
     allow_not_applicable: false
     allow_not_available: false
@@ -63,12 +74,12 @@ columns:
       - validator_name: values
         params:
           values:
-            - imaging mass spectrometry
-            - MALDI imaging mass spectrometry
-            - DESI imaging mass spectrometry
-            - SIMS imaging mass spectrometry
+            - mass spectrometry imaging
+            - MALDI mass spectrometry imaging
+            - DESI mass spectrometry imaging
+            - SIMS mass spectrometry imaging
           error_level: error
-          description: MSI technology type. Use 'imaging mass spectrometry' when the specific modality is not known or not listed. NTR needed for EFO/MS ontology support.
+          description: MSI technology type. Use 'mass spectrometry imaging' (PRIDE:0000631) when the specific modality is not known or not listed; modality child terms pending in PRIDE.
 
   - name: characteristics[sample stabilization]
     ontology_accession: IMS:1002010
@@ -98,38 +109,29 @@ columns:
     ontology_accession: MS:1000834
     description: >-
       MALDI matrix compound applied to the tissue section prior to acquisition
-      (PSI-MS MS:1000834 matrix solution). Full compound names and common
-      abbreviations (e.g. '2,5-dihydroxybenzoic acid' / 'DHB') are accepted as
-      synonyms. Use 'none' for matrix-free laser desorption experiments and
-      'not applicable' for DESI or SIMS experiments.
+      (PSI-MS MS:1000834 matrix solution). Use the ChEBI compound name where
+      possible (e.g. '2,5-dihydroxybenzoic acid' rather than 'DHB'); common
+      abbreviations are accepted but raise a warning. Use 'not applicable' for
+      DESI, SIMS and matrix-free laser desorption experiments.
       Corresponds to METASPACE MALDI_Matrix field.
     requirement: required
     allow_not_applicable: true
     allow_not_available: false
     validators:
-      - validator_name: values
+      - validator_name: ontology
         params:
-          values:
-            - 2,5-dihydroxybenzoic acid
-            - DHB
-            - alpha-cyano-4-hydroxycinnamic acid
-            - CHCA
-            - HCCA
-            - norharmane
-            - 9-aminoacridine
-            - 9-AA
-            - sinapinic acid
-            - SA
-            - dithranol
-            - 2,5-dihydroxyacetophenone
-            - DHAP
-            - 2,4,6-trihydroxyacetophenone
-            - THAP
-            - DAN
-            - 1,5-diaminonaphthalene
-            - none
+          ontologies:
+            - chebi
           error_level: warning
-          description: MALDI matrix compound or 'not applicable' for non-MALDI methods
+          description: MALDI matrix compound should be a valid ChEBI term when possible
+          examples:
+            - 2,5-dihydroxybenzoic acid
+            - alpha-cyano-4-hydroxycinnamic acid
+            - trans-sinapic acid
+            - 9-aminoacridine
+            - 1,5-diaminonaphthalene
+            - norharmane
+            - 2,5-dihydroxyacetophenone
 
   - name: comment[imaging ion source]
     ontology_accession: IMS:1000012
@@ -209,7 +211,7 @@ columns:
     validators:
       - validator_name: number_with_unit
         params:
-          units: [µm, um]
+          units: [µm, μm, um]
           error_level: error
           description: Pixel size x with unit (µm)
           examples:
@@ -228,7 +230,7 @@ columns:
     validators:
       - validator_name: number_with_unit
         params:
-          units: [µm, um]
+          units: [µm, μm, um]
           error_level: error
           description: Pixel size y with unit (µm)
           examples:
@@ -278,6 +280,36 @@ columns:
             - 2000m/z
             - 3000m/z
 
+  - name: comment[ms min im]
+    ontology_accession: PRIDE:0000841
+    description: MS method-defined minimum ion mobility setting used to acquire the data (1/K0 or Vs/cm2). Same column as ms-proteomics. Use 'not applicable' when ion mobility separation was not used.
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: pattern
+        params:
+          pattern: ^[\d.]+$
+          description: Numeric ion mobility value
+          examples:
+            - 0.6
+            - 0.7
+
+  - name: comment[ms max im]
+    ontology_accession: PRIDE:0000842
+    description: MS method-defined maximum ion mobility setting used to acquire the data (1/K0 or Vs/cm2). Same column as ms-proteomics. Use 'not applicable' when ion mobility separation was not used.
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: pattern
+        params:
+          pattern: ^[\d.]+$
+          description: Numeric ion mobility value
+          examples:
+            - 1.3
+            - 1.6
+
   - name: comment[scan pattern]
     ontology_accession: IMS:1000041
     description: >-
@@ -317,7 +349,22 @@ columns:
             - continuous
             - processed
           error_level: error
-          description: imzML scan type (IMS:1000030 continuous or IMS:1000031 processed)
+          description: imzML ibd binary type (IMS:1000030 continuous or IMS:1000031 processed)
+
+  - name: comment[spectrum representation]
+    ontology_accession: MS:1000525
+    description: Whether spectra are stored as profile or centroided (peak-picked) data; PSI-MS spectrum representation (MS:1000525), declared in the imzML fileContent. Independent of comment[ibd binary type].
+    requirement: optional
+    allow_not_applicable: false
+    allow_not_available: true
+    validators:
+      - validator_name: values
+        params:
+          values:
+            - profile spectrum
+            - centroid spectrum
+          error_level: error
+          description: Spectrum representation (MS:1000128 profile spectrum or MS:1000127 centroid spectrum)
 
   - name: comment[analyzer]
     ontology_accession: MS:1000443
@@ -490,7 +537,7 @@ columns:
     validators:
       - validator_name: number_with_unit
         params:
-          units: [µm, um]
+          units: [µm, μm, um]
           error_level: warning
           description: Section thickness with unit (µm)
           examples:
@@ -519,6 +566,40 @@ columns:
             - 500
             - 1000
 
+  - name: comment[laser repetition rate]
+    ontology_accession: IMS:1006000
+    description: Laser pulse repetition rate (IMS:1006000, a laser attribute under MS:1000841). Acquisition parameter taken from the instrument method or vendor export when available. Use 'not applicable' for DESI or SIMS experiments.
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: number_with_unit
+        params:
+          units: [Hz, kHz]
+          error_level: warning
+          description: Laser repetition rate with unit
+          examples:
+            - 10000 Hz
+            - 10 kHz
+            - 2000 Hz
+
+  - name: comment[laser focus diameter]
+    ontology_accession: MS:1000844
+    description: Diameter of the laser spot on the sample (PSI-MS MS:1000844 focus diameter x; give one value for a circular spot). Together with pixel size this shows whether pixels are oversampled. Acquisition parameter taken from the instrument method or vendor export when available. Use 'not applicable' for DESI or SIMS experiments.
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: number_with_unit
+        params:
+          units: [µm, μm, um]
+          error_level: warning
+          description: Laser focus diameter with unit (µm)
+          examples:
+            - 20 µm
+            - 10 µm
+            - 50 µm
+
   - name: comment[tissue section]
     description: Tissue section identifier (slide ID, section number, or file path reference). Allows linking an assay row to a specific physical section.
     requirement: recommended
@@ -534,13 +615,20 @@ columns:
             - slide_A_section_3
             - HB1234_S01
 
-  - name: comment[modification parameters]
-    ontology_accession: MS:1001055
-    description: Post-translational modifications; generally not applicable for MSI experiments
+  - name: comment[optical image file]
+    ontology_accession: IMS:1006008
+    description: File name of the optical image (e.g. H&E or brightfield scan) co-registered with the MSI acquisition (IMS:1006008 optical image location). Use 'not available' if no optical image was recorded or deposited.
     requirement: optional
-    cardinality: multiple
-    allow_not_applicable: true
+    allow_not_applicable: false
     allow_not_available: true
+    validators:
+      - validator_name: pattern
+        params:
+          pattern: ^.+$
+          description: Optical image file name
+          examples:
+            - section_001_HE.tif
+            - slide_A_brightfield.png
 
   - name: characteristics[sample growth conditions]
     ontology_accession: EFO:0000001
@@ -647,20 +735,3 @@ columns:
             - none
           error_level: warning
           description: Spectral normalization method
-
-  - name: comment[mass resolution]
-    ontology_accession: MS:1000011
-    description: Mass resolution of the instrument at the reported m/z. MS:1000011. Format '{value} ppm', '{value} Da', or '{value} mDa'. Use 'not available' if unrecorded.
-    requirement: optional
-    allow_not_applicable: false
-    allow_not_available: true
-    validators:
-      - validator_name: number_with_unit
-        params:
-          units: [ppm, Da, mDa]
-          error_level: warning
-          description: Mass resolution with unit
-          examples:
-            - 5 ppm
-            - 0.5 Da
-            - 50 mDa
