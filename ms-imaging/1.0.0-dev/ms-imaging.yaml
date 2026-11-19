@@ -14,6 +14,11 @@ documentation: |
     where the m/z axis is in the binary ibd file.
   - `comment[scan pattern]`: IMS:1000041 hierarchy (meandering, flyback, random
     access). Use 'not applicable' for non-raster instruments (FT-ICR, SIMS).
+  - Scan geometry: `comment[scan pattern]`, `comment[linescan sequence]`,
+    `comment[line scan orientation]` and `comment[line scan direction]` map one-to-one
+    onto the four scanSettings terms imzML exporters write (e.g. meandering, top down,
+    horizontal line scan, linescan right left). `comment[ibd binary type]` comes from
+    the imzML fileContent.
   - `comment[matrix]`: MALDI matrix compound (a sample-preparation parameter, hence a
     comment rather than a characteristic). Use 'not applicable' for DESI/SIMS.
   - `comment[imaging ion source]`: PSI-MS ionization type term (MS:1000008 hierarchy),
@@ -28,8 +33,9 @@ documentation: |
   'not applicable' usage:
   - `comment[matrix]` and `comment[matrix application method]`: DESI/SIMS
   - `comment[section thickness]`: non-tissue substrates (PVDF membrane, cell culture)
-  - `comment[scan pattern]`, `comment[scan type]`, `comment[linescan sequence]`,
-    `comment[line scan direction]`: non-raster or non-imzML instruments (FT-ICR)
+  - `comment[scan pattern]`, `comment[linescan sequence]`, `comment[line scan orientation]`,
+    `comment[line scan direction]`: non-raster instruments (FT-ICR)
+  - `comment[ibd binary type]`: data not stored as imzML
   - `comment[laser shots per spectrum]`: DESI/SIMS experiments
 contributors:
   - Lisa Boatner (lboatner@chanzuckerberg.com) - Chan Zuckerberg Initiative
@@ -293,12 +299,13 @@ columns:
           error_level: error
           description: MSI scan pattern (IMS:1000041 hierarchy)
 
-  - name: comment[scan type]
+  - name: comment[ibd binary type]
     ontology_accession: IMS:1000003
     description: >-
-      imzML binary data layout; IMS:1000003 ibd binary type. 'continuous'
-      (IMS:1000030) stores full spectra per pixel; 'processed' (IMS:1000031)
-      stores only detected peaks. Use 'not applicable' if the data is not in
+      imzML binary data layout; IMS:1000003 ibd binary type, declared in the
+      imzML fileContent. 'continuous' (IMS:1000030) stores one shared m/z array
+      for all pixels; 'processed' (IMS:1000031) stores an m/z array per pixel,
+      typically after peak picking. Use 'not applicable' if the data is not in
       imzML format.
     requirement: required
     allow_not_applicable: true
@@ -389,12 +396,12 @@ columns:
             'left right' (IMS:1000402) and 'right left' (IMS:1000403) for
             vertical scans.
 
-  - name: comment[line scan direction]
+  - name: comment[line scan orientation]
     ontology_accession: IMS:1000048
     description: >-
-      Orientation of line scans during acquisition. IMS:1000048 scan type
-      hierarchy: IMS:1000480 horizontal line scan or IMS:1000481 vertical
-      line scan.
+      Orientation of each line scan during acquisition. IMS:1000048 hierarchy
+      (labelled 'scan type' in the IMS ontology): IMS:1000480 horizontal line
+      scan or IMS:1000481 vertical line scan. Written to imzML scanSettings.
       Use 'not applicable' for non-raster instruments (e.g. FT-ICR, Orbitrap).
     requirement: recommended
     allow_not_applicable: true
@@ -406,7 +413,30 @@ columns:
             - horizontal line scan
             - vertical line scan
           error_level: warning
-          description: Line scan direction (IMS:1000480 horizontal or IMS:1000481 vertical)
+          description: Line scan orientation (IMS:1000480 horizontal or IMS:1000481 vertical)
+
+  - name: comment[line scan direction]
+    ontology_accession: IMS:1000049
+    description: >-
+      Direction in which each line was scanned, as written to imzML
+      scanSettings. IMS:1000049 line scan direction hierarchy: IMS:1000490
+      linescan right left, IMS:1000491 linescan left right, IMS:1000492
+      linescan bottom up, IMS:1000493 linescan top down. With a meandering
+      scan pattern this is the direction of the first line. Use 'not
+      applicable' for non-raster instruments (e.g. FT-ICR, Orbitrap).
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: values
+        params:
+          values:
+            - linescan right left
+            - linescan left right
+            - linescan bottom up
+            - linescan top down
+          error_level: warning
+          description: Line scan direction (IMS:1000049 hierarchy)
 
   - name: comment[matrix application method]
     ontology_accession: MS:1000833
