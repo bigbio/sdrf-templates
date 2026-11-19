@@ -13,7 +13,8 @@ documentation: |
     'not available' for continuous imzML where the m/z axis is in the binary ibd file.
   - `comment[scan pattern]`: IMS:1000041 hierarchy (meandering, one way, flyback,
     random access). Use 'not applicable' for non-raster instruments (FT-ICR, SIMS).
-  - `characteristics[matrix]`: MALDI matrix compound. Use 'not applicable' for DESI/SIMS.
+  - `comment[matrix]`: MALDI matrix compound (a sample-preparation parameter, hence a
+    comment rather than a characteristic). Use 'not applicable' for DESI/SIMS.
   - `comment[imaging ion source]`: PSI-MS ionization type term (MS:1000008 hierarchy),
     validated against OLS. See column description for common terms.
   - `comment[analyzer]`: PSI-MS mass analyzer term (MS:1000443 hierarchy), validated
@@ -24,7 +25,7 @@ documentation: |
   in descriptions for reference. PSI-MS terms (ionization, analyzer) use `ontology: ms`.
 
   'not applicable' usage:
-  - `characteristics[matrix]` and `comment[matrix application method]`: DESI/SIMS
+  - `comment[matrix]` and `comment[matrix application method]`: DESI/SIMS
   - `comment[section thickness]`: non-tissue substrates (PVDF membrane, cell culture)
   - `comment[scan pattern]`, `comment[scan type]`, `comment[linescan sequence]`,
     `comment[line scan direction]`: non-raster or non-imzML instruments (FT-ICR)
@@ -85,7 +86,7 @@ columns:
           error_level: warning
           description: Tissue sample stabilization method
 
-  - name: characteristics[matrix]
+  - name: comment[matrix]
     ontology_accession: IMS:1000090
     description: >-
       MALDI matrix compound applied to the tissue section prior to acquisition.
