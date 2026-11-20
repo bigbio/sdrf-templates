@@ -522,8 +522,8 @@ columns:
       and manual sprayers (pneumatic, robotic, airbrush) are 'sprayed MALDI
       matrix preparation' (MS:1000838); inkjet and acoustic droplet deposition
       are 'printed MALDI matrix preparation' (MS:1000837). Sublimation has no
-      PSI-MS term yet; a request is pending, and the value passes with a warning
-      meanwhile. Name the device, if relevant, in comment[plate geometry] or a
+      PSI-MS term yet (requested in HUPO-PSI/psi-ms-CV#614); the value passes
+      with a warning meanwhile. Name the device, if relevant, in comment[plate geometry] or a
       free-text comment. Use 'not applicable' for DESI and SIMS experiments and
       'not available' if the method was not recorded.
     requirement: recommended
