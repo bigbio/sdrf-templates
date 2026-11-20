@@ -37,6 +37,9 @@ documentation: |
   IMS ontology note: the IMS ontology (imagingMS.obo) is not available in OLS.
   IMS-specific columns use `values` or `pattern` validators with IMS accessions cited
   in descriptions for reference. PSI-MS terms (ionization, analyzer) use `ontology: ms`.
+  The IMS concepts used here are being mirrored into the PRIDE ontology
+  (PRIDE-Archive/pride-ontology#220); once released, these columns will switch to
+  `ontology: pride` validators.
 
   'not applicable' usage:
   - `comment[matrix]` and `comment[matrix application method]`: DESI/SIMS
@@ -67,7 +70,7 @@ columns:
       'Mass spectrometry imaging' (PRIDE:0000631, equivalent to MS:1002521); the
       'mass spectrometry imaging' (MSI) wording avoids the IMS abbreviation,
       which also denotes ion mobility spectrometry. Modality-specific child
-      terms are pending in the PRIDE ontology.
+      terms are pending in the PRIDE ontology (PRIDE-Archive/pride-ontology#220).
     requirement: required
     allow_not_applicable: false
     allow_not_available: false
