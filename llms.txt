@@ -32,6 +32,7 @@ repeating every inherited parent. Downstream validators should resolve inheritan
 - [ms-metabolomics](https://raw.githubusercontent.com/bigbio/sdrf-templates/dev/ms-metabolomics/1.0.0-dev/ms-metabolomics.yaml): Shared mass-spectrometry metabolomics layer.
 - [lc-ms-metabolomics](https://raw.githubusercontent.com/bigbio/sdrf-templates/dev/lc-ms-metabolomics/1.0.0-dev/lc-ms-metabolomics.yaml): LC-MS metabolomics specialization.
 - [gc-ms-metabolomics](https://raw.githubusercontent.com/bigbio/sdrf-templates/dev/gc-ms-metabolomics/1.0.0-dev/gc-ms-metabolomics.yaml): GC-MS metabolomics specialization.
+- [ms-imaging](https://raw.githubusercontent.com/bigbio/sdrf-templates/dev/ms-imaging/1.0.0-dev/ms-imaging.yaml): Mass spectrometry imaging layer (MALDI, DESI, SIMS).
 
 ## Organism and sample-context templates
 
