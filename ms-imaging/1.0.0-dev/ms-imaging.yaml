@@ -6,7 +6,7 @@ documentation: |
   DESI, SIMS, and related mass spectrometry imaging modalities.
 
   Key annotation guidance:
-  - `technology type`: use 'mass spectrometry imaging' (PRIDE:0000631) for generic MSI;
+  - `technology type`: use 'Mass spectrometry imaging' (PRIDE:0000631) for generic MSI;
     use the specific modality value (MALDI/DESI/SIMS) when known. Modality child terms
     are pending in the PRIDE ontology.
   - `characteristics[analyte class]`: what the imaging targeted, as a ChEBI class label
@@ -63,10 +63,11 @@ columns:
     ontology_accession: PRIDE:0000663
     description: >-
       Type of MSI technology. Overrides the base proteomics vocabulary with mass
-      spectrometry imaging terms. The 'mass spectrometry imaging' (MSI) wording
-      follows PRIDE:0000631 and avoids the IMS abbreviation, which also denotes
-      ion mobility spectrometry. Modality-specific child terms are pending in
-      the PRIDE ontology.
+      spectrometry imaging terms. The generic value is the existing PRIDE term
+      'Mass spectrometry imaging' (PRIDE:0000631, equivalent to MS:1002521); the
+      'mass spectrometry imaging' (MSI) wording avoids the IMS abbreviation,
+      which also denotes ion mobility spectrometry. Modality-specific child
+      terms are pending in the PRIDE ontology.
     requirement: required
     allow_not_applicable: false
     allow_not_available: false
@@ -76,12 +77,12 @@ columns:
       - validator_name: values
         params:
           values:
-            - mass spectrometry imaging
+            - Mass spectrometry imaging
             - MALDI mass spectrometry imaging
             - DESI mass spectrometry imaging
             - SIMS mass spectrometry imaging
           error_level: error
-          description: MSI technology type. Use 'mass spectrometry imaging' (PRIDE:0000631) when the specific modality is not known or not listed; modality child terms pending in PRIDE.
+          description: MSI technology type. Use 'Mass spectrometry imaging' (PRIDE:0000631) when the specific modality is not known or not listed; modality child terms pending in PRIDE.
 
   - name: characteristics[sample stabilization]
     ontology_accession: IMS:1002010
