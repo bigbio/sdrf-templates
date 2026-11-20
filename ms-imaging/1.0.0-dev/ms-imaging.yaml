@@ -27,6 +27,11 @@ documentation: |
     `comment[laser focus diameter]`, `comment[optical image file]`) are meant to be
     filled from the imzML header, the vendor export or the registration file when
     available rather than recalled by the annotator.
+  - Modality-specific source parameters follow the imzML ontology's DESI and SIMS
+    parameter sets: `comment[spray voltage]` and `comment[solvent flow rate]` for DESI;
+    `comment[primary ion species]`, `comment[beam energy]`, `comment[beam current]` and
+    `comment[primary ion dose density]` for SIMS. All optional; 'not applicable' outside
+    their modality, mirroring how the MALDI matrix and laser columns behave.
   - `comment[matrix]`: MALDI matrix compound (a sample-preparation parameter, hence a
     comment rather than a characteristic). Use 'not applicable' for DESI/SIMS.
   - `comment[imaging ion source]`: PSI-MS ionization type term (MS:1000008 hierarchy),
@@ -47,7 +52,11 @@ documentation: |
   - `comment[scan pattern]`, `comment[linescan sequence]`, `comment[line scan orientation]`,
     `comment[line scan direction]`: non-raster instruments (FT-ICR)
   - `comment[ibd binary type]`: data not stored as imzML
-  - `comment[laser shots per spectrum]`: DESI/SIMS experiments
+  - `comment[laser shots per spectrum]`, `comment[laser repetition rate]`,
+    `comment[laser focus diameter]`: DESI/SIMS experiments
+  - `comment[solvent]`, `comment[spray voltage]`, `comment[solvent flow rate]`: MALDI/SIMS
+  - `comment[primary ion species]`, `comment[beam energy]`, `comment[beam current]`,
+    `comment[primary ion dose density]`: MALDI/DESI
 contributors:
   - Lisa Boatner (lboatner@chanzuckerberg.com) - Chan Zuckerberg Initiative
 version: 1.0.0-dev
@@ -743,6 +752,108 @@ columns:
     requirement: optional
     allow_not_applicable: true
     allow_not_available: true
+
+  - name: comment[spray voltage]
+    ontology_accession: IMS:1001212
+    description: Voltage applied to the DESI spray emitter (IMS:1001212, a DESI parameter). Acquisition parameter taken from the instrument method when available. Use 'not applicable' for MALDI and SIMS experiments.
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: number_with_unit
+        params:
+          units: [kV, V]
+          error_level: warning
+          description: Spray voltage with unit
+          examples:
+            - 4.5 kV
+            - 5 kV
+            - 4500 V
+
+  - name: comment[solvent flow rate]
+    ontology_accession: IMS:1001213
+    description: Flow rate of the DESI spray solvent (IMS:1001213, a DESI parameter). Acquisition parameter taken from the instrument method when available. Use 'not applicable' for MALDI and SIMS experiments.
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: number_with_unit
+        params:
+          units: [µL/min, μL/min, uL/min]
+          error_level: warning
+          description: Solvent flow rate with unit (µL/min)
+          examples:
+            - 2 µL/min
+            - 1.5 µL/min
+            - 3 uL/min
+
+  - name: comment[primary ion species]
+    ontology_accession: IMS:1001201
+    description: Primary ion species of the SIMS ion gun (IMS:1001201 primary ion gun species), e.g. Bi3+, C60+, Ar2500+, Ga+. Use 'not applicable' for MALDI and DESI experiments.
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: pattern
+        params:
+          pattern: ^.+$
+          description: Primary ion species (free text)
+          examples:
+            - Bi3+
+            - C60+
+            - Ar2500+
+            - Ga+
+
+  - name: comment[beam energy]
+    ontology_accession: IMS:1001202
+    description: Kinetic energy of the SIMS primary ion beam (IMS:1001202, a SIMS parameter). Use 'not applicable' for MALDI and DESI experiments.
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: number_with_unit
+        params:
+          units: [keV, eV]
+          error_level: warning
+          description: Beam energy with unit
+          examples:
+            - 30 keV
+            - 25 keV
+            - 10 keV
+
+  - name: comment[beam current]
+    ontology_accession: IMS:1001203
+    description: Current of the SIMS primary ion beam at the sample (IMS:1001203, a SIMS parameter). Use 'not applicable' for MALDI and DESI experiments.
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: number_with_unit
+        params:
+          units: [pA, nA]
+          error_level: warning
+          description: Beam current with unit
+          examples:
+            - 0.3 pA
+            - 20 pA
+            - 1 nA
+
+  - name: comment[primary ion dose density]
+    ontology_accession: IMS:1001207
+    description: Primary ion dose delivered per unit area in SIMS (IMS:1001207, a SIMS parameter), the quantity that distinguishes static from dynamic SIMS. Use 'not applicable' for MALDI and DESI experiments.
+    requirement: optional
+    allow_not_applicable: true
+    allow_not_available: true
+    validators:
+      - validator_name: number_with_unit
+        params:
+          units: [ions/cm2, ions/cm^2, ions/cm²]
+          error_level: warning
+          description: Primary ion dose density with unit (ions per square centimetre)
+          examples:
+            - 1e12 ions/cm2
+            - 5e11 ions/cm2
+            - 1e13 ions/cm2
 
   - name: comment[resolving power]
     ontology_accession: MS:1000800
